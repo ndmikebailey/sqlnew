@@ -1,0 +1,24 @@
+{
+  "checks": [
+    "ragged sparse nullable int64 and compaction",
+    "private patch and exact restoration without base rewrite",
+    "nested savepoints and rollback of compaction",
+    "WAL reader snapshot across published replacement regions",
+    "all axes, ranges, fractional predicates and aggregate SQL semantics",
+    "coordinate uniqueness, IGNORE, REPLACE and relocation",
+    "REAL bit recovery and individually compressed TEXT/BLOB, rename/drop",
+    "attached database joins and schema-qualified counters",
+    "checkpoint and reopen",
+    "existing columnar folding modes and canonical fold merges"
+  ],
+  "canonical_fold_checks": 360,
+  "exact": true,
+  "runtime": {
+    "version": "0.2.1-dev",
+    "sqlite_source_id": "2026-10-14 13:39:28 e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bbalt1",
+    "backend": "avx2-f64",
+    "library_sha256": "5ad28bb4cb3419a9856f3affade0ecc08106ae10e104e570185c899ededd8faa"
+  },
+  "database": "C:\\Users\\mikea\\Documents\\projects\\SQLNEW\\build\\dev021\\contracts-1792019886040911200\\regions.sqlnew",
+  "source_sha256": "380ff02666363634e0ce89c0c76277c480b5d9003781b64a7c99cf5a89dd68d2"
+}

@@ -1,0 +1,2 @@
+# Only Python vector APIs and benchmark fixture generation need NumPy.
+numpy>=1.26,<3

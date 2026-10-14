@@ -1,0 +1,24 @@
+{
+  "retrieved_on": "2026-10-14",
+  "source": "https://github.com/sqlite/sqlite.git",
+  "canonical_source": "https://sqlite.org/src",
+  "branch": "branch-3.54",
+  "git_commit": "23500fbf19d6d412f3326614ce3bac2fbab7564f",
+  "fossil_commit": "e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bb3716",
+  "commit_time_utc": "2026-10-14T13:39:28Z",
+  "version": "3.54.1",
+  "status": "Unreleased 3.54.1 maintenance snapshot following published 3.54.0; pinned for SQLNEW validation.",
+  "integration": "Net source delta from original import; SQLNEW select.c hooks and product README retained. No trunk-only feature intake. Optional upstream extensions remain unregistered unless explicitly built.",
+  "original_import": {
+    "retrieved_on": "2026-09-05",
+    "source": "https://github.com/sqlite/sqlite.git",
+    "canonical_source": "https://sqlite.org/src",
+    "branch": "master",
+    "git_commit": "f3b9f74d81132426dee1ccc07a67fdad2ccfeaa9",
+    "fossil_commit": "4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+    "commit_time_utc": "2026-09-04T14:20:44Z",
+    "version": "3.54.0",
+    "status": "development trunk; latest published stable release is 3.53.4",
+    "history": "Shallow clone of the official upstream mirror. Full source and upstream tests are present."
+  }
+}

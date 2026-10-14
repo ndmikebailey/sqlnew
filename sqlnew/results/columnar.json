@@ -1,0 +1,160 @@
+{
+  "timestamp_utc": "2026-09-05T18:04:58.969374+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "rows": 1000000,
+  "machine": "AMD64",
+  "processor": "Intel64 Family 6 Model 165 Stepping 2, GenuineIntel",
+  "logical_cpus": 12,
+  "scope": "This engine only. SQL ingestion, query latency, physical file and execution counters.",
+  "workload": "Deterministic event IDs and times, 257 sensors, varying real readings, unique formatted messages.",
+  "limitations": [
+    "Warm single-connection queries; no throughput or cold-cache guarantee.",
+    "Logical bytes are raw typed values, not another database's file size.",
+    "Range pruning benefits from correlation between values and row groups.",
+    "Grouped, distinct, filtered and expression aggregates use the ordinary SQL path."
+  ],
+  "source_sha256": {
+    "ext/sqlnew/columnar.c": "dbaedab99f6203e7b29a9f138a5758499f48d1fe47bcdf82d9778f151556ae78",
+    "ext/sqlnew/sqlnew.c": "22718b54f4e805d3036f8c18026ddc9863f0561d3fab3eadb3aed7c95f874808",
+    "src/select.c": "e64d618fd1c8cbffa904c3f7153e24efc6ac84633ccd45e93aa1895ec662c103",
+    "sqlnew/config.h": "fd84dcb0afc570c4243d6bd0634d45ee1a21e5f8f0ce5aceb65f6ca7797a0028",
+    "sqlnew/build.py": "bd004bdf1097c35c78677d0afc57e2440a2e0f5e0aa3064709d1fe949a9e378e",
+    "sqlnew/db.py": "4596f6af166581a152adf840f44aea61106c7909dbe9a820946cb365fc2b3015",
+    "sqlnew/exercise_columnar.py": "0c8ab4518e47b37db4f97c927bc45dcd42e7834661a3eca596e8fc318aac16fc"
+  },
+  "ingest_seconds": 1.527546999976039,
+  "product_version": "0.1.0-dev",
+  "cpu_backend": "avx2-f64",
+  "groups": 977,
+  "compressed_column_bytes": 25286006,
+  "logical_value_bytes": 79777786,
+  "queries": {
+    "summary": {
+      "sql": "SELECT count(*),sum(seq),min(ts),max(ts) FROM events",
+      "parameters": [],
+      "median_ms": 1.7029999289661646,
+      "samples_ms": [
+        1.6545000253245234,
+        1.8216000171378255,
+        1.6392000252380967,
+        1.81940000038594,
+        2.014199970290065,
+        1.7192000523209572,
+        1.7029999289661646,
+        1.7050000606104732,
+        1.6905999509617686,
+        1.6956999897956848,
+        1.6850000247359276
+      ],
+      "work_per_query": {
+        "blocks_read": 0,
+        "columns_decoded": 0,
+        "compressed_bytes_read": 0,
+        "rows_emitted": 0,
+        "summary_blocks": 3908,
+        "blocks_written": 0
+      },
+      "plan": [
+        [
+          21,
+          0,
+          0,
+          "COLUMNAR SUMMARY events"
+        ]
+      ]
+    },
+    "time_slice": {
+      "sql": "SELECT seq FROM events WHERE ts BETWEEN ? AND ? ORDER BY seq",
+      "parameters": [
+        1700500000000,
+        1700500099000
+      ],
+      "median_ms": 0.498599954880774,
+      "samples_ms": [
+        0.5170999793335795,
+        0.5265000509098172,
+        0.48349995631724596,
+        0.48619997687637806,
+        0.4830000689253211,
+        0.510399928316474,
+        0.5688000237569213,
+        0.5144999595358968,
+        0.4688000772148371,
+        0.498599954880774,
+        0.47800003085285425
+      ],
+      "work_per_query": {
+        "blocks_read": 1,
+        "columns_decoded": 2,
+        "compressed_bytes_read": 88,
+        "rows_emitted": 1024,
+        "summary_blocks": 0,
+        "blocks_written": 0
+      },
+      "plan": [
+        [
+          3,
+          0,
+          99,
+          "SCAN events VIRTUAL TABLE INDEX 0:1,32;1,8;"
+        ],
+        [
+          16,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    },
+    "point": {
+      "sql": "SELECT seq,sensor,message FROM events WHERE rowid=?",
+      "parameters": [
+        999983
+      ],
+      "median_ms": 0.17010001465678215,
+      "samples_ms": [
+        0.17829996068030596,
+        0.17360004130750895,
+        0.17099990509450436,
+        0.16990001313388348,
+        0.17010001465678215,
+        0.18970004748553038,
+        0.1674999948590994,
+        0.16549997963011265,
+        0.1642999704927206,
+        0.16469997353851795,
+        0.18480001017451286
+      ],
+      "work_per_query": {
+        "blocks_read": 1,
+        "columns_decoded": 3,
+        "compressed_bytes_read": 10956,
+        "rows_emitted": 1,
+        "summary_blocks": 0,
+        "blocks_written": 0
+      },
+      "plan": [
+        [
+          2,
+          0,
+          99,
+          "SCAN events VIRTUAL TABLE INDEX 0:-1,2;"
+        ]
+      ]
+    }
+  },
+  "integrity_check": [
+    [
+      "ok"
+    ]
+  ],
+  "checkpoint": [
+    [
+      0,
+      0,
+      0
+    ]
+  ],
+  "database_bytes": 28262400,
+  "reopen_verified": true
+}

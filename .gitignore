@@ -1,0 +1,29 @@
+/build/
+/.tools/
+__pycache__/
+*.pyc
+
+# Local Python environments and editor state.
+.venv/
+venv/
+.vs/
+.vscode/
+
+# Local configuration. Keep examples shareable.
+.env
+.env.*
+!.env.example
+
+# Native build products. Upstream database test fixtures remain versioned.
+*.obj
+*.o
+*.lo
+*.dll
+*.so
+*.dylib
+*.exe
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.a

@@ -1,0 +1,3902 @@
+{
+  "timestamp_utc": "2026-09-05T19:19:13.098077+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 165 Stepping 2, GenuineIntel",
+  "logical_cpus": 12,
+  "python": "3.14.4",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/h2oai/db-benchmark/c7421051af7530951d16b1505158371aebc0d2c1/_data/groupby-datagen.R",
+      "bytes": 2189,
+      "sha256": "bfcc1b01bee40a9051315d468b46b6dc0e98a7c7e6f3a1ca0175c4952c8cded6"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/h2oai/db-benchmark/c7421051af7530951d16b1505158371aebc0d2c1/duckdb/groupby-duckdb.R",
+      "bytes": 17886,
+      "sha256": "932bff40cc84c388e07d39f38ea740ca85601ec67e554468a5ee553d0b887bda"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/multiprocessio/dsq/c3ae0bafb0c3283e3c98cb250ada5a19e79ad58e/scripts/benchmark.sh",
+      "bytes": 1308,
+      "sha256": "319928d8bc58194722197ddba04d271f12e7c7fd08e29cef7a40a0585ad35078"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/multiprocessio/dsq/c3ae0bafb0c3283e3c98cb250ada5a19e79ad58e/testdata/taxi.csv.7z",
+      "bytes": 26145719,
+      "sha256": "37a54adcfa6a7111410d65a3f96eeac971f7796a6f0d0cab47c33f5c097cf1a0"
+    }
+  ],
+  "build": {
+    "baseline_commit": "f3b9f74d81132426dee1ccc07a67fdad2ccfeaa9",
+    "source": "Pristine git archive of the fork's imported revision",
+    "compiler": [
+      "cl",
+      "/nologo",
+      "/O2",
+      "/MD",
+      "/utf-8"
+    ],
+    "defines": [
+      "SQLITE_ENABLE_FTS5",
+      "SQLITE_ENABLE_RTREE",
+      "SQLITE_ENABLE_MATH_FUNCTIONS",
+      "SQLITE_ENABLE_EXPLAIN_COMMENTS"
+    ],
+    "baseline_command": [
+      "cl",
+      "/nologo",
+      "/O2",
+      "/MD",
+      "/utf-8",
+      "/DSQLITE_ENABLE_FTS5",
+      "/DSQLITE_ENABLE_RTREE",
+      "/DSQLITE_ENABLE_MATH_FUNCTIONS",
+      "/DSQLITE_ENABLE_EXPLAIN_COMMENTS",
+      "/DSQLITE_CORE",
+      "/DSQLITE_API=__declspec(dllexport)",
+      "/IC:\\Users\\mikea\\Documents\\projects\\SQLNEW\\build\\comparison\\baseline-build",
+      "/LD",
+      "C:\\Users\\mikea\\Documents\\projects\\SQLNEW\\build\\comparison\\baseline-build\\sqlite3.c",
+      "/link",
+      "/OUT:C:\\Users\\mikea\\Documents\\projects\\SQLNEW\\build\\comparison\\sqlite-baseline.dll"
+    ],
+    "baseline_amalgamation_sha256": "48019a003d50407d3e78c861aa78f340213351f3f8f562813ba1bf1841fa6e33",
+    "sqlnew_amalgamation_sha256": "e1300782af2ced5f2c7f49fb2726a79e42ebffdf97803df54879dd50b0618dac",
+    "helpers": {
+      "csv": "f0625fece30b7ded92d783ea72d7d24f77a3c230a98d237c7eb31ce0ccecf56d",
+      "shathree": "13333eb610aff224b646e4fa0243b5206efe55c28c4cd3b0346b7ad81ca22d20"
+    }
+  },
+  "oracle": "Independent Arrow/NumPy aggregates and Python SHA3 framing over every typed input value.",
+  "oracle_versions": {
+    "numpy": "2.3.5",
+    "pyarrow": "24.0.0"
+  },
+  "protocol": {
+    "repetitions": 6,
+    "warmups": 1,
+    "execution": "sequential balanced rotation across isolated worker processes",
+    "query_timing": "CREATE TEMP TABLE AS SELECT, including preparation and in-memory result materialization; validation excluded",
+    "point_timing": "100 prepared point reads, including shared Python/ctypes binding and result conversion",
+    "update_timing": "100 prepared random updates in one FULL-synchronous committed transaction; validation/restoration excluded",
+    "load_timing": "single observation per arm: same native CSV reader, casts, INSERT SELECT and commit; preprocessing excluded",
+    "comparison": "pristine revision-matched SQLite, same SQLite with declared workload indexes, SQLNEW columnar",
+    "float_tolerance": {
+      "relative": 1e-10,
+      "absolute": 1e-07
+    },
+    "limits": [
+      "Warm local single-connection workload; not a cold-cache or concurrent-service benchmark.",
+      "Public workloads adapted to supported SQL and available machine scale; not published-suite scores.",
+      "Load and index-build times are single observations, not sampled estimates.",
+      "No composite winner score; workload tradeoffs reported separately."
+    ]
+  },
+  "datasets": [
+    {
+      "description": "H2O group cardinalities and value distributions; NumPy PCG64 seed 108, not R-identical rows; K=100, no NULLs, unsorted.",
+      "adaptations": [
+        "1,000,000-row default instead of the original minimum 10,000,000; configurable.",
+        "Portable SELECTs materialized into a temporary table; deterministic result ordering added.",
+        "q6 (median/stddev) and q9 (correlation) are reported unsupported by both SQLite configurations and SQLNEW."
+      ],
+      "unsupported": {
+        "h2o_q6": "quantile_cont and stddev are unavailable",
+        "h2o_q9": "corr is unavailable"
+      },
+      "indexes": [
+        "CREATE INDEX tuned_id12 ON t(id1,id2,v1)",
+        "CREATE INDEX tuned_id3 ON t(id3,v1,v2,v3)",
+        "CREATE INDEX tuned_id4 ON t(id4,v1,v2,v3)",
+        "CREATE INDEX tuned_id6 ON t(id6,v1,v2,v3)",
+        "CREATE INDEX tuned_top2 ON t(id6,v3 DESC)"
+      ],
+      "point_columns": [
+        "id1",
+        "v1",
+        "v3"
+      ],
+      "update_column": "v1",
+      "name": "groupby",
+      "rows": 1000000,
+      "schema": [
+        [
+          "id1",
+          "TEXT"
+        ],
+        [
+          "id2",
+          "TEXT"
+        ],
+        [
+          "id3",
+          "TEXT"
+        ],
+        [
+          "id4",
+          "INTEGER"
+        ],
+        [
+          "id5",
+          "INTEGER"
+        ],
+        [
+          "id6",
+          "INTEGER"
+        ],
+        [
+          "v1",
+          "INTEGER"
+        ],
+        [
+          "v2",
+          "INTEGER"
+        ],
+        [
+          "v3",
+          "REAL"
+        ]
+      ],
+      "null_marker": "\\N",
+      "csv_sha256": "47081fd53f679b073d41f2d778f20beb52f7d1089831cb28319768db51d2297a",
+      "logical_arrow_bytes": 82000000,
+      "input_hash": "6E7C3CA6E92491E51F52A76223235C1EFEBEEB9E4275B684A7E8E74DEA401C02",
+      "engines": {
+        "sqlite": {
+          "ingest_seconds": 1.3762524999910966,
+          "index_seconds": 0.0,
+          "analyze_seconds": 0.014248899999074638,
+          "checkpoint_seconds": 0.11807490000501275,
+          "ready_seconds": 1.508576299995184,
+          "database_bytes": 52092928,
+          "wal_bytes_before_checkpoint": 52410552,
+          "input_hash": "6E7C3CA6E92491E51F52A76223235C1EFEBEEB9E4275B684A7E8E74DEA401C02",
+          "unsupported": {
+            "h2o_q6": "no such function: quantile_cont",
+            "h2o_q9": "no such function: corr"
+          },
+          "sqlite_version": "3.54.0",
+          "source_id": "2026-09-04 14:20:44 4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+          "compile_options": [
+            "ATOMIC_INTRINSICS=0",
+            "COMPILER=msvc-1944",
+            "DEFAULT_AUTOVACUUM",
+            "DEFAULT_CACHE_SIZE=-2000",
+            "DEFAULT_FILE_FORMAT=4",
+            "DEFAULT_JOURNAL_SIZE_LIMIT=-1",
+            "DEFAULT_MMAP_SIZE=0",
+            "DEFAULT_PAGE_SIZE=4096",
+            "DEFAULT_PCACHE_INITSZ=20",
+            "DEFAULT_RECURSIVE_TRIGGERS",
+            "DEFAULT_SECTOR_SIZE=4096",
+            "DEFAULT_SYNCHRONOUS=2",
+            "DEFAULT_WAL_AUTOCHECKPOINT=1000",
+            "DEFAULT_WAL_SYNCHRONOUS=2",
+            "DEFAULT_WORKER_THREADS=0",
+            "DIRECT_OVERFLOW_READ",
+            "ENABLE_EXPLAIN_COMMENTS",
+            "ENABLE_FTS5",
+            "ENABLE_MATH_FUNCTIONS",
+            "ENABLE_RTREE",
+            "MALLOC_SOFT_LIMIT=1024",
+            "MAX_ATTACHED=10",
+            "MAX_COLUMN=2000",
+            "MAX_COMPOUND_SELECT=500",
+            "MAX_DEFAULT_PAGE_SIZE=8192",
+            "MAX_EXPR_DEPTH=1000",
+            "MAX_FUNCTION_ARG=1000",
+            "MAX_LENGTH=1000000000",
+            "MAX_LIKE_PATTERN_LENGTH=50000",
+            "MAX_MMAP_SIZE=0x7fff0000",
+            "MAX_PAGE_COUNT=0xfffffffe",
+            "MAX_PAGE_SIZE=65536",
+            "MAX_SCHEMA=10000000",
+            "MAX_SQL_LENGTH=1000000000",
+            "MAX_TRIGGER_DEPTH=1000",
+            "MAX_VARIABLE_NUMBER=32766",
+            "MAX_VDBE_OP=250000000",
+            "MAX_WORKER_THREADS=8",
+            "MUTEX_W32",
+            "SYSTEM_MALLOC",
+            "TEMP_STORE=1",
+            "THREADSAFE=1"
+          ],
+          "library_sha256": "4a6300cc78a475356ab6bbcbf687321f70e84a3f997dd0e307d89cd85be084a9",
+          "settings": {
+            "page_size": 4096,
+            "journal_mode": "wal",
+            "synchronous": 2,
+            "cache_size": -65536,
+            "mmap_size": 0,
+            "temp_store": 2,
+            "threads": 1,
+            "wal_autocheckpoint": 0
+          },
+          "final_validation": {
+            "restored_full_input_hash": "6E7C3CA6E92491E51F52A76223235C1EFEBEEB9E4275B684A7E8E74DEA401C02",
+            "integrity": "ok",
+            "reopen": true,
+            "final_database_bytes": 52097024
+          }
+        },
+        "sqlite_indexed": {
+          "ingest_seconds": 1.3448655999964103,
+          "index_seconds": 5.870748999994248,
+          "analyze_seconds": 0.5528033000882715,
+          "checkpoint_seconds": 0.6377555000362918,
+          "ready_seconds": 8.406173400115222,
+          "database_bytes": 174632960,
+          "wal_bytes_before_checkpoint": 175672712,
+          "input_hash": "6E7C3CA6E92491E51F52A76223235C1EFEBEEB9E4275B684A7E8E74DEA401C02",
+          "unsupported": {
+            "h2o_q6": "no such function: quantile_cont",
+            "h2o_q9": "no such function: corr"
+          },
+          "sqlite_version": "3.54.0",
+          "source_id": "2026-09-04 14:20:44 4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+          "compile_options": [
+            "ATOMIC_INTRINSICS=0",
+            "COMPILER=msvc-1944",
+            "DEFAULT_AUTOVACUUM",
+            "DEFAULT_CACHE_SIZE=-2000",
+            "DEFAULT_FILE_FORMAT=4",
+            "DEFAULT_JOURNAL_SIZE_LIMIT=-1",
+            "DEFAULT_MMAP_SIZE=0",
+            "DEFAULT_PAGE_SIZE=4096",
+            "DEFAULT_PCACHE_INITSZ=20",
+            "DEFAULT_RECURSIVE_TRIGGERS",
+            "DEFAULT_SECTOR_SIZE=4096",
+            "DEFAULT_SYNCHRONOUS=2",
+            "DEFAULT_WAL_AUTOCHECKPOINT=1000",
+            "DEFAULT_WAL_SYNCHRONOUS=2",
+            "DEFAULT_WORKER_THREADS=0",
+            "DIRECT_OVERFLOW_READ",
+            "ENABLE_EXPLAIN_COMMENTS",
+            "ENABLE_FTS5",
+            "ENABLE_MATH_FUNCTIONS",
+            "ENABLE_RTREE",
+            "MALLOC_SOFT_LIMIT=1024",
+            "MAX_ATTACHED=10",
+            "MAX_COLUMN=2000",
+            "MAX_COMPOUND_SELECT=500",
+            "MAX_DEFAULT_PAGE_SIZE=8192",
+            "MAX_EXPR_DEPTH=1000",
+            "MAX_FUNCTION_ARG=1000",
+            "MAX_LENGTH=1000000000",
+            "MAX_LIKE_PATTERN_LENGTH=50000",
+            "MAX_MMAP_SIZE=0x7fff0000",
+            "MAX_PAGE_COUNT=0xfffffffe",
+            "MAX_PAGE_SIZE=65536",
+            "MAX_SCHEMA=10000000",
+            "MAX_SQL_LENGTH=1000000000",
+            "MAX_TRIGGER_DEPTH=1000",
+            "MAX_VARIABLE_NUMBER=32766",
+            "MAX_VDBE_OP=250000000",
+            "MAX_WORKER_THREADS=8",
+            "MUTEX_W32",
+            "SYSTEM_MALLOC",
+            "TEMP_STORE=1",
+            "THREADSAFE=1"
+          ],
+          "library_sha256": "4a6300cc78a475356ab6bbcbf687321f70e84a3f997dd0e307d89cd85be084a9",
+          "settings": {
+            "page_size": 4096,
+            "journal_mode": "wal",
+            "synchronous": 2,
+            "cache_size": -65536,
+            "mmap_size": 0,
+            "temp_store": 2,
+            "threads": 1,
+            "wal_autocheckpoint": 0
+          },
+          "final_validation": {
+            "restored_full_input_hash": "6E7C3CA6E92491E51F52A76223235C1EFEBEEB9E4275B684A7E8E74DEA401C02",
+            "integrity": "ok",
+            "reopen": true,
+            "final_database_bytes": 175046656
+          }
+        },
+        "sqlnew_columnar": {
+          "ingest_seconds": 2.2507580999517813,
+          "index_seconds": 0.0,
+          "analyze_seconds": 0.003388199955224991,
+          "checkpoint_seconds": 0.10100160003639758,
+          "ready_seconds": 2.355147899943404,
+          "database_bytes": 24829952,
+          "wal_bytes_before_checkpoint": 25008432,
+          "input_hash": "6E7C3CA6E92491E51F52A76223235C1EFEBEEB9E4275B684A7E8E74DEA401C02",
+          "unsupported": {
+            "h2o_q6": "no such function: quantile_cont",
+            "h2o_q9": "no such function: corr"
+          },
+          "sqlite_version": "3.54.0",
+          "source_id": "2026-09-04 14:20:44 4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+          "compile_options": [
+            "ATOMIC_INTRINSICS=0",
+            "COMPILER=msvc-1944",
+            "DEFAULT_AUTOVACUUM",
+            "DEFAULT_CACHE_SIZE=-2000",
+            "DEFAULT_FILE_FORMAT=4",
+            "DEFAULT_JOURNAL_SIZE_LIMIT=-1",
+            "DEFAULT_MMAP_SIZE=0",
+            "DEFAULT_PAGE_SIZE=4096",
+            "DEFAULT_PCACHE_INITSZ=20",
+            "DEFAULT_RECURSIVE_TRIGGERS",
+            "DEFAULT_SECTOR_SIZE=4096",
+            "DEFAULT_SYNCHRONOUS=2",
+            "DEFAULT_WAL_AUTOCHECKPOINT=1000",
+            "DEFAULT_WAL_SYNCHRONOUS=2",
+            "DEFAULT_WORKER_THREADS=0",
+            "DIRECT_OVERFLOW_READ",
+            "ENABLE_EXPLAIN_COMMENTS",
+            "ENABLE_FTS5",
+            "ENABLE_MATH_FUNCTIONS",
+            "ENABLE_RTREE",
+            "EXTRA_INIT=sqlnew_bootstrap",
+            "MALLOC_SOFT_LIMIT=1024",
+            "MAX_ATTACHED=10",
+            "MAX_COLUMN=2000",
+            "MAX_COMPOUND_SELECT=500",
+            "MAX_DEFAULT_PAGE_SIZE=8192",
+            "MAX_EXPR_DEPTH=1000",
+            "MAX_FUNCTION_ARG=1000",
+            "MAX_LENGTH=1000000000",
+            "MAX_LIKE_PATTERN_LENGTH=50000",
+            "MAX_MMAP_SIZE=0x7fff0000",
+            "MAX_PAGE_COUNT=0xfffffffe",
+            "MAX_PAGE_SIZE=65536",
+            "MAX_SCHEMA=10000000",
+            "MAX_SQL_LENGTH=1000000000",
+            "MAX_TRIGGER_DEPTH=1000",
+            "MAX_VARIABLE_NUMBER=32766",
+            "MAX_VDBE_OP=250000000",
+            "MAX_WORKER_THREADS=8",
+            "MUTEX_W32",
+            "SYSTEM_MALLOC",
+            "TEMP_STORE=1",
+            "THREADSAFE=1"
+          ],
+          "library_sha256": "b3f92a982913f3982236798c7e10c06dcbef7d31671d16abad407797f68e7853",
+          "settings": {
+            "page_size": 4096,
+            "journal_mode": "wal",
+            "synchronous": 2,
+            "cache_size": -65536,
+            "mmap_size": 0,
+            "temp_store": 2,
+            "threads": 1,
+            "wal_autocheckpoint": 0
+          },
+          "final_validation": {
+            "restored_full_input_hash": "6E7C3CA6E92491E51F52A76223235C1EFEBEEB9E4275B684A7E8E74DEA401C02",
+            "integrity": "ok",
+            "reopen": true,
+            "final_database_bytes": 24829952
+          }
+        }
+      },
+      "queries": {
+        "h2o_q1": {
+          "sql": "SELECT id1,sum(v1) AS v1 FROM t GROUP BY id1 ORDER BY id1",
+          "source": "H2O.ai db-benchmark groupby (adapted)",
+          "sample_orders": [
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 809.6556999953464,
+              "q1_ms": 797.6065999246202,
+              "q3_ms": 862.5398250005674,
+              "samples_ms": [
+                800.8453999646008,
+                928.6326000001281,
+                722.948299953714,
+                877.2310999920592,
+                796.5269999112934,
+                818.4660000260919
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 100,
+              "result_hash": "6A02C0B33D905B1C8EDE298E47A2D3051234281C5872B488E8E766B5635FC2CE",
+              "plan": [
+                [
+                  7,
+                  0,
+                  215,
+                  "SCAN t"
+                ],
+                [
+                  9,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 69.10660001449287,
+              "q1_ms": 67.80719995731488,
+              "q3_ms": 73.2335000357125,
+              "samples_ms": [
+                66.78190000820905,
+                86.30039996933192,
+                68.11290001496673,
+                67.7052999380976,
+                74.27790004294366,
+                70.10030001401901
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 100,
+              "result_hash": "6A02C0B33D905B1C8EDE298E47A2D3051234281C5872B488E8E766B5635FC2CE",
+              "plan": [
+                [
+                  7,
+                  0,
+                  212,
+                  "SCAN t USING COVERING INDEX tuned_id12"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 937.6268499763682,
+              "q1_ms": 889.5299249852542,
+              "q3_ms": 1024.869725049939,
+              "samples_ms": [
+                980.2025000099093,
+                1076.7557000508532,
+                812.7409999724478,
+                1039.7588000632823,
+                895.0511999428272,
+                887.6894999993965
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 1824031,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 1824031,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 1824031,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 1824031,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 1824031,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 1824031,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 100,
+              "result_hash": "6A02C0B33D905B1C8EDE298E47A2D3051234281C5872B488E8E766B5635FC2CE",
+              "plan": [
+                [
+                  7,
+                  0,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            }
+          }
+        },
+        "h2o_q2": {
+          "sql": "SELECT id1,id2,sum(v1) AS v1 FROM t GROUP BY id1,id2 ORDER BY id1,id2",
+          "source": "H2O.ai db-benchmark groupby (adapted)",
+          "sample_orders": [
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 1193.5435499763116,
+              "q1_ms": 1145.4029500018805,
+              "q3_ms": 1211.7818749684375,
+              "samples_ms": [
+                1133.744699996896,
+                1206.7093999357894,
+                1180.3777000168338,
+                1213.4726999793202,
+                1218.1828999891877,
+                1095.2031000051647
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 10000,
+              "result_hash": "23D343D47DD1FEF5D3D1BCB7734FDE928700E0966E4CFE27058E7F406026603F",
+              "plan": [
+                [
+                  7,
+                  0,
+                  215,
+                  "SCAN t"
+                ],
+                [
+                  9,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 90.6103000161238,
+              "q1_ms": 89.46837499388494,
+              "q3_ms": 91.6587000247091,
+              "samples_ms": [
+                91.68850001879036,
+                104.94230000767857,
+                89.40739999525249,
+                89.65129998978227,
+                87.97820005565882,
+                91.56930004246533
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 10000,
+              "result_hash": "23D343D47DD1FEF5D3D1BCB7734FDE928700E0966E4CFE27058E7F406026603F",
+              "plan": [
+                [
+                  7,
+                  0,
+                  212,
+                  "SCAN t USING COVERING INDEX tuned_id12"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 1406.4719500020146,
+              "q1_ms": 1325.202475010883,
+              "q3_ms": 1453.1928999931552,
+              "samples_ms": [
+                1453.5069999983534,
+                1313.3722000056878,
+                1295.0771999312565,
+                1452.2505999775603,
+                1360.693300026469,
+                1491.4162000641227
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 3228683,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 3228683,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 3228683,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 3228683,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 3228683,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 3228683,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 10000,
+              "result_hash": "23D343D47DD1FEF5D3D1BCB7734FDE928700E0966E4CFE27058E7F406026603F",
+              "plan": [
+                [
+                  7,
+                  0,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            }
+          }
+        },
+        "h2o_q3": {
+          "sql": "SELECT id3,sum(v1) AS v1,avg(v3) AS v3 FROM t GROUP BY id3 ORDER BY id3",
+          "source": "H2O.ai db-benchmark groupby (adapted)",
+          "sample_orders": [
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 963.1258500157855,
+              "q1_ms": 927.9288249963429,
+              "q3_ms": 1013.1775999907404,
+              "samples_ms": [
+                1065.861999988556,
+                849.9068000819534,
+                925.3291999921203,
+                935.7277000090107,
+                990.5240000225604,
+                1020.7287999801338
+              ],
+              "validated": true,
+              "max_float_abs_error": 6.394884621840902e-14,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 10000,
+              "result_hash": "408EABDAA8DF04AE6D12E59BFA6E0E6CC7E40CC0EB88B0172422293E59E85B6C",
+              "plan": [
+                [
+                  7,
+                  0,
+                  215,
+                  "SCAN t"
+                ],
+                [
+                  9,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 92.50274999067187,
+              "q1_ms": 91.99372498551384,
+              "q3_ms": 92.70285000093281,
+              "samples_ms": [
+                91.65020007640123,
+                92.32739999424666,
+                92.67809998709708,
+                113.35510003846139,
+                92.71110000554472,
+                91.8824999826029
+              ],
+              "validated": true,
+              "max_float_abs_error": 6.394884621840902e-14,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 10000,
+              "result_hash": "408EABDAA8DF04AE6D12E59BFA6E0E6CC7E40CC0EB88B0172422293E59E85B6C",
+              "plan": [
+                [
+                  7,
+                  0,
+                  212,
+                  "SCAN t USING COVERING INDEX tuned_id3"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 1062.4237500014715,
+              "q1_ms": 1032.334824994905,
+              "q3_ms": 1120.799750002334,
+              "samples_ms": [
+                1132.0801000110805,
+                1030.483499984257,
+                1145.4025999410078,
+                1037.888800026849,
+                955.890899989754,
+                1086.958699976094
+              ],
+              "validated": true,
+              "max_float_abs_error": 6.394884621840902e-14,
+              "work_per_sample": [
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 14002526,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 14002526,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 14002526,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 14002526,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 14002526,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 14002526,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 10000,
+              "result_hash": "408EABDAA8DF04AE6D12E59BFA6E0E6CC7E40CC0EB88B0172422293E59E85B6C",
+              "plan": [
+                [
+                  7,
+                  0,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            }
+          }
+        },
+        "h2o_q4": {
+          "sql": "SELECT id4,avg(v1) AS v1,avg(v2) AS v2,avg(v3) AS v3 FROM t GROUP BY id4 ORDER BY id4",
+          "source": "H2O.ai db-benchmark groupby (adapted)",
+          "sample_orders": [
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 793.1012999615632,
+              "q1_ms": 769.2718499747571,
+              "q3_ms": 818.3772750489879,
+              "samples_ms": [
+                786.0476999776438,
+                725.4475000081584,
+                763.6798999737948,
+                911.3964999560267,
+                800.1548999454826,
+                824.4514000834897
+              ],
+              "validated": true,
+              "max_float_abs_error": 3.552713678800501e-13,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 100,
+              "result_hash": "3B4EBAAE9523333A425B16AB4899FB6878B7343C58940A0B8C2CCE78EF5CFFB7",
+              "plan": [
+                [
+                  7,
+                  0,
+                  215,
+                  "SCAN t"
+                ],
+                [
+                  9,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 114.3721499829553,
+              "q1_ms": 109.12742506479844,
+              "q3_ms": 118.41627501416951,
+              "samples_ms": [
+                107.47390007600188,
+                130.35989995114505,
+                119.66960004065186,
+                114.08800003118813,
+                104.81449996586889,
+                114.65629993472248
+              ],
+              "validated": true,
+              "max_float_abs_error": 3.552713678800501e-13,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 100,
+              "result_hash": "3B4EBAAE9523333A425B16AB4899FB6878B7343C58940A0B8C2CCE78EF5CFFB7",
+              "plan": [
+                [
+                  7,
+                  0,
+                  209,
+                  "SCAN t USING COVERING INDEX tuned_id4"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 815.337699954398,
+              "q1_ms": 801.4921500289347,
+              "q3_ms": 898.611649958184,
+              "samples_ms": [
+                924.897399963811,
+                819.7543999413028,
+                740.3295999392867,
+                810.9209999674931,
+                798.3492000494152,
+                928.8131000939757
+              ],
+              "validated": true,
+              "max_float_abs_error": 3.552713678800501e-13,
+              "work_per_sample": [
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 9888883,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 9888883,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 9888883,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 9888883,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 9888883,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 9888883,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 100,
+              "result_hash": "3B4EBAAE9523333A425B16AB4899FB6878B7343C58940A0B8C2CCE78EF5CFFB7",
+              "plan": [
+                [
+                  7,
+                  0,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            }
+          }
+        },
+        "h2o_q5": {
+          "sql": "SELECT id6,sum(v1) AS v1,sum(v2) AS v2,sum(v3) AS v3 FROM t GROUP BY id6 ORDER BY id6",
+          "source": "H2O.ai db-benchmark groupby (adapted)",
+          "sample_orders": [
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 932.5162500026636,
+              "q1_ms": 869.5137750182766,
+              "q3_ms": 983.4911249927245,
+              "samples_ms": [
+                887.5398000236601,
+                1096.277100034058,
+                985.4905999964103,
+                977.4926999816671,
+                855.2434000885114,
+                863.5051000164822
+              ],
+              "validated": true,
+              "max_float_abs_error": 7.275957614183426e-12,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 10000,
+              "result_hash": "49A29D5B6BA44E485841803C2D1F46470A4E91EF32B934AEE0CE64EFCA795E28",
+              "plan": [
+                [
+                  7,
+                  0,
+                  215,
+                  "SCAN t"
+                ],
+                [
+                  9,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 113.51625004317611,
+              "q1_ms": 111.8097750004381,
+              "q3_ms": 113.69542498141527,
+              "samples_ms": [
+                109.54580001998693,
+                113.6877000099048,
+                113.98269992787391,
+                113.34480007644743,
+                113.69799997191876,
+                111.29809997510165
+              ],
+              "validated": true,
+              "max_float_abs_error": 7.275957614183426e-12,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 10000,
+              "result_hash": "49A29D5B6BA44E485841803C2D1F46470A4E91EF32B934AEE0CE64EFCA795E28",
+              "plan": [
+                [
+                  7,
+                  0,
+                  209,
+                  "SCAN t USING COVERING INDEX tuned_id6"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 897.2917500068434,
+              "q1_ms": 861.3082249648869,
+              "q3_ms": 956.9822500925511,
+              "samples_ms": [
+                966.1339001031592,
+                865.05619995296,
+                851.9805000396445,
+                860.0588999688625,
+                929.5273000607267,
+                1072.1085000550374
+              ],
+              "validated": true,
+              "max_float_abs_error": 7.275957614183426e-12,
+              "work_per_sample": [
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 10763904,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 10763904,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 10763904,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 10763904,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 10763904,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 3908,
+                  "compressed_bytes_read": 10763904,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 10000,
+              "result_hash": "49A29D5B6BA44E485841803C2D1F46470A4E91EF32B934AEE0CE64EFCA795E28",
+              "plan": [
+                [
+                  7,
+                  0,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            }
+          }
+        },
+        "h2o_q7": {
+          "sql": "SELECT id3,max(v1)-min(v2) AS value FROM t GROUP BY id3 ORDER BY id3",
+          "source": "H2O.ai db-benchmark groupby (adapted)",
+          "sample_orders": [
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 960.2328500477597,
+              "q1_ms": 883.3492500416469,
+              "q3_ms": 985.504075040808,
+              "samples_ms": [
+                975.119800074026,
+                862.6837000483647,
+                841.0370999481529,
+                1055.4094000253826,
+                945.3459000214934,
+                988.9655000297353
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 10000,
+              "result_hash": "5ED940EB244CFFB8854F345E81AA604862C6963DF480BE828CE98E275E0FB476",
+              "plan": [
+                [
+                  7,
+                  0,
+                  215,
+                  "SCAN t"
+                ],
+                [
+                  9,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 98.54439995251596,
+              "q1_ms": 96.49507506401278,
+              "q3_ms": 100.36699994816445,
+              "samples_ms": [
+                100.90009996201843,
+                94.23650009557605,
+                98.32109999842942,
+                103.5434000659734,
+                98.7676999066025,
+                95.8864000858739
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 10000,
+              "result_hash": "5ED940EB244CFFB8854F345E81AA604862C6963DF480BE828CE98E275E0FB476",
+              "plan": [
+                [
+                  7,
+                  0,
+                  212,
+                  "SCAN t USING COVERING INDEX tuned_id3"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 1053.0108999810182,
+              "q1_ms": 1037.3994749679696,
+              "q3_ms": 1093.5800000443123,
+              "samples_ms": [
+                1059.4277000054717,
+                1046.5940999565646,
+                1159.776599961333,
+                947.2175999544561,
+                1104.9641000572592,
+                1034.3345999717712
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 6544499,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 6544499,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 6544499,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 6544499,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 6544499,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 2931,
+                  "compressed_bytes_read": 6544499,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 10000,
+              "result_hash": "5ED940EB244CFFB8854F345E81AA604862C6963DF480BE828CE98E275E0FB476",
+              "plan": [
+                [
+                  7,
+                  0,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            }
+          }
+        },
+        "h2o_q8": {
+          "sql": "SELECT id6,v3 FROM (SELECT id6,v3,row_number() OVER (PARTITION BY id6 ORDER BY v3 DESC) AS rank FROM t WHERE v3 IS NOT NULL) WHERE rank<=2 ORDER BY id6,v3 DESC",
+          "source": "H2O.ai db-benchmark groupby (adapted)",
+          "sample_orders": [
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 1353.2575499266386,
+              "q1_ms": 1326.5465250296984,
+              "q3_ms": 1371.4323000458535,
+              "samples_ms": [
+                1367.6168998936191,
+                1254.058700054884,
+                1338.898199959658,
+                1372.7041000965983,
+                1322.4293000530452,
+                1428.5201999591663
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 20000,
+              "result_hash": "83A7D0695A12798DB51EB8884AEDDF1ECFB36215A56826DA6F7BFE7A4F8E360F",
+              "plan": [
+                [
+                  2,
+                  0,
+                  0,
+                  "CO-ROUTINE (subquery-1)"
+                ],
+                [
+                  5,
+                  2,
+                  0,
+                  "CO-ROUTINE (subquery-3)"
+                ],
+                [
+                  8,
+                  5,
+                  215,
+                  "SCAN t"
+                ],
+                [
+                  22,
+                  5,
+                  0,
+                  "USE TEMP B-TREE FOR ORDER BY"
+                ],
+                [
+                  39,
+                  2,
+                  214,
+                  "SCAN (subquery-3)"
+                ],
+                [
+                  87,
+                  0,
+                  214,
+                  "SCAN (subquery-1)"
+                ],
+                [
+                  98,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR ORDER BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 453.0911500332877,
+              "q1_ms": 444.1688249935396,
+              "q3_ms": 457.1937500440981,
+              "samples_ms": [
+                441.243699984625,
+                476.453100098297,
+                452.94420002028346,
+                458.51230004336685,
+                453.23810004629195,
+                440.51059999037534
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 20000,
+              "result_hash": "83A7D0695A12798DB51EB8884AEDDF1ECFB36215A56826DA6F7BFE7A4F8E360F",
+              "plan": [
+                [
+                  2,
+                  0,
+                  0,
+                  "CO-ROUTINE (subquery-1)"
+                ],
+                [
+                  5,
+                  2,
+                  0,
+                  "CO-ROUTINE (subquery-3)"
+                ],
+                [
+                  8,
+                  5,
+                  208,
+                  "SCAN t USING COVERING INDEX tuned_top2"
+                ],
+                [
+                  28,
+                  2,
+                  214,
+                  "SCAN (subquery-3)"
+                ],
+                [
+                  76,
+                  0,
+                  214,
+                  "SCAN (subquery-1)"
+                ],
+                [
+                  87,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR ORDER BY"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 1364.0237500076182,
+              "q1_ms": 1324.6884499676526,
+              "q3_ms": 1415.1632249122486,
+              "samples_ms": [
+                1347.4775000941008,
+                1317.0920999255031,
+                1426.6942999092862,
+                1295.3270999714732,
+                1458.4652000339702,
+                1380.5699999211356
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 9799944,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 9799944,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 9799944,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 9799944,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 9799944,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 1954,
+                  "compressed_bytes_read": 9799944,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 20000,
+              "result_hash": "83A7D0695A12798DB51EB8884AEDDF1ECFB36215A56826DA6F7BFE7A4F8E360F",
+              "plan": [
+                [
+                  2,
+                  0,
+                  0,
+                  "CO-ROUTINE (subquery-1)"
+                ],
+                [
+                  5,
+                  2,
+                  0,
+                  "CO-ROUTINE (subquery-3)"
+                ],
+                [
+                  8,
+                  5,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  21,
+                  5,
+                  0,
+                  "USE TEMP B-TREE FOR ORDER BY"
+                ],
+                [
+                  38,
+                  2,
+                  215,
+                  "SCAN (subquery-3)"
+                ],
+                [
+                  86,
+                  0,
+                  215,
+                  "SCAN (subquery-1)"
+                ],
+                [
+                  97,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR ORDER BY"
+                ]
+              ]
+            }
+          }
+        },
+        "h2o_q10": {
+          "sql": "SELECT id1,id2,id3,id4,id5,id6,sum(v3) AS v3,count(*) AS n FROM t GROUP BY id1,id2,id3,id4,id5,id6 ORDER BY id1,id2,id3,id4,id5,id6",
+          "source": "H2O.ai db-benchmark groupby (adapted)",
+          "sample_orders": [
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 2052.186450047884,
+              "q1_ms": 1968.1540250312537,
+              "q3_ms": 2132.3752000462264,
+              "samples_ms": [
+                1942.2300000442192,
+                2157.018000027165,
+                2058.446800103411,
+                2045.9260999923572,
+                2159.822399960831,
+                1919.7700000368059
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 1000000,
+              "result_hash": "1F4564383D9901212BC1DCAD5426C6D91879A89C08DF8A2183CA971E58A37CD7",
+              "plan": [
+                [
+                  7,
+                  0,
+                  215,
+                  "SCAN t"
+                ],
+                [
+                  9,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 2074.509850004688,
+              "q1_ms": 2044.658074999461,
+              "q3_ms": 2101.908225013176,
+              "samples_ms": [
+                2079.3663000222296,
+                2036.3263000035658,
+                2109.422200010158,
+                2069.6533999871463,
+                1973.0874000815675,
+                2124.2201999993995
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 1000000,
+              "result_hash": "1F4564383D9901212BC1DCAD5426C6D91879A89C08DF8A2183CA971E58A37CD7",
+              "plan": [
+                [
+                  8,
+                  0,
+                  224,
+                  "SCAN t USING INDEX tuned_id12"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 2520.9117499762215,
+              "q1_ms": 2498.870849987725,
+              "q3_ms": 2571.7991500278004,
+              "samples_ms": [
+                2498.317699995823,
+                2541.2931999890134,
+                2581.9678000407293,
+                2402.457599993795,
+                2500.5302999634296,
+                2590.4976999154314
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 6839,
+                  "compressed_bytes_read": 20034029,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 6839,
+                  "compressed_bytes_read": 20034029,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 6839,
+                  "compressed_bytes_read": 20034029,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 6839,
+                  "compressed_bytes_read": 20034029,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 6839,
+                  "compressed_bytes_read": 20034029,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 977,
+                  "columns_decoded": 6839,
+                  "compressed_bytes_read": 20034029,
+                  "rows_emitted": 1000000,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 1000000,
+              "result_hash": "1F4564383D9901212BC1DCAD5426C6D91879A89C08DF8A2183CA971E58A37CD7",
+              "plan": [
+                [
+                  7,
+                  0,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            }
+          }
+        },
+        "summary": {
+          "sql": "SELECT count(*) AS n,sum(v1) AS s,min(id4) AS lo,max(id4) AS hi FROM t",
+          "source": "SQLNEW diagnostic",
+          "sample_orders": [
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 81.86910004587844,
+              "q1_ms": 81.58234998700209,
+              "q3_ms": 83.65052496083081,
+              "samples_ms": [
+                81.57879998907447,
+                82.14520011097193,
+                81.59299998078495,
+                78.5959999775514,
+                84.15229991078377,
+                112.92210000101477
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 1,
+              "result_hash": "8481AAD208E00F93673C5BFEB810B398EB8C08485A49F4E6A8432817A5DFDCA3",
+              "plan": [
+                [
+                  3,
+                  0,
+                  215,
+                  "SCAN t"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 69.69855003990233,
+              "q1_ms": 69.13712504319847,
+              "q3_ms": 90.63365001929924,
+              "samples_ms": [
+                70.00040006823838,
+                65.73180004488677,
+                69.39670001156628,
+                69.05060005374253,
+                97.51140000298619,
+                118.92260005697608
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 1,
+              "result_hash": "8481AAD208E00F93673C5BFEB810B398EB8C08485A49F4E6A8432817A5DFDCA3",
+              "plan": [
+                [
+                  3,
+                  0,
+                  209,
+                  "SCAN t USING COVERING INDEX tuned_id4"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 2.2569000138901174,
+              "q1_ms": 2.0529500325210392,
+              "q3_ms": 3.0990250525064766,
+              "samples_ms": [
+                1.993600046262145,
+                2.0948000019416213,
+                2.4190000258386135,
+                2.0390000427141786,
+                3.3257000613957644,
+                3.9752000011503696
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 3908,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 3908,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 3908,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 3908,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 3908,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 3908,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 1,
+              "result_hash": "8481AAD208E00F93673C5BFEB810B398EB8C08485A49F4E6A8432817A5DFDCA3",
+              "plan": [
+                [
+                  21,
+                  0,
+                  0,
+                  "COLUMNAR SUMMARY t"
+                ]
+              ]
+            }
+          }
+        },
+        "point_reads_100": {
+          "sql": null,
+          "source": "SQLNEW access/update diagnostic",
+          "sample_orders": [
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 1.4189499779604375,
+              "q1_ms": 1.3752250233665109,
+              "q3_ms": 1.4339499757625163,
+              "samples_ms": [
+                1.406499999575317,
+                1.7180000431835651,
+                1.3648000312969089,
+                1.3200999237596989,
+                1.4347999822348356,
+                1.4313999563455582
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "operations": 100
+            },
+            "sqlite_indexed": {
+              "median_ms": 1.5665499959141016,
+              "q1_ms": 1.4877750363666564,
+              "q3_ms": 1.6415749269071966,
+              "samples_ms": [
+                1.4492999762296677,
+                1.6070000128820539,
+                1.4750000555068254,
+                1.5260999789461493,
+                2.065200009383261,
+                1.653099898248911
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "operations": 100
+            },
+            "sqlnew_columnar": {
+              "median_ms": 19.107799977064133,
+              "q1_ms": 19.02252502623014,
+              "q3_ms": 19.165849982528016,
+              "samples_ms": [
+                19.112300011329353,
+                19.18369997292757,
+                20.083900075405836,
+                18.940499983727932,
+                18.99560005404055,
+                19.103299942798913
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 1006167,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 1006167,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 1006167,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 1006167,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 1006167,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 1006167,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "operations": 100
+            }
+          }
+        },
+        "random_updates_100": {
+          "sql": null,
+          "source": "SQLNEW access/update diagnostic",
+          "sample_orders": [
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 2.516400010790676,
+              "q1_ms": 2.2956000466365367,
+              "q3_ms": 3.208649985026568,
+              "samples_ms": [
+                2.2714000660926104,
+                2.664600033313036,
+                2.368199988268316,
+                2.1587000228464603,
+                3.552099922671914,
+                3.389999968931079
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "operations": 100
+            },
+            "sqlite_indexed": {
+              "median_ms": 14.568350045010448,
+              "q1_ms": 13.425050012301654,
+              "q3_ms": 18.196849967353046,
+              "samples_ms": [
+                15.112100052647293,
+                12.21289997920394,
+                14.024600037373602,
+                13.225200003944337,
+                21.48940006736666,
+                19.22509993892163
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "operations": 100
+            },
+            "sqlnew_columnar": {
+              "median_ms": 153.21464999578893,
+              "q1_ms": 148.74407491879538,
+              "q3_ms": 174.08322499250062,
+              "samples_ms": [
+                147.85929990466684,
+                184.0054999338463,
+                180.43399997986853,
+                155.03090003039688,
+                151.39839996118098,
+                144.15619999635965
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 1800,
+                  "compressed_bytes_read": 4299588,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 1800,
+                  "compressed_bytes_read": 4299588,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 1800,
+                  "compressed_bytes_read": 4299588,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 1800,
+                  "compressed_bytes_read": 4299588,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 1800,
+                  "compressed_bytes_read": 4299588,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 1800,
+                  "compressed_bytes_read": 4299588,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                }
+              ],
+              "operations": 100
+            }
+          }
+        }
+      },
+      "load_order": [
+        "sqlite",
+        "sqlite_indexed",
+        "sqlnew_columnar"
+      ]
+    },
+    {
+      "description": "Complete pinned GitHub taxi fixture: April 2021 NYC yellow taxi, all 18 columns and 2,171,187 rows in source order.",
+      "raw_csv_sha256": "09724fada398032e6d5620dc062f60c48feb277657a8e6bf9c9fddf9a44457e3",
+      "adaptations": [
+        "Timestamps become integer Unix seconds; numeric and text values and NULLs retained; signed zero canonicalized.",
+        "Separate persistent load and warm query phases instead of the source's mixed CSV-import/end-to-end timings."
+      ],
+      "unsupported": {},
+      "indexes": [
+        "CREATE INDEX tuned_passengers ON t(passenger_count,total_amount)",
+        "CREATE INDEX tuned_time ON t(tpep_pickup_datetime,total_amount)",
+        "CREATE INDEX tuned_payment ON t(payment_type,fare_amount,trip_distance)"
+      ],
+      "point_columns": [
+        "passenger_count",
+        "total_amount",
+        "tpep_pickup_datetime"
+      ],
+      "update_column": "fare_amount",
+      "name": "taxi",
+      "rows": 2171187,
+      "schema": [
+        [
+          "VendorID",
+          "INTEGER"
+        ],
+        [
+          "tpep_pickup_datetime",
+          "INTEGER"
+        ],
+        [
+          "tpep_dropoff_datetime",
+          "INTEGER"
+        ],
+        [
+          "passenger_count",
+          "INTEGER"
+        ],
+        [
+          "trip_distance",
+          "REAL"
+        ],
+        [
+          "RatecodeID",
+          "INTEGER"
+        ],
+        [
+          "store_and_fwd_flag",
+          "TEXT"
+        ],
+        [
+          "PULocationID",
+          "INTEGER"
+        ],
+        [
+          "DOLocationID",
+          "INTEGER"
+        ],
+        [
+          "payment_type",
+          "INTEGER"
+        ],
+        [
+          "fare_amount",
+          "REAL"
+        ],
+        [
+          "extra",
+          "REAL"
+        ],
+        [
+          "mta_tax",
+          "REAL"
+        ],
+        [
+          "tip_amount",
+          "REAL"
+        ],
+        [
+          "tolls_amount",
+          "REAL"
+        ],
+        [
+          "improvement_surcharge",
+          "REAL"
+        ],
+        [
+          "total_amount",
+          "REAL"
+        ],
+        [
+          "congestion_surcharge",
+          "REAL"
+        ]
+      ],
+      "null_marker": "\\N",
+      "csv_sha256": "57111c694b9db1a4f445419df3f224b6a5fe1b05f567674ed3c808eea17264e2",
+      "logical_arrow_bytes": 308517966,
+      "input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+      "engines": {
+        "sqlite": {
+          "ingest_seconds": 6.358600699924864,
+          "index_seconds": 0.0,
+          "analyze_seconds": 0.16258909995667636,
+          "checkpoint_seconds": 0.4805799999739975,
+          "ready_seconds": 7.001769799855538,
+          "database_bytes": 197709824,
+          "wal_bytes_before_checkpoint": 198880672,
+          "input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+          "unsupported": {},
+          "sqlite_version": "3.54.0",
+          "source_id": "2026-09-04 14:20:44 4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+          "compile_options": [
+            "ATOMIC_INTRINSICS=0",
+            "COMPILER=msvc-1944",
+            "DEFAULT_AUTOVACUUM",
+            "DEFAULT_CACHE_SIZE=-2000",
+            "DEFAULT_FILE_FORMAT=4",
+            "DEFAULT_JOURNAL_SIZE_LIMIT=-1",
+            "DEFAULT_MMAP_SIZE=0",
+            "DEFAULT_PAGE_SIZE=4096",
+            "DEFAULT_PCACHE_INITSZ=20",
+            "DEFAULT_RECURSIVE_TRIGGERS",
+            "DEFAULT_SECTOR_SIZE=4096",
+            "DEFAULT_SYNCHRONOUS=2",
+            "DEFAULT_WAL_AUTOCHECKPOINT=1000",
+            "DEFAULT_WAL_SYNCHRONOUS=2",
+            "DEFAULT_WORKER_THREADS=0",
+            "DIRECT_OVERFLOW_READ",
+            "ENABLE_EXPLAIN_COMMENTS",
+            "ENABLE_FTS5",
+            "ENABLE_MATH_FUNCTIONS",
+            "ENABLE_RTREE",
+            "MALLOC_SOFT_LIMIT=1024",
+            "MAX_ATTACHED=10",
+            "MAX_COLUMN=2000",
+            "MAX_COMPOUND_SELECT=500",
+            "MAX_DEFAULT_PAGE_SIZE=8192",
+            "MAX_EXPR_DEPTH=1000",
+            "MAX_FUNCTION_ARG=1000",
+            "MAX_LENGTH=1000000000",
+            "MAX_LIKE_PATTERN_LENGTH=50000",
+            "MAX_MMAP_SIZE=0x7fff0000",
+            "MAX_PAGE_COUNT=0xfffffffe",
+            "MAX_PAGE_SIZE=65536",
+            "MAX_SCHEMA=10000000",
+            "MAX_SQL_LENGTH=1000000000",
+            "MAX_TRIGGER_DEPTH=1000",
+            "MAX_VARIABLE_NUMBER=32766",
+            "MAX_VDBE_OP=250000000",
+            "MAX_WORKER_THREADS=8",
+            "MUTEX_W32",
+            "SYSTEM_MALLOC",
+            "TEMP_STORE=1",
+            "THREADSAFE=1"
+          ],
+          "library_sha256": "4a6300cc78a475356ab6bbcbf687321f70e84a3f997dd0e307d89cd85be084a9",
+          "settings": {
+            "page_size": 4096,
+            "journal_mode": "wal",
+            "synchronous": 2,
+            "cache_size": -65536,
+            "mmap_size": 0,
+            "temp_store": 2,
+            "threads": 1,
+            "wal_autocheckpoint": 0
+          },
+          "final_validation": {
+            "restored_full_input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+            "integrity": "ok",
+            "reopen": true,
+            "final_database_bytes": 197709824
+          }
+        },
+        "sqlite_indexed": {
+          "ingest_seconds": 6.484926100005396,
+          "index_seconds": 8.083339700009674,
+          "analyze_seconds": 0.6205081000225618,
+          "checkpoint_seconds": 0.8870545000536367,
+          "ready_seconds": 16.075828400091268,
+          "database_bytes": 335454208,
+          "wal_bytes_before_checkpoint": 337436272,
+          "input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+          "unsupported": {},
+          "sqlite_version": "3.54.0",
+          "source_id": "2026-09-04 14:20:44 4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+          "compile_options": [
+            "ATOMIC_INTRINSICS=0",
+            "COMPILER=msvc-1944",
+            "DEFAULT_AUTOVACUUM",
+            "DEFAULT_CACHE_SIZE=-2000",
+            "DEFAULT_FILE_FORMAT=4",
+            "DEFAULT_JOURNAL_SIZE_LIMIT=-1",
+            "DEFAULT_MMAP_SIZE=0",
+            "DEFAULT_PAGE_SIZE=4096",
+            "DEFAULT_PCACHE_INITSZ=20",
+            "DEFAULT_RECURSIVE_TRIGGERS",
+            "DEFAULT_SECTOR_SIZE=4096",
+            "DEFAULT_SYNCHRONOUS=2",
+            "DEFAULT_WAL_AUTOCHECKPOINT=1000",
+            "DEFAULT_WAL_SYNCHRONOUS=2",
+            "DEFAULT_WORKER_THREADS=0",
+            "DIRECT_OVERFLOW_READ",
+            "ENABLE_EXPLAIN_COMMENTS",
+            "ENABLE_FTS5",
+            "ENABLE_MATH_FUNCTIONS",
+            "ENABLE_RTREE",
+            "MALLOC_SOFT_LIMIT=1024",
+            "MAX_ATTACHED=10",
+            "MAX_COLUMN=2000",
+            "MAX_COMPOUND_SELECT=500",
+            "MAX_DEFAULT_PAGE_SIZE=8192",
+            "MAX_EXPR_DEPTH=1000",
+            "MAX_FUNCTION_ARG=1000",
+            "MAX_LENGTH=1000000000",
+            "MAX_LIKE_PATTERN_LENGTH=50000",
+            "MAX_MMAP_SIZE=0x7fff0000",
+            "MAX_PAGE_COUNT=0xfffffffe",
+            "MAX_PAGE_SIZE=65536",
+            "MAX_SCHEMA=10000000",
+            "MAX_SQL_LENGTH=1000000000",
+            "MAX_TRIGGER_DEPTH=1000",
+            "MAX_VARIABLE_NUMBER=32766",
+            "MAX_VDBE_OP=250000000",
+            "MAX_WORKER_THREADS=8",
+            "MUTEX_W32",
+            "SYSTEM_MALLOC",
+            "TEMP_STORE=1",
+            "THREADSAFE=1"
+          ],
+          "library_sha256": "4a6300cc78a475356ab6bbcbf687321f70e84a3f997dd0e307d89cd85be084a9",
+          "settings": {
+            "page_size": 4096,
+            "journal_mode": "wal",
+            "synchronous": 2,
+            "cache_size": -65536,
+            "mmap_size": 0,
+            "temp_store": 2,
+            "threads": 1,
+            "wal_autocheckpoint": 0
+          },
+          "final_validation": {
+            "restored_full_input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+            "integrity": "ok",
+            "reopen": true,
+            "final_database_bytes": 336023552
+          }
+        },
+        "sqlnew_columnar": {
+          "ingest_seconds": 8.011776100029238,
+          "index_seconds": 0.0,
+          "analyze_seconds": 0.021940499893389642,
+          "checkpoint_seconds": 0.29785119998268783,
+          "ready_seconds": 8.331567799905315,
+          "database_bytes": 74141696,
+          "wal_bytes_before_checkpoint": 74609112,
+          "input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+          "unsupported": {},
+          "sqlite_version": "3.54.0",
+          "source_id": "2026-09-04 14:20:44 4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+          "compile_options": [
+            "ATOMIC_INTRINSICS=0",
+            "COMPILER=msvc-1944",
+            "DEFAULT_AUTOVACUUM",
+            "DEFAULT_CACHE_SIZE=-2000",
+            "DEFAULT_FILE_FORMAT=4",
+            "DEFAULT_JOURNAL_SIZE_LIMIT=-1",
+            "DEFAULT_MMAP_SIZE=0",
+            "DEFAULT_PAGE_SIZE=4096",
+            "DEFAULT_PCACHE_INITSZ=20",
+            "DEFAULT_RECURSIVE_TRIGGERS",
+            "DEFAULT_SECTOR_SIZE=4096",
+            "DEFAULT_SYNCHRONOUS=2",
+            "DEFAULT_WAL_AUTOCHECKPOINT=1000",
+            "DEFAULT_WAL_SYNCHRONOUS=2",
+            "DEFAULT_WORKER_THREADS=0",
+            "DIRECT_OVERFLOW_READ",
+            "ENABLE_EXPLAIN_COMMENTS",
+            "ENABLE_FTS5",
+            "ENABLE_MATH_FUNCTIONS",
+            "ENABLE_RTREE",
+            "EXTRA_INIT=sqlnew_bootstrap",
+            "MALLOC_SOFT_LIMIT=1024",
+            "MAX_ATTACHED=10",
+            "MAX_COLUMN=2000",
+            "MAX_COMPOUND_SELECT=500",
+            "MAX_DEFAULT_PAGE_SIZE=8192",
+            "MAX_EXPR_DEPTH=1000",
+            "MAX_FUNCTION_ARG=1000",
+            "MAX_LENGTH=1000000000",
+            "MAX_LIKE_PATTERN_LENGTH=50000",
+            "MAX_MMAP_SIZE=0x7fff0000",
+            "MAX_PAGE_COUNT=0xfffffffe",
+            "MAX_PAGE_SIZE=65536",
+            "MAX_SCHEMA=10000000",
+            "MAX_SQL_LENGTH=1000000000",
+            "MAX_TRIGGER_DEPTH=1000",
+            "MAX_VARIABLE_NUMBER=32766",
+            "MAX_VDBE_OP=250000000",
+            "MAX_WORKER_THREADS=8",
+            "MUTEX_W32",
+            "SYSTEM_MALLOC",
+            "TEMP_STORE=1",
+            "THREADSAFE=1"
+          ],
+          "library_sha256": "b3f92a982913f3982236798c7e10c06dcbef7d31671d16abad407797f68e7853",
+          "settings": {
+            "page_size": 4096,
+            "journal_mode": "wal",
+            "synchronous": 2,
+            "cache_size": -65536,
+            "mmap_size": 0,
+            "temp_store": 2,
+            "threads": 1,
+            "wal_autocheckpoint": 0
+          },
+          "final_validation": {
+            "restored_full_input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+            "integrity": "ok",
+            "reopen": true,
+            "final_database_bytes": 74145792
+          }
+        }
+      },
+      "queries": {
+        "dsq_taxi_groupby": {
+          "sql": "SELECT passenger_count,count(*) AS n,avg(total_amount) AS avg_total FROM t GROUP BY passenger_count ORDER BY passenger_count",
+          "source": "multiprocessio/dsq scripts/benchmark.sh",
+          "sample_orders": [
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 1529.0932499920018,
+              "q1_ms": 1493.2854500657413,
+              "q3_ms": 1565.08952495642,
+              "samples_ms": [
+                1566.0546999424696,
+                1562.1939999982715,
+                1622.7124999277294,
+                1495.9924999857321,
+                1467.8347000153735,
+                1492.383100092411
+              ],
+              "validated": true,
+              "max_float_abs_error": 2.1895374402447487e-10,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 11,
+              "result_hash": "223869E626EEA63E4276732AD4ADBC3E44B01CD1164D380C51B359EFD7AAF169",
+              "plan": [
+                [
+                  7,
+                  0,
+                  226,
+                  "SCAN t"
+                ],
+                [
+                  9,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 151.00674994755536,
+              "q1_ms": 145.58545005274937,
+              "q3_ms": 159.73344995290972,
+              "samples_ms": [
+                143.92169995699078,
+                144.03010008390993,
+                162.3905999585986,
+                150.25149995926768,
+                166.0612999694422,
+                151.76199993584305
+              ],
+              "validated": true,
+              "max_float_abs_error": 2.1895374402447487e-10,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 11,
+              "result_hash": "223869E626EEA63E4276732AD4ADBC3E44B01CD1164D380C51B359EFD7AAF169",
+              "plan": [
+                [
+                  7,
+                  0,
+                  219,
+                  "SCAN t USING COVERING INDEX tuned_passengers"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 1451.2403999688104,
+              "q1_ms": 1392.58554999833,
+              "q3_ms": 1490.8139000181109,
+              "samples_ms": [
+                1415.4750999296084,
+                1487.0057000080124,
+                1384.9557000212371,
+                1695.2674000058323,
+                1293.6594999628142,
+                1492.083300021477
+              ],
+              "validated": true,
+              "max_float_abs_error": 2.1895374402447487e-10,
+              "work_per_sample": [
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 4242,
+                  "compressed_bytes_read": 10450745,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 4242,
+                  "compressed_bytes_read": 10450745,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 4242,
+                  "compressed_bytes_read": 10450745,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 4242,
+                  "compressed_bytes_read": 10450745,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 4242,
+                  "compressed_bytes_read": 10450745,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 4242,
+                  "compressed_bytes_read": 10450745,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 11,
+              "result_hash": "223869E626EEA63E4276732AD4ADBC3E44B01CD1164D380C51B359EFD7AAF169",
+              "plan": [
+                [
+                  7,
+                  0,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            }
+          }
+        },
+        "summary": {
+          "sql": "SELECT count(*) AS n,sum(passenger_count) AS passengers,min(tpep_pickup_datetime) AS lo,max(tpep_pickup_datetime) AS hi FROM t",
+          "source": "SQLNEW diagnostic",
+          "sample_orders": [
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 319.3879000027664,
+              "q1_ms": 303.33405002602376,
+              "q3_ms": 345.191975007765,
+              "samples_ms": [
+                436.1782999476418,
+                349.4377000024542,
+                296.159700024873,
+                302.3384000407532,
+                306.3209999818355,
+                332.4548000236973
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 1,
+              "result_hash": "BAA1A9522CEB0B9E51D8258A9CE2B509A4D03DFD54461EC02FF36B0E1523F546",
+              "plan": [
+                [
+                  3,
+                  0,
+                  226,
+                  "SCAN t"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 323.44190002186224,
+              "q1_ms": 313.29087499761954,
+              "q3_ms": 333.8030749873724,
+              "samples_ms": [
+                335.27659997344017,
+                366.49990000296384,
+                329.382500029169,
+                304.17939997278154,
+                311.88739999197423,
+                317.50130001455545
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 1,
+              "result_hash": "BAA1A9522CEB0B9E51D8258A9CE2B509A4D03DFD54461EC02FF36B0E1523F546",
+              "plan": [
+                [
+                  3,
+                  0,
+                  226,
+                  "SCAN t"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 4.985650011803955,
+              "q1_ms": 4.877350002061576,
+              "q3_ms": 5.114050087286159,
+              "samples_ms": [
+                5.1351001020520926,
+                9.903699974529445,
+                4.92039998061955,
+                4.659999976865947,
+                4.863000009208918,
+                5.05090004298836
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 8484,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 8484,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 8484,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 8484,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 8484,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 0,
+                  "columns_decoded": 0,
+                  "compressed_bytes_read": 0,
+                  "rows_emitted": 0,
+                  "summary_blocks": 8484,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 1,
+              "result_hash": "BAA1A9522CEB0B9E51D8258A9CE2B509A4D03DFD54461EC02FF36B0E1523F546",
+              "plan": [
+                [
+                  21,
+                  0,
+                  0,
+                  "COLUMNAR SUMMARY t"
+                ]
+              ]
+            }
+          }
+        },
+        "time_range": {
+          "sql": "SELECT count(*) AS n,sum(total_amount) AS total FROM t WHERE tpep_pickup_datetime>=1618488000 AND tpep_pickup_datetime<1618495200",
+          "source": "SQLNEW diagnostic",
+          "sample_orders": [
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 260.8566000126302,
+              "q1_ms": 255.3665000014007,
+              "q3_ms": 279.74042503046803,
+              "samples_ms": [
+                285.4615000542253,
+                297.27390001062304,
+                262.57719995919615,
+                254.10999997984618,
+                246.54560000635684,
+                259.1360000660643
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 1,
+              "result_hash": "BA43EB1BD35D19F89564B6154C09AB5D826361FA8A976EE12CBD84C3E0605A19",
+              "plan": [
+                [
+                  3,
+                  0,
+                  226,
+                  "SCAN t"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 0.8024999988265336,
+              "q1_ms": 0.7949499995447695,
+              "q3_ms": 0.8395999611821026,
+              "samples_ms": [
+                0.8495999500155449,
+                0.7466999813914299,
+                0.9021000005304813,
+                0.7954000029712915,
+                0.8095999946817756,
+                0.7947999984025955
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 1,
+              "result_hash": "BA43EB1BD35D19F89564B6154C09AB5D826361FA8A976EE12CBD84C3E0605A19",
+              "plan": [
+                [
+                  3,
+                  0,
+                  159,
+                  "SEARCH t USING COVERING INDEX tuned_time (tpep_pickup_datetime>? AND tpep_pickup_datetime<?)"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 6.207949947565794,
+              "q1_ms": 6.101449980633333,
+              "q3_ms": 6.374300020979717,
+              "samples_ms": [
+                6.412100046873093,
+                6.154999951831996,
+                6.2608999432995915,
+                6.910099997185171,
+                5.932200001552701,
+                6.083599990233779
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 76,
+                  "columns_decoded": 110,
+                  "compressed_bytes_read": 343009,
+                  "rows_emitted": 77108,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 76,
+                  "columns_decoded": 110,
+                  "compressed_bytes_read": 343009,
+                  "rows_emitted": 77108,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 76,
+                  "columns_decoded": 110,
+                  "compressed_bytes_read": 343009,
+                  "rows_emitted": 77108,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 76,
+                  "columns_decoded": 110,
+                  "compressed_bytes_read": 343009,
+                  "rows_emitted": 77108,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 76,
+                  "columns_decoded": 110,
+                  "compressed_bytes_read": 343009,
+                  "rows_emitted": 77108,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 76,
+                  "columns_decoded": 110,
+                  "compressed_bytes_read": 343009,
+                  "rows_emitted": 77108,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 1,
+              "result_hash": "BA43EB1BD35D19F89564B6154C09AB5D826361FA8A976EE12CBD84C3E0605A19",
+              "plan": [
+                [
+                  3,
+                  0,
+                  99,
+                  "SCAN t VIRTUAL TABLE INDEX 0:1,32;1,16;"
+                ]
+              ]
+            }
+          }
+        },
+        "payment_groupby": {
+          "sql": "SELECT payment_type,count(*) AS n,sum(fare_amount) AS fare,avg(trip_distance) AS distance FROM t GROUP BY payment_type ORDER BY payment_type",
+          "source": "SQLNEW diagnostic",
+          "sample_orders": [
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 1575.7013499969617,
+              "q1_ms": 1483.1192249548621,
+              "q3_ms": 1639.515874965582,
+              "samples_ms": [
+                1447.9266999987885,
+                1531.3431000104174,
+                1467.0445999363437,
+                1646.0012999596074,
+                1672.2977999597788,
+                1620.059599983506
+              ],
+              "validated": true,
+              "max_float_abs_error": 4.872679710388184e-06,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 5,
+              "result_hash": "BB6B21861461804CECE9112A3C5E93208CD3DEC3633D82D4210BB78A4C600A56",
+              "plan": [
+                [
+                  7,
+                  0,
+                  226,
+                  "SCAN t"
+                ],
+                [
+                  9,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            },
+            "sqlite_indexed": {
+              "median_ms": 212.02720003202558,
+              "q1_ms": 204.26467500510626,
+              "q3_ms": 219.02217497699894,
+              "samples_ms": [
+                200.1711999764666,
+                232.7678999863565,
+                205.16550005413592,
+                218.88890000991523,
+                203.96439998876303,
+                219.06659996602684
+              ],
+              "validated": true,
+              "max_float_abs_error": 4.872679710388184e-06,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "rows": 5,
+              "result_hash": "BB6B21861461804CECE9112A3C5E93208CD3DEC3633D82D4210BB78A4C600A56",
+              "plan": [
+                [
+                  7,
+                  0,
+                  220,
+                  "SCAN t USING COVERING INDEX tuned_payment"
+                ]
+              ]
+            },
+            "sqlnew_columnar": {
+              "median_ms": 1455.985049949959,
+              "q1_ms": 1427.454674965702,
+              "q3_ms": 1476.4589249680284,
+              "samples_ms": [
+                1470.0596999609843,
+                1478.5919999703765,
+                1577.2141000488773,
+                1441.9103999389336,
+                1422.6360999746248,
+                1323.333099950105
+              ],
+              "validated": true,
+              "max_float_abs_error": 4.872679710388184e-06,
+              "work_per_sample": [
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 6363,
+                  "compressed_bytes_read": 17482782,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 6363,
+                  "compressed_bytes_read": 17482782,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 6363,
+                  "compressed_bytes_read": 17482782,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 6363,
+                  "compressed_bytes_read": 17482782,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 6363,
+                  "compressed_bytes_read": 17482782,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 2121,
+                  "columns_decoded": 6363,
+                  "compressed_bytes_read": 17482782,
+                  "rows_emitted": 2171187,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "rows": 5,
+              "result_hash": "BB6B21861461804CECE9112A3C5E93208CD3DEC3633D82D4210BB78A4C600A56",
+              "plan": [
+                [
+                  7,
+                  0,
+                  199,
+                  "SCAN t VIRTUAL TABLE INDEX 0:"
+                ],
+                [
+                  11,
+                  0,
+                  0,
+                  "USE TEMP B-TREE FOR GROUP BY"
+                ]
+              ]
+            }
+          }
+        },
+        "point_reads_100": {
+          "sql": null,
+          "source": "SQLNEW access/update diagnostic",
+          "sample_orders": [
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 1.5872500371187925,
+              "q1_ms": 1.4035249769221991,
+              "q3_ms": 1.7484000127296895,
+              "samples_ms": [
+                1.7751000123098493,
+                1.3692999491468072,
+                1.506200060248375,
+                1.6683000139892101,
+                2.636999939568341,
+                1.2410000199452043
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "operations": 100
+            },
+            "sqlite_indexed": {
+              "median_ms": 1.3214500504545867,
+              "q1_ms": 1.2424250307958573,
+              "q3_ms": 1.393350015860051,
+              "samples_ms": [
+                1.3914000010117888,
+                1.2515000998973846,
+                1.1981000425294042,
+                1.2394000077620149,
+                1.3940000208094716,
+                1.7360999481752515
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "operations": 100
+            },
+            "sqlnew_columnar": {
+              "median_ms": 10.211749991867691,
+              "q1_ms": 9.94374995934777,
+              "q3_ms": 10.357875056797639,
+              "samples_ms": [
+                9.790400043129921,
+                9.854599949903786,
+                10.406400077044964,
+                10.21119998767972,
+                10.212299996055663,
+                10.603399947285652
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 689193,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 689193,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 689193,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 689193,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 689193,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 300,
+                  "compressed_bytes_read": 689193,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 0
+                }
+              ],
+              "operations": 100
+            }
+          }
+        },
+        "random_updates_100": {
+          "sql": null,
+          "source": "SQLNEW access/update diagnostic",
+          "sample_orders": [
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ],
+            [
+              "sqlnew_columnar",
+              "sqlite",
+              "sqlite_indexed"
+            ],
+            [
+              "sqlite",
+              "sqlite_indexed",
+              "sqlnew_columnar"
+            ],
+            [
+              "sqlite_indexed",
+              "sqlnew_columnar",
+              "sqlite"
+            ]
+          ],
+          "measurements": {
+            "sqlite": {
+              "median_ms": 2.7557500288821757,
+              "q1_ms": 2.4971749808173627,
+              "q3_ms": 3.2314499840140343,
+              "samples_ms": [
+                3.360999980941415,
+                3.8871000288054347,
+                2.8427999932318926,
+                2.250300021842122,
+                2.4399999529123306,
+                2.668700064532459
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "operations": 100
+            },
+            "sqlite_indexed": {
+              "median_ms": 7.689900055993348,
+              "q1_ms": 6.023800000548363,
+              "q3_ms": 8.511950058164075,
+              "samples_ms": [
+                7.785200024954975,
+                8.754200069233775,
+                15.16569999512285,
+                5.456099985167384,
+                5.500199971720576,
+                7.594600087031722
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+              ],
+              "operations": 100
+            },
+            "sqlnew_columnar": {
+              "median_ms": 166.68155003571883,
+              "q1_ms": 159.13357504177839,
+              "q3_ms": 172.2281499824021,
+              "samples_ms": [
+                188.96729999687523,
+                164.88240007311106,
+                157.21730003133416,
+                168.4806999983266,
+                154.94669997133315,
+                173.47729997709394
+              ],
+              "validated": true,
+              "max_float_abs_error": 0.0,
+              "work_per_sample": [
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 3600,
+                  "compressed_bytes_read": 5321610,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 3600,
+                  "compressed_bytes_read": 5321610,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 3600,
+                  "compressed_bytes_read": 5321610,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 3600,
+                  "compressed_bytes_read": 5321610,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 3600,
+                  "compressed_bytes_read": 5321610,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                },
+                {
+                  "blocks_read": 100,
+                  "columns_decoded": 3600,
+                  "compressed_bytes_read": 5321610,
+                  "rows_emitted": 100,
+                  "summary_blocks": 0,
+                  "blocks_written": 100
+                }
+              ],
+              "operations": 100
+            }
+          }
+        }
+      },
+      "load_order": [
+        "sqlite",
+        "sqlite_indexed",
+        "sqlnew_columnar"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "sqlnew/benchmark_build.py": "72ed450c258b8a9bd2bc4239fbeddf11fd01ca89074638ac00867e7d6f9f74f6",
+    "sqlnew/benchmark_data.py": "c75ccd688c6abd79eb842a113d27668fc97476876abfaa1c1306ac7cc31b14f3",
+    "sqlnew/benchmark_compare.py": "ab0861b0d9073e8828e00fb139652ea6a9792d3e48ac2285edf2fe11bc1518b6",
+    "sqlnew/db.py": "4596f6af166581a152adf840f44aea61106c7909dbe9a820946cb365fc2b3015",
+    "sqlnew/build.py": "bd004bdf1097c35c78677d0afc57e2440a2e0f5e0aa3064709d1fe949a9e378e",
+    "sqlnew/config.h": "fd84dcb0afc570c4243d6bd0634d45ee1a21e5f8f0ce5aceb65f6ca7797a0028",
+    "src/select.c": "e64d618fd1c8cbffa904c3f7153e24efc6ac84633ccd45e93aa1895ec662c103",
+    "ext/sqlnew/columnar.c": "dbaedab99f6203e7b29a9f138a5758499f48d1fe47bcdf82d9778f151556ae78",
+    "ext/sqlnew/sqlnew.c": "22718b54f4e805d3036f8c18026ddc9863f0561d3fab3eadb3aed7c95f874808",
+    "ext/sqlnew/intblock.c": "490a7d2fc52f641aa84de927f524e510177cb997ba87d5b98008f0d1dae329d6"
+  }
+}

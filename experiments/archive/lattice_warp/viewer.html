@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lattice Lab — bend, compress, recover</title>
+<style>
+:root{color-scheme:dark;--bg:#0d1720;--panel:#14232e;--line:#2a3c49;--ink:#e9f2f6;--muted:#a2b7c4;--accent:#54dbc0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}main{max-width:1520px;margin:auto;padding:32px 36px 50px}header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}.eyebrow{color:var(--accent);font-size:12px;letter-spacing:.16em;text-transform:uppercase}h1{font-size:36px;line-height:1.15;margin:8px 0 14px;font-weight:650;letter-spacing:-.035em}h2{font-size:18px;margin:0 0 6px;font-weight:600}p{margin:0 0 12px;color:var(--muted)}.tag{border:1px solid var(--line);border-radius:30px;padding:7px 14px;font-size:12px;white-space:nowrap}.controls{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr;gap:22px;background:var(--panel);border:1px solid var(--line);padding:19px 22px;border-radius:12px;margin:22px 0 16px}label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}select,button{font:inherit;color:var(--ink);border:1px solid #3e5667;border-radius:6px;background:#1c303d;padding:8px 12px}select{width:100%}button{cursor:pointer}button:hover{background:#2d495a}button.primary{background:var(--accent);color:#082e2a;border-color:var(--accent);font-weight:600}input[type=range]{width:100%;accent-color:var(--accent)}.value{float:right;color:var(--ink);font-variant-numeric:tabular-nums}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 18px}.actions span{margin-left:auto;font-size:12px;color:var(--muted)}.views{display:grid;grid-template-columns:1fr 1fr;gap:16px}.view{border:1px solid var(--line);border-radius:12px;background:linear-gradient(145deg,#142731,#111e29);overflow:hidden;min-width:0}.viewhead{padding:16px 20px 0}.viewhead p{font-size:12px}canvas{display:block;width:100%;height:405px;cursor:grab;touch-action:none}canvas:active{cursor:grabbing}.viewfoot{padding:0 20px 14px;display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted)}.legend{background:linear-gradient(90deg,#440154,#3b528b,#21918c,#5ec962,#fde725);width:95px;height:7px;display:inline-block;margin:0 6px;border-radius:4px}.readout{margin:12px 0 20px;padding:11px 16px;background:#132b30;border-left:3px solid var(--accent);font-size:13px;min-height:44px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.metric{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}.metric small{color:var(--muted);display:block}.metric strong{font-size:28px;letter-spacing:-.03em;font-variant-numeric:tabular-nums;display:block;margin:4px 0}.metric em{font-size:12px;color:var(--muted);font-style:normal}.metric.good strong{color:var(--accent)}.details{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;margin-top:26px}.detail{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;min-width:0}.detail p{font-size:13px}table{border-collapse:collapse;width:100%;font-size:13px;margin-top:16px}th,td{text-align:right;border-bottom:1px solid var(--line);padding:10px 8px;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{color:var(--muted);font-size:11px;font-weight:500}td:last-child{color:var(--accent)}.scroll{overflow-x:auto}.detail ul{padding-left:18px;color:var(--muted);font-size:13px}.detail li{margin-bottom:8px}details{margin-top:20px;color:var(--muted);font-size:13px}summary{cursor:pointer;color:var(--ink)}code{color:#c6e7de}a{color:var(--accent)}footer{margin-top:22px;font-size:12px;color:var(--muted)}.note{font-size:12px;color:var(--muted);margin-top:10px}#squeezeWarning{color:#ffcb88}.state{font-size:12px;color:var(--accent)}
+@media(max-width:900px){main{padding:22px 16px}.controls{grid-template-columns:1fr 1fr}.views,.details{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.actions span{width:100%;margin:0}h1{font-size:29px}header .tag{display:none}canvas{height:370px}}
+</style>
+<main>
+<header><div><div class="eyebrow">A Python experiment / Lattice Lab</div><h1>Bend the geometry. Measure the bytes.</h1><p>Each colored cell holds a number. Move the cells, line up their patterns, then recover the original table.</p></div><div class="tag" id="sizeTag"></div></header>
+<div class="controls">
+<div><label for="dataset">Data in the cells</label><select id="dataset"></select></div>
+<div><label for="bendA">Bend across columns <span class="value" id="aValue">0</span></label><input id="bendA" type="range" min="0" max="8" step="1" value="0"></div>
+<div><label for="bendB">Bend across rows <span class="value" id="bValue">0</span></label><input id="bendB" type="range" min="0" max="8" step="1" value="0"></div>
+<div><label for="squeeze">Squeeze the displayed lattice <span class="value" id="scaleValue">1×</span></label><input id="squeeze" type="range" min="0" max="10" step="1" value="0"></div>
+</div>
+<div class="actions"><button class="primary" id="align">Find best warp</button><button id="animate">Animate best warp</button><button id="reset">Reset view</button><select id="rows" aria-label="Rows visible" style="width:auto"><option value="1">One row through the cube</option><option value="4">Four rows through the cube</option></select><label style="margin:0"><input id="connections" type="checkbox" checked> Grid connections</label><span>Drag either view to rotate both · scroll to zoom · hover a cell to read its number</span></div>
+<div class="views">
+<section class="view"><div class="viewhead"><h2>01 / Original lattice</h2><p>Fixed cell positions. Color represents the stored value, 0–255.</p></div><canvas id="before" aria-label="Original three-dimensional data lattice"></canvas><div class="viewfoot"><span>Column x · row y · layer z</span><span>0 <i class="legend"></i>255</span></div></section>
+<section class="view"><div class="viewhead"><h2>02 / Warped lattice</h2><p>Same cell identities and values. The bend shifts each vertical column.</p></div><canvas id="after" aria-label="Warped three-dimensional data lattice"></canvas><div class="viewfoot"><span id="geometryStatus">Bend A = 0, B = 0</span><span>Unwrapped view</span></div></section>
+</div>
+<div class="readout" id="cellReadout">Hover a cell to inspect its original coordinates, warped coordinates, and unchanged value.</div>
+<div class="metrics">
+<div class="metric"><small>Ordinary compression</small><strong id="baselineBytes"></strong><em>zlib, original cell order</em></div>
+<div class="metric good"><small>This warp + compression</small><strong id="warpBytes"></strong><em id="breakdown"></em></div>
+<div class="metric"><small>Original data recovered</small><strong id="recovered"></strong><em id="verifyDetail"></em></div>
+<div class="metric"><small>Drawing volume</small><strong id="volume"></strong><em id="volumeDetail"></em></div>
+</div>
+<div class="details">
+<section class="detail"><h2>What the Python run measured</h2><p>All 81 bends were tried on each dataset. These are complete file sizes, including dimensions and the saved warp map. The same zlib settings and byte order are used throughout.</p><div class="scroll"><table><thead><tr><th>Dataset</th><th>Raw packet</th><th>Ordinary zlib</th><th>Best warp + zlib</th></tr></thead><tbody id="resultsTable"></tbody></table></div><p class="note" id="bestStatus"></p><div class="state" id="animationStatus">Ready to explore</div></section>
+<section class="detail"><h2>What does “preserve relationships” mean here?</h2><ul><li>Every original cell ID and value is recovered exactly. Original grid connections can be reconstructed from the cell indices.</li><li>Lengths, angles, and geometric nearest neighbors can change during the bend.</li><li>The picture shows an unwrapped shear. The stored array wraps shifted cells at the top and bottom, making the discrete transformation reversible.</li></ul><p id="precisionInfo"></p><p id="squeezeWarning"></p><p class="note">The position experiment uses the A = 5, B = 3 bend and a fixed coordinate grid of 1/8 cell width. Values and IDs remain separately stored.</p></section>
+</div>
+<details><summary>How to interpret this experiment and run your own data</summary><p style="margin-top:12px">The patterned example is deliberately constructed from curved, repeated bands. The encoder is given only the completed data, and searches a chosen family of bends. The noisy example replaces about 10% of cells with random bytes. The random example is a control. This shows what this particular mechanism can do; it does not prove a best possible encoding for all data.</p><p>Python performs every transform, compression measurement, and byte-for-byte recovery check before writing this page. The sliders select those measured cases. Animation interpolates between them for display; measurements update at each tested bend. The browser draws the cells using those Python-generated numbers.</p><p>Run <code>python experiment.py --open</code>. Add a cubic uint8 NumPy array with <code>--input data.npy --size 32</code>. Its axes are z, y, x. Try a different generated sample with <code>--seed 123</code>. Full measurements, checksums, and repeated-compression results are in <a href="results.json">results.json</a>; the method and independent decoding example are in <a href="report.md">report.md</a>.</p></details>
+<footer id="footer"></footer>
+</main>
+<script>
+const E = __EXPERIMENT_DATA__;
+const N=E.size, fmt=n=>n.toLocaleString('en-US'), byId=id=>document.getElementById(id);
+let datasetIndex=0, A=0, B=0, squeezePower=0, viewRows=1, yaw=-.17, pitch=.13, zoom=1;
+let targetMap=E.maps[0], shownMap=targetMap.slice(), animationToken=0, selected=null, renderPending=false;
+const canvases=[byId('before'),byId('after')], picks=[[],[]];
+const palette=[[68,1,84],[59,82,139],[33,145,140],[94,201,98],[253,231,37]];
+function color(value,brightness=1){const t=value/255*4,i=Math.min(3,Math.floor(t)),f=t-i;return `rgb(${palette[i].map((v,k)=>Math.round((v+(palette[i+1][k]-v)*f)*brightness)).join(',')})`;}
+function projection(x,y,z,w,h){let c=Math.cos(yaw),s=Math.sin(yaw),rx=c*x+s*y,depth=-s*x+c*y;let cp=Math.cos(pitch),sp=Math.sin(pitch),vertical=cp*z-sp*depth;depth=cp*depth+sp*z;const unit=Math.min(w*.70/N,h*.46/N)*zoom, perspective=5*N/(5*N+depth);return [w/2+rx*unit*perspective,h/2-vertical*unit*perspective,depth];}
+function projectCell(x,y,z,side,w,h){const c=(N-1)/2,sc=side?2**-squeezePower:1;const sh=side?shownMap[y*N+x]:0;return projection((x-c)*sc,(y-c)*sc,(z-c-sh)*sc,w,h);}
+function draw(side){
+ const canvas=canvases[side], rect=canvas.getBoundingClientRect(), w=rect.width,h=rect.height,dpr=Math.min(2,window.devicePixelRatio||1);
+ if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}
+ const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+ const c=(N-1)/2,sc=side?2**-squeezePower:1;
+ // Original cube outline is a reference frame; it is not a clipping boundary.
+ ctx.strokeStyle='#416070';ctx.lineWidth=.8;ctx.globalAlpha=.42;
+ const corners=[];for(let z of [-.5,N-.5])for(let y of [-.5,N-.5])for(let x of [-.5,N-.5])corners.push(projection(x-c,y-c,z-c,w,h));
+ for(let i=0;i<8;i++)for(let bit of [1,2,4]){let j=i^bit;if(j>i){ctx.beginPath();ctx.moveTo(...corners[i].slice(0,2));ctx.lineTo(...corners[j].slice(0,2));ctx.stroke();}}
+ ctx.globalAlpha=1;
+ const rows=viewRows===1?[Math.floor(N/2)]:[Math.floor(N*.15),Math.floor(N*.38),Math.floor(N*.61),Math.floor(N*.84)];
+ const values=E.datasets[datasetIndex].values, cells=[];
+ for(const y of rows)for(let z=0;z<N;z++)for(let x=0;x<N;x++){
+   const id=(z*N+y)*N+x,p=projectCell(x,y,z,side,w,h);cells.push({x,y,z,id,p,value:values[id]});
+ }
+ cells.sort((a,b)=>b.p[2]-a.p[2]);picks[side]=cells;
+ if(byId('connections').checked){
+  ctx.strokeStyle='#91aabd';ctx.lineWidth=.7;ctx.globalAlpha=.65;ctx.beginPath();
+  for(const cell of cells){for(const [dx,dz] of [[1,0],[0,1]]){if(cell.x+dx<N&&cell.z+dz<N){const p=projectCell(cell.x+dx,cell.y,cell.z+dz,side,w,h);ctx.moveTo(cell.p[0],cell.p[1]);ctx.lineTo(p[0],p[1]);}}}
+  ctx.stroke();ctx.globalAlpha=1;
+ }
+ const half=.46;
+ for(const cell of cells){const {x,y,z,p,value}=cell, sh=side?shownMap[y*N+x]:0;
+   function vertex(dx,dy,dz){return projection((x+dx-c)*sc,(y+dy-c)*sc,(z+dz-c-sh)*sc,w,h);}
+   // Three shaded faces make each datum a visible cell, with a small gap.
+   const verts=[vertex(-half,-half,-half),vertex(half,-half,-half),vertex(half,-half,half),vertex(-half,-half,half),vertex(-half,half,half),vertex(half,half,half),vertex(half,half,-half)];
+   for(const [face,bright] of [[[0,1,2,3],1],[[3,2,5,4],1.08],[[1,2,5,6],.72]]){
+     ctx.beginPath();face.forEach((k,i)=>i?ctx.lineTo(verts[k][0],verts[k][1]):ctx.moveTo(verts[k][0],verts[k][1]));ctx.closePath();ctx.fillStyle=color(value,bright);ctx.fill();
+   }
+   if(selected&&selected.id===cell.id){ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(p[0],p[1],Math.max(3,7*sc*zoom),0,Math.PI*2);ctx.stroke();}
+ }
+ ctx.fillStyle='#96aebb';ctx.font='11px system-ui';ctx.fillText(`${fmt(cells.length)} visible / ${fmt(N**3)} total cells`,18,h-14);
+ if(side&&squeezePower>5){ctx.fillStyle='#ffcb88';ctx.fillText('Cells are still stored individually as the drawing shrinks.',18,22);}
+}
+function render(){renderPending=false;draw(0);draw(1);}
+function scheduleRender(){if(!renderPending){renderPending=true;requestAnimationFrame(render);}}
+function updateMetrics(){
+ const r=E.datasets[datasetIndex],m=r.candidates[A*9+B],p=E.precision[squeezePower];
+ byId('aValue').textContent=A;byId('bValue').textContent=B;byId('scaleValue').textContent=squeezePower?`1/${2**squeezePower}×`:'1×';
+ byId('baselineBytes').textContent=fmt(r.baseline_bytes)+' B';byId('warpBytes').textContent=fmt(m.bytes)+' B';
+ byId('breakdown').textContent=`${fmt(m.payload_bytes)} payload + ${m.map_bytes} map + ${m.header_bytes} header`;
+ byId('recovered').textContent=fmt(r.cells_recovered)+' / '+fmt(N**3);
+ byId('verifyDetail').textContent='Exact values + original cell identities';
+ byId('volume').textContent=squeezePower?`1 / ${fmt(2**(3*squeezePower))}`:'100%';
+ byId('volumeDetail').textContent=`Scale does not change this ${fmt(m.bytes)} B packet`;
+ byId('geometryStatus').textContent=`Bend A = ${A}, B = ${B} · scale ${squeezePower?'1/'+2**squeezePower:'1'}`;
+ byId('bestStatus').textContent=`Search winner for ${r.name.toLowerCase()}: A = ${r.best.a}, B = ${r.best.b}; ${fmt(r.best.bytes)} B. Current bend is ${(r.baseline_bytes/m.bytes).toFixed(2)}× as compact as ordinary zlib.`;
+ byId('precisionInfo').textContent=`Fixed-grid position test at this scale: ${fmt(p.distinct_positions)} distinct coordinate triples for ${fmt(N**3)} cells.`;
+ byId('squeezeWarning').textContent=p.position_collisions?`${fmt(p.position_collisions)} cells exceed the distinct position count. Position alone can no longer distinguish all cells on this grid.`:'Every cell has a distinct rounded position on this grid.';
+ if(selected)showCell(selected);
+}
+function setBend(a,b,smooth=true){
+ A=a;B=b;byId('bendA').value=a;byId('bendB').value=b;targetMap=E.maps[A*9+B];
+ const from=shownMap.slice(),start=performance.now(),duration=smooth?200:0,token=++setBend.token;
+ function step(now){if(token!==setBend.token)return;const t=duration?Math.min(1,(now-start)/duration):1;const eased=t*t*(3-2*t);shownMap=targetMap.map((v,i)=>from[i]+(v-from[i])*eased);scheduleRender();if(t<1)requestAnimationFrame(step);}
+ updateMetrics();requestAnimationFrame(step);
+}
+setBend.token=0;
+function cancelAnimation(){animationToken++;byId('animate').textContent='Animate best warp';byId('animationStatus').textContent='Ready to explore';}
+function showCell(cell){
+ const {x,y,z,id}=cell,v=E.datasets[datasetIndex].values[id],shift=targetMap[y*N+x],wrapped=((z-shift)%N+N)%N;
+ byId('cellReadout').textContent=`Cell ${fmt(id)} · original (x, y, z) = (${x}, ${y}, ${z}) · value = ${v} · warped z = ${z-shift} · stored layer after wrap = ${wrapped} · inverse returns (${x}, ${y}, ${z}), value ${v}`;
+}
+for(let side=0;side<2;side++){
+ const canvas=canvases[side];let down=null;
+ canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
+ canvas.addEventListener('pointerup',()=>down=null);canvas.addEventListener('pointercancel',()=>down=null);
+ canvas.addEventListener('pointermove',e=>{
+  if(down){yaw+=(e.clientX-down.x)*.006;pitch=Math.max(-1.2,Math.min(1.2,pitch+(e.clientY-down.y)*.006));down={x:e.clientX,y:e.clientY};scheduleRender();return;}
+  const rect=canvas.getBoundingClientRect(),px=e.clientX-rect.left,py=e.clientY-rect.top;let found=null,best=90;
+  for(let i=picks[side].length-1;i>=0;i--){const cell=picks[side][i],d=(cell.p[0]-px)**2+(cell.p[1]-py)**2;if(d<best){best=d;found=cell;}}
+  if(found){selected=found;showCell(found);scheduleRender();}
+ });
+ canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.5,Math.min(2.5,zoom*Math.exp(-e.deltaY*.001)));scheduleRender();},{passive:false});
+}
+byId('dataset').innerHTML=E.datasets.map((r,i)=>`<option value="${i}">${r.name}</option>`).join('');
+byId('dataset').addEventListener('change',e=>{cancelAnimation();datasetIndex=Number(e.target.value);updateMetrics();scheduleRender();});
+for(const id of ['bendA','bendB'])byId(id).addEventListener('input',()=>{cancelAnimation();setBend(Number(byId('bendA').value),Number(byId('bendB').value));});
+byId('squeeze').addEventListener('input',e=>{squeezePower=Number(e.target.value);updateMetrics();scheduleRender();});
+byId('rows').addEventListener('change',e=>{viewRows=Number(e.target.value);scheduleRender();});
+byId('connections').addEventListener('change',scheduleRender);
+byId('align').addEventListener('click',()=>{cancelAnimation();const b=E.datasets[datasetIndex].best;setBend(b.a,b.b);byId('animationStatus').textContent='Smallest complete packet among all 81 tested bends';});
+byId('reset').addEventListener('click',()=>{cancelAnimation();squeezePower=0;byId('squeeze').value=0;yaw=-.17;pitch=.13;zoom=1;selected=null;byId('cellReadout').textContent='Hover a cell to inspect its original coordinates, warped coordinates, and unchanged value.';setBend(0,0);});
+byId('animate').addEventListener('click',()=>{
+ if(byId('animate').textContent==='Stop animation'){cancelAnimation();return;}
+ const token=++animationToken,best=E.datasets[datasetIndex].best;byId('animate').textContent='Stop animation';setBend(0,0,false);
+ let i=0;function next(){if(token!==animationToken)return;const t=i/10;setBend(Math.round(best.a*t),Math.round(best.b*t));byId('animationStatus').textContent=`Testing bend ${i+1} of 11 animation steps`;i++;if(i<=10)setTimeout(next,300);else{byId('animate').textContent='Animate best warp';byId('animationStatus').textContent=best.a===0&&best.b===0?'The identity warp won for this dataset. Try the bend sliders to compare.':'Best measured bend reached. Every original cell is recoverable.';}}next();
+});
+byId('sizeTag').textContent=`${N} × ${N} × ${N} · ${fmt(N**3)} cells`;
+byId('resultsTable').innerHTML=E.datasets.map(r=>`<tr><td>${r.name}</td><td>${fmt(r.raw_packet_bytes)} B</td><td>${fmt(r.baseline_bytes)} B</td><td>${fmt(r.best.bytes)} B</td></tr>`).join('');
+byId('footer').textContent=`Reproducible Python run · seed ${E.seed} · ${E.datasets.length*81} exact candidate decodes · generated offline`;
+new ResizeObserver(scheduleRender).observe(document.querySelector('.views'));
+updateMetrics();scheduleRender();
+</script>
+</html>

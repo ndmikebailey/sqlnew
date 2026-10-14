@@ -1,0 +1,190 @@
+{
+  "timestamp_utc": "2026-09-06T01:50:43.937808+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "rows": 1000000,
+  "machine": "AMD64",
+  "processor": "Intel64 Family 6 Model 165 Stepping 2, GenuineIntel",
+  "logical_cpus": 12,
+  "scope": "This engine only. SQL ingestion, query latency, physical file and execution counters.",
+  "workload": "Deterministic event IDs and times, 257 sensors, varying real readings, unique formatted messages.",
+  "limitations": [
+    "Warm single-connection queries; no throughput or cold-cache guarantee.",
+    "Logical bytes are raw typed values, not another database's file size.",
+    "Range pruning benefits from correlation between values and row groups.",
+    "This fixture measures summaries, a range, and a point read; grouped paths are measured by benchmark_v2.py."
+  ],
+  "source_sha256": {
+    "ext/sqlnew/columnar.c": "571387e9727cbc5da7923b8fe10b9c751d9d63cbafb35c63f466d9da403804c8",
+    "ext/sqlnew/columnar_batch.inc": "51f69a8db3812e5b72d7fa0b7d1c435ab712e85ff9dcd0cd1a3d094580d003c9",
+    "ext/sqlnew/columnar_index.inc": "d8218712bbf8c0ab3f3a1fe42f442c080de5fe196a6d19b9a4a646b28a88216d",
+    "ext/sqlnew/columnar_write.inc": "13732522bbee141a63ad0552129c8bef6fef1d6e8eb46c4e35ebe4d04b4ab5e1",
+    "ext/sqlnew/sqlnew.c": "35fa43f1bbbeaaca7fde750c5ce3f5ff3ec68d729ef09af1accfd9bd09136516",
+    "src/select.c": "83cc899c13580b553a1a8fb6a3187029843e04abb05e83a774803e0b613debf9",
+    "sqlnew/config.h": "70f9ef8fb5c3ab91e624b0dbdaad3b64c8fca5457ccf056a93f556890d0f9be3",
+    "sqlnew/build.py": "f82ab827036297b1841b9284da88da4d60927e27a070000b559b9cdb80eec823",
+    "sqlnew/db.py": "4596f6af166581a152adf840f44aea61106c7909dbe9a820946cb365fc2b3015",
+    "sqlnew/exercise_columnar.py": "c8dfa9eb3a053721b6080eca913a8d5b951131b8387637c923410463f129583e"
+  },
+  "ingest_seconds": 1.656483400030993,
+  "product_version": "0.2.0-dev",
+  "cpu_backend": "avx2-f64",
+  "groups": 977,
+  "compressed_column_bytes": 25286006,
+  "logical_value_bytes": 79777786,
+  "queries": {
+    "summary": {
+      "sql": "SELECT count(*),sum(seq),min(ts),max(ts) FROM events",
+      "parameters": [],
+      "median_ms": 2.130500040948391,
+      "samples_ms": [
+        1.9811000674962997,
+        2.53950001206249,
+        2.130500040948391,
+        2.3301999317482114,
+        2.3995001101866364,
+        2.063599997200072,
+        2.0129000768065453,
+        2.283999929204583,
+        2.0553000504150987,
+        2.0192000083625317,
+        2.1858999971300364
+      ],
+      "work_per_query": {
+        "blocks_read": 0,
+        "columns_decoded": 0,
+        "compressed_bytes_read": 0,
+        "rows_emitted": 0,
+        "summary_blocks": 3908,
+        "blocks_written": 0,
+        "columns_written": 0,
+        "patches_written": 0,
+        "patches_read": 0,
+        "compactions": 0,
+        "rows_filtered": 0,
+        "batch_rows": 0,
+        "index_rows_read": 0,
+        "index_rows_written": 0,
+        "batch_fallbacks": 0
+      },
+      "plan": [
+        [
+          21,
+          0,
+          0,
+          "COLUMNAR SUMMARY events"
+        ]
+      ]
+    },
+    "time_slice": {
+      "sql": "SELECT seq FROM events WHERE ts BETWEEN ? AND ? ORDER BY seq",
+      "parameters": [
+        1700500000000,
+        1700500099000
+      ],
+      "median_ms": 0.6321000400930643,
+      "samples_ms": [
+        0.6612999131903052,
+        0.6289000157266855,
+        0.6234999746084213,
+        0.6336000515148044,
+        0.6218999624252319,
+        0.6214000750333071,
+        0.6321000400930643,
+        0.8781000506132841,
+        0.9726000716909766,
+        0.6521999603137374,
+        0.6290000164881349
+      ],
+      "work_per_query": {
+        "blocks_read": 1,
+        "columns_decoded": 2,
+        "compressed_bytes_read": 88,
+        "rows_emitted": 100,
+        "summary_blocks": 0,
+        "blocks_written": 0,
+        "columns_written": 0,
+        "patches_written": 0,
+        "patches_read": 0,
+        "compactions": 0,
+        "rows_filtered": 924,
+        "batch_rows": 0,
+        "index_rows_read": 0,
+        "index_rows_written": 0,
+        "batch_fallbacks": 0
+      },
+      "plan": [
+        [
+          3,
+          0,
+          99,
+          "SCAN events VIRTUAL TABLE INDEX 0:1,32;1,8;"
+        ],
+        [
+          16,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    },
+    "point": {
+      "sql": "SELECT seq,sensor,message FROM events WHERE rowid=?",
+      "parameters": [
+        999983
+      ],
+      "median_ms": 0.1984999980777502,
+      "samples_ms": [
+        0.2090000780299306,
+        0.21079997532069683,
+        0.20100001711398363,
+        0.19990000873804092,
+        0.1981999957934022,
+        0.1984999980777502,
+        0.19689998589456081,
+        0.19649998284876347,
+        0.19589997828006744,
+        0.19479996990412474,
+        0.2598999999463558
+      ],
+      "work_per_query": {
+        "blocks_read": 1,
+        "columns_decoded": 3,
+        "compressed_bytes_read": 10956,
+        "rows_emitted": 1,
+        "summary_blocks": 0,
+        "blocks_written": 0,
+        "columns_written": 0,
+        "patches_written": 0,
+        "patches_read": 0,
+        "compactions": 0,
+        "rows_filtered": 0,
+        "batch_rows": 0,
+        "index_rows_read": 0,
+        "index_rows_written": 0,
+        "batch_fallbacks": 0
+      },
+      "plan": [
+        [
+          2,
+          0,
+          99,
+          "SCAN events VIRTUAL TABLE INDEX 0:-1,2;"
+        ]
+      ]
+    }
+  },
+  "integrity_check": [
+    [
+      "ok"
+    ]
+  ],
+  "checkpoint": [
+    [
+      0,
+      0,
+      0
+    ]
+  ],
+  "database_bytes": 28274688,
+  "reopen_verified": true
+}

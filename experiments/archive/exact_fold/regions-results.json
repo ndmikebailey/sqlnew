@@ -1,0 +1,1716 @@
+{
+  "platform": "Windows-11-10.0.26200-SP0",
+  "checks": {
+    "exact_checks": 119,
+    "axis_permutation_packet_bytes": [
+      108844,
+      109030,
+      109095,
+      109651,
+      109444,
+      109806
+    ],
+    "split_recompose_canonical_bytes": true,
+    "scope": "Exact numeric bits, sparse occupancy, unequal dimensions, all six axis permutations, all axis selection orders, split/reencode/recompose; no engine or security suite."
+  },
+  "measurements": [
+    {
+      "fixture": "quadratic_columns",
+      "shape_zyx": [
+        64,
+        64,
+        64
+      ],
+      "occupied_cells": 262144,
+      "logical_value_bytes": 2097152,
+      "source_sha256": "6de7995c277c87fe6ba73417bd34b62bea40eca98b774140e522f7df431850e7",
+      "linear_best": {
+        "bytes": 21042,
+        "row_major_bytes": 107707,
+        "axis_permutation": 4,
+        "six_axis_order_bytes": [
+          107707,
+          43048,
+          355531,
+          55127,
+          21042,
+          59899
+        ],
+        "codec": 3,
+        "mask_codec": 0,
+        "mask_bytes": 0,
+        "exact": true
+      },
+      "variants": {
+        "regions_existing": {
+          "bytes": 685457,
+          "exact": true,
+          "encode_seconds": 0.06961879995651543,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 685393,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 685457
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 90125,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 90189
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 87437,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 87501
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 87301,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 87365
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 1773,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 1837
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 675392,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 685393
+          },
+          "modes": {
+            "axes=0,codec=3": 512
+          },
+          "packet_sha256": "683ea4e4c5dfe50a106c501a1c1a9cb4749e9ae74a9be710be6222b1616053f3"
+        },
+        "regions_delta": {
+          "bytes": 129876,
+          "exact": true,
+          "encode_seconds": 0.3934759000549093,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 129812,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 129876
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 18841,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 18905
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 17683,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 17747
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 17855,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 17919
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 663,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 727
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 119811,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 129812
+          },
+          "modes": {
+            "axes=7,codec=1": 344,
+            "axes=7,codec=3": 168
+          },
+          "packet_sha256": "69f46d1372b6cf834df1e93d8e5ba41e9969157e5e4bc9df716707c6bd14e079"
+        },
+        "regions_shared": {
+          "bytes": 16323,
+          "exact": true,
+          "encode_seconds": 0.06526359997224063,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 16259,
+            "record_visits": 585,
+            "records_read": 85,
+            "decoded_words": 32768,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 16323
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 2550,
+              "record_visits": 85,
+              "records_read": 15,
+              "decoded_words": 4096,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 2614
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 2631,
+              "record_visits": 85,
+              "records_read": 15,
+              "decoded_words": 4096,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 2695
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 16259,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 16323
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 609,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 673
+            }
+          },
+          "physical": {
+            "records": 85,
+            "leaf_bytes": 13382,
+            "directory_bytes": 2877
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 117057
+          },
+          "modes": {
+            "axes=7,codec=3": 504,
+            "axes=7,codec=1": 8
+          },
+          "packet_sha256": "97de0a056e1b345352f3f9a0e48d381a35e9b1fe37138b9056bfe2b85ee0378f"
+        },
+        "regions_shared_no_delta": {
+          "bytes": 87015,
+          "exact": true,
+          "encode_seconds": 0.02371440001297742,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 86951,
+            "record_visits": 585,
+            "records_read": 85,
+            "decoded_words": 32768,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 87015
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 11807,
+              "record_visits": 85,
+              "records_read": 15,
+              "decoded_words": 4096,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 11871
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 11487,
+              "record_visits": 85,
+              "records_read": 15,
+              "decoded_words": 4096,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 11551
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 86951,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 87015
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 1767,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 1831
+            }
+          },
+          "physical": {
+            "records": 85,
+            "leaf_bytes": 84074,
+            "directory_bytes": 2877
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 682593
+          },
+          "modes": {
+            "axes=0,codec=3": 512
+          },
+          "packet_sha256": "f5751ad1611bc7a81fd95d5ef1128f35c4c4dbfc466c64953ddf3ca2f5e647f7"
+        }
+      }
+    },
+    {
+      "fixture": "shared_irregular_motif",
+      "shape_zyx": [
+        64,
+        64,
+        64
+      ],
+      "occupied_cells": 262144,
+      "logical_value_bytes": 2097152,
+      "source_sha256": "b9d4c9c3609bc8309b74b6c5a5acbeba48aebc8be0787a616d8eb804efacf9c4",
+      "linear_best": {
+        "bytes": 2097216,
+        "row_major_bytes": 2097216,
+        "axis_permutation": 0,
+        "six_axis_order_bytes": [
+          2097216,
+          2097216,
+          2097216,
+          2097216,
+          2097216,
+          2097216
+        ],
+        "codec": 0,
+        "mask_codec": 0,
+        "mask_bytes": 0,
+        "exact": true
+      },
+      "variants": {
+        "regions_existing": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.07916770002339035,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "6dff0ff53d6fe048b0d6c268dbee834cdb1cdd72c879bb648a5ed85830b73101"
+        },
+        "regions_delta": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.45750189991667867,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "6dff0ff53d6fe048b0d6c268dbee834cdb1cdd72c879bb648a5ed85830b73101"
+        },
+        "regions_shared": {
+          "bytes": 14169,
+          "exact": true,
+          "encode_seconds": 0.020762200001627207,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 14105,
+            "record_visits": 585,
+            "records_read": 74,
+            "decoded_words": 512,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 14169
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 6981,
+              "record_visits": 85,
+              "records_read": 22,
+              "decoded_words": 512,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 7045
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 6981,
+              "record_visits": 85,
+              "records_read": 22,
+              "decoded_words": 512,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 7045
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 6981,
+              "record_visits": 85,
+              "records_read": 22,
+              "decoded_words": 512,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 7045
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 74,
+            "leaf_bytes": 4104,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "842a124a420a10a45fbe9edcd83897da0669e294fefd4fa2742390a9a029a346"
+        },
+        "regions_shared_no_delta": {
+          "bytes": 14169,
+          "exact": true,
+          "encode_seconds": 0.030056199990212917,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 14105,
+            "record_visits": 585,
+            "records_read": 74,
+            "decoded_words": 512,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 14169
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 6981,
+              "record_visits": 85,
+              "records_read": 22,
+              "decoded_words": 512,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 7045
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 6981,
+              "record_visits": 85,
+              "records_read": 22,
+              "decoded_words": 512,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 7045
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 6981,
+              "record_visits": 85,
+              "records_read": 22,
+              "decoded_words": 512,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 7045
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 74,
+            "leaf_bytes": 4104,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "842a124a420a10a45fbe9edcd83897da0669e294fefd4fa2742390a9a029a346"
+        }
+      }
+    },
+    {
+      "fixture": "motif_one_edit_per_region",
+      "shape_zyx": [
+        64,
+        64,
+        64
+      ],
+      "occupied_cells": 262144,
+      "logical_value_bytes": 2097152,
+      "source_sha256": "ef084b3ddd38139f7caa7dac9e55ac5ae7e0cb554dd0e5acbda0ef5776edf661",
+      "linear_best": {
+        "bytes": 2097216,
+        "row_major_bytes": 2097216,
+        "axis_permutation": 0,
+        "six_axis_order_bytes": [
+          2097216,
+          2097216,
+          2097216,
+          2097216,
+          2097216,
+          2097216
+        ],
+        "codec": 0,
+        "mask_codec": 0,
+        "mask_bytes": 0,
+        "exact": true
+      },
+      "variants": {
+        "regions_existing": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.07584880001377314,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "631e052a1eeaeb8c898ecdcc17a5a8187f7bdfdaae060ff9b6242aff24706d7c"
+        },
+        "regions_delta": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.4567972000222653,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "631e052a1eeaeb8c898ecdcc17a5a8187f7bdfdaae060ff9b6242aff24706d7c"
+        },
+        "regions_shared": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.45804089994635433,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "40adc38fb72d5ddd1593d7f7d2bed52d96d0a917b2748da8861dc3067ecca961"
+        },
+        "regions_shared_no_delta": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.08748440002091229,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "40adc38fb72d5ddd1593d7f7d2bed52d96d0a917b2748da8861dc3067ecca961"
+        }
+      }
+    },
+    {
+      "fixture": "independent_bits",
+      "shape_zyx": [
+        64,
+        64,
+        64
+      ],
+      "occupied_cells": 262144,
+      "logical_value_bytes": 2097152,
+      "source_sha256": "b6fadeb05691227ee0fa90f9e4f58e3eaeeb31ea5bee599982981707a3571c13",
+      "linear_best": {
+        "bytes": 2097216,
+        "row_major_bytes": 2097216,
+        "axis_permutation": 0,
+        "six_axis_order_bytes": [
+          2097216,
+          2097216,
+          2097216,
+          2097216,
+          2097216,
+          2097216
+        ],
+        "codec": 0,
+        "mask_codec": 0,
+        "mask_bytes": 0,
+        "exact": true
+      },
+      "variants": {
+        "regions_existing": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.07838159997481853,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "ef9181d8a8328f90e14a1ff627eac119130ffcda4bda983484b6a65a2d23aa99"
+        },
+        "regions_delta": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.4576798001071438,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "ef9181d8a8328f90e14a1ff627eac119130ffcda4bda983484b6a65a2d23aa99"
+        },
+        "regions_shared": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.4650127999484539,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "a8019a1ea5bb8ca828fb8997c78bd2ca45f9fc5a5f5845ceb8b44cd0c75b19bd"
+        },
+        "regions_shared_no_delta": {
+          "bytes": 2111313,
+          "exact": true,
+          "encode_seconds": 0.08355320000555366,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 2111249,
+            "record_visits": 585,
+            "records_read": 585,
+            "decoded_words": 262144,
+            "leaf_visits": 512,
+            "requested_cells": 262144,
+            "encoded_bytes_touched": 2111313
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 265533,
+              "record_visits": 85,
+              "records_read": 85,
+              "decoded_words": 32768,
+              "leaf_visits": 64,
+              "requested_cells": 4096,
+              "encoded_bytes_touched": 265597
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 4515,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4579
+            }
+          },
+          "physical": {
+            "records": 585,
+            "leaf_bytes": 2101248,
+            "directory_bytes": 10001
+          },
+          "logical": {
+            "records": 585,
+            "bytes": 2111249
+          },
+          "modes": {
+            "axes=0,codec=0": 512
+          },
+          "packet_sha256": "a8019a1ea5bb8ca828fb8997c78bd2ca45f9fc5a5f5845ceb8b44cd0c75b19bd"
+        }
+      }
+    },
+    {
+      "fixture": "doc2sql_source_byte_window",
+      "shape_zyx": [
+        36,
+        64,
+        32
+      ],
+      "occupied_cells": 71955,
+      "logical_value_bytes": 575640,
+      "source_sha256": "7a2551fd7bb53e033f0fb2e41f2be940219cd9a387b1b0525c2b98c0302892d8",
+      "linear_best": {
+        "bytes": 244681,
+        "row_major_bytes": 244681,
+        "axis_permutation": 0,
+        "six_axis_order_bytes": [
+          244681,
+          406425,
+          280915,
+          422704,
+          424622,
+          431538
+        ],
+        "codec": 1,
+        "mask_codec": 3,
+        "mask_bytes": 76,
+        "exact": true
+      },
+      "variants": {
+        "regions_existing": {
+          "bytes": 407219,
+          "exact": true,
+          "encode_seconds": 0.027407500077970326,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 407155,
+            "record_visits": 189,
+            "records_read": 189,
+            "decoded_words": 81920,
+            "leaf_visits": 160,
+            "requested_cells": 71955,
+            "encoded_bytes_touched": 407219
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 94840,
+              "record_visits": 43,
+              "records_read": 43,
+              "decoded_words": 16384,
+              "leaf_visits": 32,
+              "requested_cells": 2048,
+              "encoded_bytes_touched": 94904
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 52216,
+              "record_visits": 29,
+              "records_read": 29,
+              "decoded_words": 10240,
+              "leaf_visits": 20,
+              "requested_cells": 1120,
+              "encoded_bytes_touched": 52280
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 102903,
+              "record_visits": 57,
+              "records_read": 57,
+              "decoded_words": 20480,
+              "leaf_visits": 40,
+              "requested_cells": 2249,
+              "encoded_bytes_touched": 102967
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 3489,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 3553
+            }
+          },
+          "physical": {
+            "records": 189,
+            "leaf_bytes": 403886,
+            "directory_bytes": 3269
+          },
+          "logical": {
+            "records": 189,
+            "bytes": 407155
+          },
+          "modes": {
+            "axes=0,codec=1": 160
+          },
+          "packet_sha256": "705c42939ca1443f9c1e3fdca49fa4ac0d59ecc66109b64e51ff4cb8f9e5cd71"
+        },
+        "regions_delta": {
+          "bytes": 407219,
+          "exact": true,
+          "encode_seconds": 0.14578979997895658,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 407155,
+            "record_visits": 189,
+            "records_read": 189,
+            "decoded_words": 81920,
+            "leaf_visits": 160,
+            "requested_cells": 71955,
+            "encoded_bytes_touched": 407219
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 94840,
+              "record_visits": 43,
+              "records_read": 43,
+              "decoded_words": 16384,
+              "leaf_visits": 32,
+              "requested_cells": 2048,
+              "encoded_bytes_touched": 94904
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 52216,
+              "record_visits": 29,
+              "records_read": 29,
+              "decoded_words": 10240,
+              "leaf_visits": 20,
+              "requested_cells": 1120,
+              "encoded_bytes_touched": 52280
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 102903,
+              "record_visits": 57,
+              "records_read": 57,
+              "decoded_words": 20480,
+              "leaf_visits": 40,
+              "requested_cells": 2249,
+              "encoded_bytes_touched": 102967
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 3489,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 3553
+            }
+          },
+          "physical": {
+            "records": 189,
+            "leaf_bytes": 403886,
+            "directory_bytes": 3269
+          },
+          "logical": {
+            "records": 189,
+            "bytes": 407155
+          },
+          "modes": {
+            "axes=0,codec=1": 160
+          },
+          "packet_sha256": "705c42939ca1443f9c1e3fdca49fa4ac0d59ecc66109b64e51ff4cb8f9e5cd71"
+        },
+        "regions_shared": {
+          "bytes": 484242,
+          "exact": true,
+          "encode_seconds": 0.1483621000079438,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 484178,
+            "record_visits": 189,
+            "records_read": 189,
+            "decoded_words": 81920,
+            "leaf_visits": 160,
+            "requested_cells": 71955,
+            "encoded_bytes_touched": 484242
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 111557,
+              "record_visits": 43,
+              "records_read": 43,
+              "decoded_words": 16384,
+              "leaf_visits": 32,
+              "requested_cells": 2048,
+              "encoded_bytes_touched": 111621
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 62008,
+              "record_visits": 29,
+              "records_read": 29,
+              "decoded_words": 10240,
+              "leaf_visits": 20,
+              "requested_cells": 1120,
+              "encoded_bytes_touched": 62072
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 121673,
+              "record_visits": 57,
+              "records_read": 57,
+              "decoded_words": 20480,
+              "leaf_visits": 40,
+              "requested_cells": 2249,
+              "encoded_bytes_touched": 121737
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 3944,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4008
+            }
+          },
+          "physical": {
+            "records": 189,
+            "leaf_bytes": 480909,
+            "directory_bytes": 3269
+          },
+          "logical": {
+            "records": 189,
+            "bytes": 484178
+          },
+          "modes": {
+            "axes=0,codec=1": 129,
+            "axes=0,codec=3": 31
+          },
+          "packet_sha256": "2696802d7ab13e222fc65258ae5b6854fabedd837212d8185e76d232212f5ec8"
+        },
+        "regions_shared_no_delta": {
+          "bytes": 484242,
+          "exact": true,
+          "encode_seconds": 0.025919599924236536,
+          "full_read": {
+            "header_bytes": 64,
+            "record_bytes": 484178,
+            "record_visits": 189,
+            "records_read": 189,
+            "decoded_words": 81920,
+            "leaf_visits": 160,
+            "requested_cells": 71955,
+            "encoded_bytes_touched": 484242
+          },
+          "queries": {
+            "plane_z": {
+              "header_bytes": 64,
+              "record_bytes": 111557,
+              "record_visits": 43,
+              "records_read": 43,
+              "decoded_words": 16384,
+              "leaf_visits": 32,
+              "requested_cells": 2048,
+              "encoded_bytes_touched": 111621
+            },
+            "plane_y": {
+              "header_bytes": 64,
+              "record_bytes": 62008,
+              "record_visits": 29,
+              "records_read": 29,
+              "decoded_words": 10240,
+              "leaf_visits": 20,
+              "requested_cells": 1120,
+              "encoded_bytes_touched": 62072
+            },
+            "plane_x": {
+              "header_bytes": 64,
+              "record_bytes": 121673,
+              "record_visits": 57,
+              "records_read": 57,
+              "decoded_words": 20480,
+              "leaf_visits": 40,
+              "requested_cells": 2249,
+              "encoded_bytes_touched": 121737
+            },
+            "point": {
+              "header_bytes": 64,
+              "record_bytes": 3944,
+              "record_visits": 4,
+              "records_read": 4,
+              "decoded_words": 512,
+              "leaf_visits": 1,
+              "requested_cells": 1,
+              "encoded_bytes_touched": 4008
+            }
+          },
+          "physical": {
+            "records": 189,
+            "leaf_bytes": 480909,
+            "directory_bytes": 3269
+          },
+          "logical": {
+            "records": 189,
+            "bytes": 484178
+          },
+          "modes": {
+            "axes=0,codec=1": 129,
+            "axes=0,codec=3": 31
+          },
+          "packet_sha256": "2696802d7ab13e222fc65258ae5b6854fabedd837212d8185e76d232212f5ec8"
+        }
+      }
+    }
+  ],
+  "finding_replication": [
+    {
+      "seed": 107,
+      "edits": "none",
+      "region_bytes": 14169,
+      "linear_best_bytes": 2097216,
+      "exact": true
+    },
+    {
+      "seed": 107,
+      "edits": "one_global",
+      "region_bytes": 18273,
+      "linear_best_bytes": 2097216,
+      "exact": true
+    },
+    {
+      "seed": 107,
+      "edits": "one_per_region",
+      "region_bytes": 2111313,
+      "linear_best_bytes": 2097216,
+      "exact": true
+    },
+    {
+      "seed": 128,
+      "edits": "none",
+      "region_bytes": 14169,
+      "linear_best_bytes": 2097216,
+      "exact": true
+    },
+    {
+      "seed": 128,
+      "edits": "one_global",
+      "region_bytes": 18273,
+      "linear_best_bytes": 2097216,
+      "exact": true
+    },
+    {
+      "seed": 128,
+      "edits": "one_per_region",
+      "region_bytes": 2111313,
+      "linear_best_bytes": 2097216,
+      "exact": true
+    }
+  ],
+  "protocol": "Python structural prototype calling existing native SQLNEW codecs. Full packets include headers, sparse occupancy, region directories, edge biases and compressed payloads. Read counters count distinct encoded records and unique decoded leaves with a fresh per-query cache; they are logical work, not physical disk I/O or native latency.",
+  "source_sha256": "f5617f7893daf0198245badaa5a5575d02484668b9b2c3ba081405bb5140b28e",
+  "library_sha256": "1281898cb5b2139ee06f181a5ac6cc8fd3c29e21b5f31ed68288848c72cbb400",
+  "source_byte_control": {
+    "paths": [
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\__init__.py",
+        "sha256": "0599ffc58cd054711b51c697c90938d10a3709ae01d96983a8dc59223bb97e2b"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\_bounded_zlib.py",
+        "sha256": "40482afe02daaa990aef7def20a58f41b672a8ff7ef4122aee962963abd79a7e"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\_crypt.py",
+        "sha256": "e90cd58029b459191a402798cb1058bce356a8973494b35d39d342d56eb5d716"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\_security.py",
+        "sha256": "3d984b3c2247f42324e0a7baf5ade0a35618141dbb277b42e0a93cb4f546e7d5"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\afp.py",
+        "sha256": "d79502b92d5d793e347691f7e657f8430846113b03de8b2dc4ece7cd50dc69b1"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\bitmap.py",
+        "sha256": "538a2a31f877ae26765a1b2976d71dc6de4a9a0ae0753d967a09786579485ff5"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\cfb.py",
+        "sha256": "019d9bfa06cdbaaf01331ac19c69e415fc075e73b036515aa5596ee219568e2a"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\cff.py",
+        "sha256": "190f7c45efb74b437927fe7fd11e16df68e34891c0051d1814e6d33f06c0b5fe"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\jpeg.py",
+        "sha256": "902c6a3ea270dd8b276d4fe3e5cec7d054b63987ad14f7878a8a0683bbb322a2"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\legacy_raster.py",
+        "sha256": "ce2841ffeac516f3520d2ff3cd2c7c202db2a005787c92268101a7b29dd40e36"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\metro2.py",
+        "sha256": "1154f52645fdc0c5dd077b0b2026be2ae0b01007133730dbc4ce9ad3ff08e8e8"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\msg.py",
+        "sha256": "e5a235c54ef45d9b95485c6f5e63e8e77220078b5e125260194979f6e662a3ae"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\native.py",
+        "sha256": "6864b3b6b720f9c6d94a3fb9e3cc4c136a96271ea5c80a429c13f1b789706a1d"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\office.py",
+        "sha256": "38ca60cdcc81611359ded69f3797a518b0ca9f09203f3d6fa35fb9f239c7d338"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\pdf.py",
+        "sha256": "dfea2f50e32d1431790a45ef359c6ffe4c957944f090d9b1c6f8d0adca0608c8"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\pdf_text.py",
+        "sha256": "7cd8bfff50d8eadcf872103baf816a2ce7def11ac8a79734ab8330d867bbbc68"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\png.py",
+        "sha256": "3be5216581925660a9925c13a5e4076de974e62152044d408cd630d8079497a1"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\records.py",
+        "sha256": "1a3d67a5fcd5e840b470744653aa0dc77f682c0de4f2dbdb0b6c4437c7756a22"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\tabular.py",
+        "sha256": "ea6e73560857b1b8a76bcef6e0ff79ff3c10561369a26f20d093967bc478f774"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\tiff.py",
+        "sha256": "d8edcc33b70faecb719d6c17107ab5eeecb7da89d3e6bf4986c44b4ef1646bb4"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\truetype.py",
+        "sha256": "cc9f6d3287666d1ae5c2949759107507122879f4136d0ba8d4b7fa00a8abed6b"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\type1.py",
+        "sha256": "f5f218509f3c8d9f26b2adcd054cfa125aca203e786e4bae302e04c1ca490ecf"
+      },
+      {
+        "path": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\src\\doc2sql\\codecs\\x9.py",
+        "sha256": "362118ca13ce41d6d32ec57c80b5e80475c061d3280e0c9257883a30de3ae50a"
+      }
+    ],
+    "description": "Sorted codec Python source files concatenated, capped at 2 MiB and truncated to whole 64-bit words. Arbitrary z,y,x layout; this is source text, not extracted document evidence."
+  }
+}

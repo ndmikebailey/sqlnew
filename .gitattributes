@@ -1,0 +1,5 @@
+* text=auto eol=lf
+# Preserve the three upstream files whose canonical Git blobs use CRLF.
+tool/GetFile.cs -text
+tool/GetTclKit.bat -text
+tool/build-all-msvc.bat -text

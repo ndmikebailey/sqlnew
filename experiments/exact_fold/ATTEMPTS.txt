@@ -1,0 +1,1444 @@
+SQLNEW EXACT FOLDING AND MERGING EXPLORATION
+Started 2026-10-13. One researcher/agent. No pytest or security suites.
+
+Aim
+Find a practical native representation that folds structured data, reconstructs
+every original value exactly, and permits inexpensive merging. Judge attempts
+by complete representation size, encoding/decoding work, and direct equality.
+Keep all attempt summaries in this file. Machine-readable measurements and
+reproducible programs are supporting artifacts, not separate narratives.
+
+Existing work
+The checkout began on sqlnew at ed1db6f76, with existing modifications in
+columnar.c, columnar_batch.inc, columnar_index.inc, columnar_write.inc, FORMAT.md,
+README.md, VALIDATION.md and three untracked core-review files. Those changes
+belong to the earlier development pass and must be preserved.
+
+Primary mathematics located
+OpenAI's 2026-10-06 release:
+https://openai.com/index/sharing-ai-progress-in-mathematics/
+https://github.com/openai/math
+Catalogue snapshot: 1581d4cbdd69a0faf34b2089614fe2a814316a6a
+Current catalogue: 719 manuscripts / 372 families, with mixed verification
+status. These are not 719 independently certified solutions. The catalogue was
+screened for computation, representation, reconstruction, and combinatorics.
+Selected proof sources are cached under ignored build/math-exploration/.
+This is a selective application review, not verification of the whole collection.
+
+Relevant primary sources and initial application decisions
+107: Matrix multiplication exponent <=9/4. Finite Fourier labels separate
+shared tensor legs; interpolation connects approximate constructions to exact
+algebra. No competitive finite matrix size is specified. Inspiration: separate
+shared structure from small exact residuals; do not claim a new matrix engine.
+https://github.com/openai/math/tree/main/preprints/Matrix-Multiplication-Nine-Fourths-October-2-2026
+
+109: Integer multiplication below n log n. Exact dyadic intermediates and
+restored auxiliary values; exponent improvement kappa=2^-182. The construction
+itself states extremely large thresholds. Inspiration: reversible integer
+transforms and explicit bit accounting; not a practical big-integer replacement.
+https://github.com/openai/math/tree/main/preprints/Integer-multiplication-below-n-log-n-September-23-2026
+
+128: Deterministic factor-two shortest common superstring. The construction
+uses occurrence counts, balanced substring graphs, periodic layers and budgeted
+connections; its guarantee is not a guarantee for ordinary greedy overlap.
+Explore a small bounded shared-span representation without claiming factor two.
+https://github.com/openai/math/tree/main/preprints/A-Polynomial-Time-2-Approximation-for-Shortest-Common-Superstring-September-24-2026
+
+116,119,130,159: Sources downloaded for targeted review of exact identities,
+information retained by summaries, exact transforms, and arithmetic structure.
+Their applicability must be established before claiming any implementation uses
+their theorems. No imported proof source is copied into the public-domain engine.
+
+Experimental contract
+Reconstruction means exact original bytes, row order, duplicates, and NULL
+positions, not approximate values or matching checksums alone. Hashes identify
+artifacts; full equality checks establish recovery on each measured fixture.
+Selection costs, headers, anchors, residuals, and merge metadata count. Include
+unstructured controls. Speculative derivations are our own and do not inherit
+the source manuscripts' guarantees.
+
+Planned attempts
+A. Integer polynomial prediction in Z/(2^64), with exact residuals and direct
+   reconstruction. Investigate whether sequential differencing helps more.
+B. Numeric byte-plane transposition and XOR lifting, with independent tiles;
+   retain raw data when a fold does not pay for its metadata or work.
+C. Shared-span strings: overlap pooling with explicit offsets and lengths.
+D. Merge folded tiles without expanding all values; establish which output
+   properties are invariant under different merge parenthesizations.
+
+Results will be appended as each attempt completes.
+
+Attempt 1: Size scout (completed)
+scout.py evaluates identity, XOR, first differences and second differences,
+with/without byte-plane transposition, using the existing SNZ compressor.
+All transforms operate on uint64 bit patterns, including REAL values. They do
+not subtract floating-point numbers. Every residual and every source byte is
+retained. A 1024-word quadratic integer fixture shrank from an existing stored
+column frame of 2864 bytes to a 252-byte candidate. A floating timestamp fixture
+went from 6240 to 314 bytes. Random words did not improve. These are constructed
+fixtures and size comparisons, not native throughput evidence.
+
+Attempt 2: Shared string spans (completed, not promoted)
+Deterministic bounded overlap pooling stores (offset,length) for every original
+string, preserving order and duplicates. Full equality passed. On 1024 sliding
+256-byte windows, compressed bytes improved 23084 -> 16670. Ordinary generated
+logs worsened 7028 -> 12331; random 64-byte strings worsened 68989 -> 71329.
+The prototype is retained in scout.py for a possible specialized window store.
+It is not the factor-two algorithm in family 128: that construction explicitly
+enumerates O(L^2) substring vertices and is not a suitable hot write path here.
+
+Attempt 3: Native tiled residual folds and canonical merges (completed)
+fold.c uses 128-word tiles aligned to absolute logical positions. Per tile it
+chooses exactly the smallest complete encoding among raw words, base offsets,
+first differences, second differences and XOR differences. Residual minima,
+packed widths, seeds and headers all count; ties use a fixed mode order.
+Every operation is in Z/(2^64). NULL maps belong to the containing column frame.
+
+Why inversion is exact: a first difference d_i=x_i-x_(i-1) is inverted by
+x_i=x_(i-1)+d_i, modulo 2^64. A second difference is inverted using the prior
+two words. Zigzag is a bijection on 64-bit words. Removing an unsigned minimum
+and bit-packing the remaining range also loses no information. Applying the
+same identities to IEEE bit patterns preserves all bits without floating error.
+This elementary derivation is independent of the new manuscripts' validity.
+
+Why merging is reproducible: each absolute tile has a deterministic encoding.
+Joining adjacent intervals leaves every interior tile untouched. If the join
+cuts a tile, at most 128 words are decoded and that single tile is re-encoded.
+Therefore merge(fold(A),fold(B))=fold(A followed by B) at matching origins.
+Induction gives identical bytes for every ordered parenthesization. Order is
+preserved: merging is associative over adjacent intervals, not commutative.
+Materialized merging copies compressed bytes; it is not O(1) and not zero-copy.
+
+216 direct canonical/equality cases passed, spanning empty/short/boundary-sized
+inputs, six origins, random splits and left/right/random merge trees.
+For 262144 words (2 MiB), initial Windows/MSVC medians in milliseconds:
+fixture          SNZ bytes  fold bytes  SNZ enc  fold enc  SNZ dec fold dec merge
+quadratic         1839850      57376     11.12     2.31     3.58     1.94   .012
+jittered clock    1576910     204832      6.95     2.48     3.19     2.01   .024
+piecewise         1321853      40992      4.61     2.18     3.30     1.83   .015
+float clock       1589584     106528      6.56     2.33     3.15     1.90   .015
+float curve       2097168    1227422     15.83     3.36     1.48     2.41   .598
+float decimal      786169    1499168      3.39     3.55     2.70     2.37   .642
+random bits       2097168    2105376     16.01     3.07     1.54     1.66   .785
+These compare native blob codecs, NOT the existing integer column encoder.
+Fold+SNZ sometimes saves more but adds work. Decimal repetition defeats this
+fold, and random input should keep its old representation. Column integration
+must compare complete encoded sizes and measure real SQL ingestion/scans.
+Raw measurements: build/math-exploration/native.json (11 repetitions, warm).
+
+Additional proof review
+116 constructs an identity-detecting matrix substitution of dimension
+O(n^3 s^6); this is not a compact fingerprint for arbitrary stored data and is
+not used as a shortcut for equality. 119 concerns noisy one-bit summaries of
+uniform independent bits, not lossless compression of arbitrary data. 130 uses
+exact complex arithmetic with supplied roots, unlike machine doubles; no FFT
+speed claim is transferred to SQLNEW. 159 guarantees arithmetic progressions
+under density/asymptotic assumptions, not that database columns must fit a small
+model. These sources motivated questions, but none certifies the prototype.
+
+Attempt 4: Column integration (completed; retained as opt-in)
+Promote only when an actual CSC column candidate beats the previous compressed
+frame, and measure whole SQL operations against the saved current-tree library.
+
+The first integration compared both complete encodings. On 65536 values it
+reduced column payloads substantially but generally added 10-17% ingestion work.
+It was superseded, rather than declared an unconditional speed improvement.
+Its results remain in build/math-exploration/column-first-integration.json.
+
+Attempt 5: Bounded comparison instead of fully encoding the loser (retained)
+A 128-word probe rejects weak candidates. The full fold must first be at most
+half the legacy uncompressed frame size. The folded candidate is compressed,
+then the legacy compressor runs with a stopping bound. Its written output plus
+pending literal bytes is a monotone lower bound on its eventual coded length.
+If that bound AND the raw fallback size exceed the comparison threshold, the
+legacy attempt stops. Otherwise it finishes normally. Thus selection still
+guarantees at least 16 bytes and 10% saved against the actual legacy encoding;
+the probe can miss an opportunity but cannot select a larger frame.
+
+Final actual-column run: 262144 values per fixture, Windows x64/MSVC /O2 /MD.
+Typed source setup excluded; in-memory table ingestion includes the SQL write.
+The scan uses min(x+0),max(x+0),count(x+0) to force decoding, bypassing summaries.
+Values are checked in full; float values are compared by their binary64 bytes.
+Four retained ingestion samples, 17 scan samples and 31 point samples.
+
+fixture        old bytes  new bytes  old/new  ingest old/new ms scan old/new ms
+quadratic         984448      49865    19.74     44.02 / 44.89     27.77 / 26.62
+jittered clock    667648     199792     3.34     45.91 / 45.54     27.12 / 27.91
+float clock      1597639      61239    26.09     47.15 / 45.25     31.77 / 30.85
+float curve      2109440    2109440     1.00     50.79 / 48.93     29.23 / 29.19
+decimal          1038449    1038449     1.00     46.02 / 52.42     31.15 / 30.96
+random integer   2109440    2109440     1.00     48.65 / 50.95     35.25 / 34.95
+
+These are column payload bytes, not complete database sizes. Small timing
+differences varied between runs. The decimal write penalty is real in these
+samples even though the old frame wins; the selection work is not free.
+All rejected-fold frames matched the baseline byte-for-byte. The default-off
+mixed INTEGER/REAL/TEXT/BLOB example and ordinary sqlnew_pack outputs also
+matched byte-for-byte. This is why column selection is opt-in, not a universal
+default. Storage savings on the three structured fixtures were stable.
+
+Retained functionality and usage
+The new native implementation lives in ext/sqlnew/fold.c and is registered by
+the normal SQLNEW build. No Python or NumPy is required at engine runtime.
+
+  sqlnew_fold(word_blob [, absolute_word_origin])
+  sqlnew_unfold(folded_blob)
+  sqlnew_fold_merge(left_folded_blob, right_folded_blob)
+
+Inputs to fold are little-endian 64-bit words (blob length divisible by eight).
+They may be signed integer representations, IEEE bit patterns, or opaque words.
+The default origin is zero; adjacent chunks must use matching absolute origins.
+The maximum raw input is 64 MiB. Empty folds act as identities at their origin.
+The functions preserve the complete original bytes, including NaN payload bits,
+infinities and negative zero when treated as opaque words. Columnar REAL values
+continue to follow the existing finite-value contract.
+
+For automatic numeric column selection, explicitly enable it on the connection:
+
+  SELECT sqlnew_columnar_folding(1);
+  CREATE VIRTUAL TABLE readings USING sqlnew_columnar(t INTEGER, value REAL);
+  -- Ordinary INSERT/UPDATE/SELECT/compaction continue to use the existing API.
+  SELECT sqlnew_columnar_folding();   -- current setting
+  SELECT sqlnew_columnar_folding(0);  -- disable future folded writes
+
+The setter returns the previous setting. New connections default to zero.
+Reading already-folded columns does not require enabling new folded writes.
+This is an experimental rollout candidate, not a change to the stability claim.
+There was no change to src/, the pager, the file signature, or SQL semantics.
+Old executables do not decode the new CSC codec 2; use this build for files
+written with folding enabled. No mass rewrite or migration was performed.
+
+Format notes (all integers little-endian)
+SFL1 header: magic at 0 (4 bytes), tile log2=7 at 4 (1 byte), zero bytes 5..7,
+unsigned absolute origin at 8 (8 bytes), word count at 16 (8 bytes), zero 24..31.
+Tiles terminate at absolute multiples of 128. Their word counts are inferred
+from origin and total count. Each has a 4-byte mode/width/zero/zero prefix.
+Mode 0 stores raw words. Mode 1 stores residual minimum then bit-packed offsets.
+Modes 2/4 store minimum, one seed, then first-difference/XOR residual offsets.
+Mode 3 stores minimum, two seeds, then second-difference residual offsets.
+Difference modes use reversible zigzag on unsigned modular differences.
+Offsets are least-significant-bit first, with zero unused bits. A fixed ordering
+of equal-size candidates establishes a unique encoding for each tile.
+SFL1 itself has no checksum; automatic column storage retains its SNZ1 wrapper.
+
+CSC1 numeric codec 2: original type, slot count and NULL bitmap retained;
+width=0 and header bytes 8..27 zero. Payload is one SFL1 frame at origin zero,
+containing only non-NULL words in slot order. The usual SNZ1 wrapper surrounds
+the complete CSC1 frame. Non-numeric and affine encodings are preserved.
+
+Final direct checks
+360 canonical fold/merge/equality cases including empty identities; full byte
+recovery for the eight native 262144-word workloads; full value recovery for
+six actual 262144-row column workloads; 2107 special raw words; 1038 integer
+extreme/NULL values; 1038 subnormal/maximum-finite/NULL REAL values. Nullable
+column edits, index reads, compaction, rollback of exact stored bytes, summaries
+and reopen also matched their independent expected values. This work used no
+pytest, unittest suite, sanitizer run, security scan, or sub-agents.
+
+Reproduction on this Windows workspace
+  python sqlnew/build.py
+  python experiments/exact_fold/scout.py
+  python experiments/exact_fold/native.py
+  python experiments/exact_fold/column.py 262144
+
+The comparison baseline was copied before edits to
+build/math-exploration/baseline/sqlnewdb.dll, with native source copies and
+hashes alongside it. That saved library includes the user's pre-existing
+uncommitted review fixes. It is not the original repository HEAD. Native
+experiment compilation uses local Visual Studio tools. NumPy is used by the
+measurement scripts only. The accepted build passes the existing warning-as-
+error extension compilation. Performance has only been measured on this host.
+
+The consolidated machine-readable evidence is experiments/exact_fold/results.json.
+It includes source/library hashes, per-sample timings, frame sizes, and the
+direct-check counts. Earlier attempts and downloaded primary sources remain
+under ignored build/math-exploration/. This file is the sole narrative attempt log.
+
+What this establishes
+A useful exact fold/merge primitive, with cheap ordered merging and substantial
+compression on some numeric structures, is now available in the engine. The
+new mathematical collection helped select representation questions; this code
+does not implement or depend on the newly claimed asymptotic theorems. The
+correctness argument for its reversible transforms and canonical merging is
+self-contained above. No claim is made that all 719 manuscripts were verified,
+that all data compresses, that merge is constant-time, or that SQL queries gain
+the same speedup as the isolated native codec. Canonicality applies to folded
+word streams, not to entire SQLite-derived database files or arbitrary SQL
+floating-point aggregate execution orders.
+
+Further primary proof links used for applicability review
+https://github.com/openai/math/tree/main/preprints/Uniform-Matrix-Hitting-Points-in-Every-Positive-Characteristic-October-4-2026
+https://github.com/openai/math/tree/main/preprints/Sharp-binary-information-contraction-on-the-discrete-cube-September-24-2026
+https://github.com/openai/math/tree/main/preprints/An-explicit-power-saving-for-the-exact-discrete-Fourier-transform-September-25-2026
+https://github.com/openai/math/tree/main/preprints/Quasipolynomial-Bounds-for-Arithmetic-Progressions-September-23-2026
+
+Design clarification: independent lattices and a shared reference map
+2026-10-13. Repository review only; no additional engine implementation.
+
+User clarification: this is an exploratory concept, not a specification or
+feature commitment. Any element may be changed, omitted or replaced. The
+implementation comparison below records what exists; it is not a checklist
+of things that must be built. Candidate designs and experiments are options,
+not an agreed roadmap. Evaluate useful representation and retrieval behavior
+without requiring a literal implementation of the visual metaphor.
+
+The user redirected the discussion away from automatic question discovery.
+Their proposed model contains many independent, irregular three-dimensional
+lattices, cubes and flat data planes. Shape/spacing reflects data quantity.
+Rows, columns and potentially multi-page cells retain addressable identities;
+relationships can cross structures without forcing a shared schema or parent
+group. Shared descriptive information belongs in a master reference system.
+Layers may have separate encryption and occupy separate SQLNEW root files,
+including files reached over a network. The precise meanings of X/Y/Z and
+whether geometry itself must be authoritative remain open design questions.
+
+Observed implementation, from current local sources:
+- experiments/lattice_warp implements reversible shifts of fixed uint8 grids,
+  with a 32x32x32 default and a viewer. It does not implement this federated
+  address space, variable-length cells, or a master relationship catalogue.
+- Native SQLNEW supports typed compressed columns, text/blob payloads, sparse
+  updates and joins across locally attached SQLNEW files. Its columnar tables
+  currently allow at most 63 columns and use 1024-row groups with an approximately
+  64 MiB frame limit. Millions of logical columns need another representation.
+- No SQLNEW master lattice directory, remote resolver or per-layer encryption
+  implementation was found in ext/sqlnew or the inspected runtime wrappers.
+- The user confirmed the project is C:/Users/mikea/Documents/projects/doc2sql.
+  That checkout has cross-format ingestion, source hashes, native
+  locators, typed values and source/page/cell relationships. These are useful
+  adapter inputs; its selected-library model is not a network-wide catalogue.
+  The preserved SQLNEW/doc2sql integration remains a paused experiment.
+
+Structural direction, still exploratory and not implemented:
+The user clarified that registering objects in another table does not capture
+the idea. The application's underlying data model and operations should embody
+the structure. Symmetry may survive even when physical spacing and payload
+sizes are asymmetric. The earlier catalogue/resolver-first suggestion is
+superseded as the proposed starting point. Shared descriptive reference data
+can remain useful without being the mechanism that creates the lattice.
+
+One interpretation to explore is a native region structure with uniform rules
+for selecting, slicing, subdividing and composing along each coordinate axis.
+Rows, columns and planes would be selections of that structure. Its own
+directories would describe occupied regions and directly locate child regions
+or payload extents. Regular adjacency would follow from the addressing rules;
+irregular connections could be stored as structural links. Logical symmetry
+does not require equal byte lengths, identical codecs or identical access costs.
+Specific semantic relationships still require explicit information; position
+alone cannot establish them. Meanings of axes remain open.
+
+Potential retained inner layers: SNZ byte compression, SFL exact word folding,
+typed payload encoding, and the existing pager as an initial backing store.
+Sparse-update and summary approaches can inform adapters, but their present
+implementations assume table columns and rowid groups. CsBlock contains fixed
+column arrays and masks; the existing storage engine is not already symmetric
+across three axes. Ordered fold merging remains valid only for contiguous
+word streams with compatible origins. Axis changes must preserve ordering
+contracts, especially for overflow-sensitive sums and floating arithmetic.
+
+A possible structural experiment would store unequal-sized regions directly
+in a persistent region directory, with no per-cell registration table. Select
+the same occupied cells through different orders of axis slicing, including
+sparse gaps and multi-page payloads. Split and recompose regions while checking
+exact cell identity, explicit versions and recovery. Numeric leaves can use
+the existing fold codec. Measure directory bytes, payload bytes touched and
+rewrite cost. Native relationships, network transport and encryption can be
+explored separately; this is an option, not a committed feature list or rewrite.
+
+Attempts 6-8: structural symmetry, asymmetric payloads and shared regions
+Session continuation after the user authorized structural experiments and
+requested a pause at any significant finding. A significant result and a
+significant limitation were found. Further feature work is paused for review.
+
+Implementation and scope
+experiments/exact_fold/regions.py is an isolated Python representation scout
+calling the current native SQLNEW compression/folding functions. It writes
+self-contained binary region packets, with direct byte offsets to children.
+There is no SQL object-registration table or separate per-cell address table.
+No main-engine or doc2sql source was changed in these attempts. The work was
+solo, with direct recovery experiments and no pytest or security suites.
+
+Each packet has a 64-byte root containing dimensions, extent, root offset,
+root anchor and occupied-cell count. A region splits uniformly along X/Y/Z
+into up to eight occupied children. Empty children are omitted. The present
+leaf extent is 8x8x8 logical words, while its encoded byte length is variable.
+Partial leaves contain an occupancy bitmap; an absent cell differs from an
+occupied zero. Leaves preserve arbitrary 64-bit patterns. This scout does not
+yet implement multi-page text-valued cells, arbitrary relationship links,
+incremental durable updates, SQL query execution, encryption or networking.
+
+Each record has an 8-byte kind/flags/mode/length header. A branch contains a
+one-byte child mask and a 16-byte (child byte offset, value translation) pair
+for each occupied child. Leaf payloads use the smallest of raw bytes, SNZ,
+SFL, or SNZ(SFL). All packet sizes below include directories, record headers,
+occupancy maps, translations and payloads. Source arrays and encoder caches
+are not needed by the decoder. Generic decoder code is shared in every case.
+
+The reference comparison is a standalone linear packet using the same four
+codec choices, searching all SIX axis orders and recording the selected order.
+It includes its 64-byte header and compressed occupancy map where needed.
+Both linear and region packets were written and reopened for exact recovery.
+These comparisons are complete experimental packet sizes, not whole SQLNEW
+database sizes and not measured SQL query or network latency.
+
+Attempt 6: uniformly subdivided regions with existing leaf codecs
+Variant regions_existing. Direct structural addressing and sparse/ragged
+recovery work, but subdivision alone hurt compression: the quadratic fixture
+grew from the best linear packet's 21,042 bytes to 685,457 bytes. Boundaries
+interrupt useful long runs and add directory overhead. The random control
+grew about 0.67%. A source-text control also grew. Rejected as a compression
+multiplier on its own; retained as the structural-work comparison baseline.
+
+Attempt 7: reversible differences along multiple axes
+Variant regions_delta. Evaluate all eight subsets of X/Y/Z differences per
+leaf, preserving boundary seeds, and choose the smallest complete leaf frame.
+Differences and inverse prefix sums operate modulo 2^64, so no approximate
+fitting, floating arithmetic or quantization occurs. Operators on distinct
+axes commute; each one is invertible by prefix sums along that axis.
+Quadratic region storage improved to 129,876 bytes, still much larger than
+the 21,042-byte strongest linear comparison. Arbitrary source bytes did not
+benefit. Rejected as a sufficient standalone improvement.
+
+Attempt 8: share translated structure recursively
+Variant regions_shared combines axis differences with exact regional sharing.
+Subtract the first occupied word from every occupied word in a leaf. Store
+that anchor on the incoming edge. At each parent, store child anchors relative
+to its first child's anchor, moving the common anchor to the parent's incoming
+edge. Intern identical encoded records by exact byte equality. Equal normalized
+leaves and equal normalized subtrees can therefore occupy the same bytes.
+Coordinates follow traversal paths, so shared storage does not merge cell
+identities. The graph is acyclic: every child record precedes its parent.
+
+For a leaf, value[i] = anchor + normalized[i] modulo 2^64. For a branch,
+child_anchor = parent_anchor + edge_translation modulo 2^64. These identities,
+the explicit occupancy bitmap and reversible leaf transforms establish exact
+recovery inductively. There is no reliance on a hash match alone: dictionary
+keys are complete record bytes and equality is checked by the Python mapping.
+Canonical rebuild applies to the same values, occupancy, dimensions, options
+and traversal order. Axis permutations need not produce identical packet bytes.
+
+Measured complete bytes (262,144 occupied words / 2,097,152 logical bytes for
+the first four fixtures; final fixture is 575,640 bytes of actual source text):
+
+Fixture                         Best linear    Shared regions   Linear / region
+quadratic_columns                   21,042           16,323          1.289x
+shared_irregular_motif           2,097,216           14,169        148.014x
+motif_one_edit_per_region        2,097,216        2,111,313          0.993x
+independent_bits                2,097,216        2,111,313          0.993x
+doc2sql_source_byte_window         244,681          484,242          0.505x
+
+The motif fixture is DELIBERATELY FAVORABLE: one incompressible 8x8x8 motif
+is repeated over 512 regions, with an independent random 64-bit additive base
+in each occurrence. The encoder sees only the resulting array. After exact
+normalization, all leaves share one 4,104-byte leaf record. Branch directories
+use 10,001 bytes and the root header 64 bytes, totaling 14,169 bytes. This is
+a demonstration of shared structure, not evidence of a universal 148x gain
+or a newly established mathematical compression theorem.
+
+The doc2sql control concatenates the sorted Python files under
+C:/Users/mikea/Documents/projects/doc2sql/src/doc2sql/codecs, takes at most
+2 MiB and truncates to whole words. Its geometric arrangement is arbitrary.
+It measures real source bytes, NOT extracted document evidence, a document
+corpus, or an actual doc2sql ingestion workflow. It exposes a current weakness:
+mandatory numeric normalization can harm a byte compressor's useful patterns.
+
+Ablation: regions_shared_no_delta uses the same shared structure but disables
+multiaxis differences. The motif remains 14,169 bytes, proving its gain comes
+from normalization and sharing, not the axis transform. Quadratic storage grows
+to 87,015 bytes: that fixture needs both mechanisms for the measured benefit.
+
+Significant failure boundary
+One independently changed word per 512-word motif region is only 0.1953125%
+of values. It makes every normalized leaf distinct and destroys the sharing:
+the packet grows from 14,169 to 2,111,313 bytes. The values still recover exactly;
+this is a compression failure, not corruption. Two additional independent
+motif/anchor seeds (107 and 128) reproduced these exact sizes. With only ONE
+changed value globally, both seeds instead produced 18,273-byte packets, so
+sharing survives elsewhere. Do not assume near-equal regions share efficiently.
+No exception/residual-sharing mechanism has been implemented in this attempt.
+
+Comparison correction
+The first run used only the ordinary Z/Y/X linear order, which made quadratic
+storage appear to improve from 107,707 to 16,323 bytes (about 6.6x). Searching
+all six axis orders brought the existing codec to 21,042 bytes, reducing the
+actual advantage over that stronger baseline to 1.289x. The 148.014x motif
+finding survived this correction. No further work relies on the weaker claim.
+
+Lookup-work observation, not a speed claim
+Each query starts with a fresh cache of decoded leaf records. On the favorable
+motif, any central axis plane returns 4,096 values from 64 logical leaf visits
+but decodes only ONE shared 512-word leaf. Distinct encoded records touched
+total 7,045 bytes. The unshared region version decodes 32,768 words and touches
+265,597 encoded bytes for the same result: 64x fewer words decoded and about
+37.7x fewer distinct encoded bytes. Both still visit 85 logical records and
+assemble all 4,096 result values. Output and navigation work have not vanished.
+A single-point lookup touches 4,579 encoded bytes and decodes 512 words in
+both versions; sharing did not improve that isolated lookup's work.
+
+On quadratic data, two plane directions decode 4,096 words; the third decodes
+32,768. The traversal rules are symmetric but the data and costs are not.
+These counters describe logical access to packet bytes already held in RAM;
+the runner initially reads the entire packet from disk. They are not measured
+disk I/O, network transfer, agent token savings or a native SQL timing result.
+The current Python builder's elapsed times are included for reproducibility,
+not compared against native engine ingestion or claimed as an improvement.
+
+Direct recovery checks and reproducibility
+119 structural checks cover unequal 17x25x33 dimensions, sparse occupancy,
+zero versus absence, 64-bit edge patterns, all six axis permutations and every
+axis-selection order. Selection-order checks recompute intersected bounds and
+verify each result; they do not implement independently persisted plane views.
+A non-tile-aligned split/reencode/recompose returns the original canonical
+packet. This reconstructs values and reencodes; it is not a zero-copy merge.
+Twenty primary region packets recover all occupied values after disk reopen,
+with central planes and a point verified for each. Five strongest linear
+packets also recover after reopen. Six replication packets recover exactly.
+
+Run: python experiments/exact_fold/regions.py
+Retained evidence: experiments/exact_fold/regions-results.json (not committed).
+Binary packets and intermediate results: build/math-exploration/regions/.
+The evidence includes source/library hashes, source-text fixture file hashes,
+axis-order comparisons, representation sizes, modes and per-query work counts.
+
+Decision at requested pause
+Retain the isolated scout and evidence; do not integrate this structure into
+the main engine yet. Structural normalization and sharing can multiply the
+existing codec's compression on repeated shapes and reduce repeated decoding.
+Exact whole-leaf equality is too brittle under distributed small edits, and
+numeric normalization is unsuitable as a compulsory path for arbitrary bytes.
+A next direction worth discussing is a shared exact base plus sparse exact
+exceptions with a bounded lookup dependency, alongside a byte-preserving
+fallback. This is a proposed response to the finding, not work already done.
+
+Attempt 9: immutable compressed base with automatic, separate changes
+The user proposed leaving compressed data unchanged and storing edits separately
+so reads resolve the current value without destroying shared structure. This
+attempt implements that idea in the isolated region scout. The result is
+significant enough to pause again before expanding or integrating it.
+
+Implementation
+experiments/exact_fold/overlays.py reuses regions.py and the same native codecs.
+OverlayWriter automatically keeps a mapping from LOGICAL coordinates to the
+latest replacement value or deletion. It never edits the base packet, shared
+leaf records, or another occurrence of a shared pattern. Setting a cell back
+to its base state removes its change entry. Occupied zero differs from absence.
+
+On sealing a snapshot, the writer encodes two sparse region packets: replacement
+values and deletion positions. They can share their own repeated internal
+patterns. A 128-byte outer SOV1 header records the base packet's SHA-256,
+generation, shape, child packet lengths and number of changed coordinates.
+The complete current view consists of the original base plus this overlay.
+An empty overlay occupies 256 bytes (outer header plus two empty region roots).
+The hash is checked at reader construction to bind changes to the exact base.
+
+For each requested coordinate, a deletion makes it absent, a replacement
+supplies the new exact bits, otherwise the original base supplies the value.
+Replacement and deletion masks are disjoint. When changes cover an entire
+requested selection, the reader skips the base for that selection. All reads
+use one consolidated current overlay, never a replay chain of past edits.
+Older sealed overlay bytes continue to describe their pinned earlier state.
+
+This is an actual separate change representation, not a registry that merely
+names lattice objects. The current SQLNEW column engine already has a related
+sparse-patch approach, but ext/sqlnew/columnar_write.inc merges dense patches
+at 64 changed slots. No such merge into the immutable base occurs in this scout.
+No main SQLNEW or doc2sql source was changed by this attempt.
+
+Complete stored bytes, including base, changes and all directories/headers
+The starting data is the previous deliberately favorable translated-motif
+fixture: 262,144 values, 2,097,152 logical value bytes, immutable base 14,169
+bytes. New replacement values are exact, and the best linear comparison again
+tries all six axis orders with the same four codec choices. For these modified
+arrays the best linear packet is 2,097,216 bytes.
+
+Change workload                    Changes   Base + overlay  Linear / combined
+Previous failure, same positions        512          24,540        85.461x
+One random position in each region     512          61,362        34.178x
+Random replacements, 1%              2,621         137,915        15.207x
+Random replacements, 10%            26,214         421,832         4.972x
+Random replacements, 50%           131,072       1,445,156         1.451x
+Random replacements, 100%          262,144       2,125,674         0.987x
+
+The exact 512 edits that destroyed sharing in Attempt 8 now add only 10,371
+bytes to the 14,169-byte base. Rebuilding the edited region structure required
+2,111,313 bytes. Two additional independent seeds (107,128) also produced
+14,169-byte bases plus 10,371-byte overlays and recovered every value exactly.
+Randomizing both the changed position within each region and its replacement
+value still preserves a 34.178x size advantage. Shared change positions helped
+the first case but are not required to retain the original base's sharing.
+
+The 100% replacement case is 1.36% larger than the best linear packet because
+it keeps the old base and region overhead. The reader correctly skips that
+base when everything requested is replaced. Retaining an immutable historical
+base does not imply that every later view will remain strongly compressed.
+
+Repeated edits, restoration and snapshots
+A separate unequal 17x25x33 fixture exercises an insertion into an absent cell,
+deletion, occupied zero, maximum uint64, the high signed bit, and edits at
+region boundaries. One hundred subsequent update batches repeatedly change
+two of five edited coordinates. Every current snapshot is checked in full.
+The latest overlay stays exactly 681 bytes with five entries throughout those
+100 batches. Repeated writes overwrite the latest logical exception rather
+than accumulating entries. A previously pinned reader still returns its old
+values after those writes. Restoring all original states removes all entries
+and returns the overlay to 256 bytes. The base hash remains unchanged.
+
+Different edit histories ending in the same state produce identical child
+packets; snapshot generations may differ in the outer header. An overlay for
+a different base is rejected. Keeping all 101 historical overlay packets in
+this lifecycle example would cost 68,942 bytes, plus the 2,355-byte base once.
+Latest-state consolidation therefore bounds current lookup depth and removes
+obsolete current entries; it does not make retained historical snapshots free.
+The writer does not yet structurally share bytes between different overlay
+files or implement durable snapshot publication and concurrent writers.
+
+Lookup benefits and the next observed limitation
+For the first 512-edit case, reading the full current dataset decodes one
+512-word shared base leaf and one 512-word shared update leaf. It still assembles
+all 262,144 requested values. A plane through the edits returns 4,096 values,
+applies 64 changes, touches 10,292 distinct encoded bytes and decodes 1,024
+words. An edited point can skip the base, touching 781 overlay bytes and
+decoding 512 words. An unchanged point in an edited region touches 5,360 bytes
+and decodes 1,024 words, versus the pristine base's 4,579 bytes and 512 words.
+The change layer introduces work on unchanged lookups; it is not universally
+faster simply because storage is smaller.
+
+The sparse overlay presently reuses a DENSE 512-word leaf decoder. Random
+change positions create different occupancy masks, limiting leaf sharing.
+With one random change per region, a full read decodes 165,888 overlay words
+for only 512 changed values. At 1% random replacements it decodes 260,096
+overlay words for 2,621 changes. This is a concrete lookup bottleneck despite
+good stored sizes. A next experiment should encode/decode sparse changed slots
+directly and use their occupancy before expanding values. That could retain
+the immutable-base result while reducing work proportional to unchanged slots.
+It has not been implemented here, in keeping with the requested review pause.
+
+Limits and evidence
+This solves updates to a KNOWN, already shared base. It does not automatically
+discover such a base inside imported near-matching records, and it does not
+fix the prior source-text control's poor initial numeric representation.
+All primary multipliers remain synthetic workload results, not claims about
+general document collections. The prototype handles 64-bit cells and edits
+within an existing extent; growing dimensions and variable-length text cells
+remain outside this experiment.
+
+The Python writer materializes its original base for exact no-op/revert
+comparison, and sealing materializes sparse arrays then rebuilds the change
+packets. It preserves base bytes but is not a measured low-cost native write
+path. Recorded encode times exclude writer initialization. Packets are read
+fully from disk before querying; read counters are logical memory access and
+decoded-word counts, not physical I/O, SQL latency or agent token measurements.
+
+All six main base/overlay pairs were written and reopened, with exact full,
+central-plane, edited-plane, edited-point and available unchanged-point reads.
+One hundred lifecycle snapshots and the two extra seeds also recover exactly.
+No pytest, security suite or subagent was used. Earlier engine changes remain
+untouched. There is no new format adoption or migration in the main engine.
+
+Run: python experiments/exact_fold/overlays.py
+Retained evidence: experiments/exact_fold/overlays-results.json (not committed).
+Binary base/overlay pairs and intermediate results: build/math-exploration/overlays/.
+The evidence records exact byte sizes, source/base/overlay/library hashes,
+query-work counters, density comparisons, replication and lifecycle checks.
+
+Decision at requested pause
+The immutable base plus consolidated exact changes is worth carrying forward.
+It fixes the measured destruction of sharing without modifying the base and
+keeps current lookup history depth fixed. Changes preserve existing sharing;
+they sometimes share patterns themselves, but still add stored information.
+The next question is efficient sparse change retrieval, not whether base
+immutability can preserve the multiplier. Do not assume compression gains
+alone have established improved native query performance.
+
+Attempt 10: retrieve sparse changes directly
+The user redirected the next step toward simplifying retrieval. This attempt
+keeps the immutable base and consolidated change semantics, and replaces only
+the change representation and reader. The prior overlay implementation and
+measurements remain intact for direct comparison. A useful retrieval milestone
+was reached; further expansion is paused for the requested progress report.
+
+Implementation
+experiments/exact_fold/retrieval.py adds SparseWriter and SparseReader. Callers
+use get((z,y,x)) for a value/absence or select(bounds) for a region. The reader
+resolves current values internally; callers do not inspect a change table or
+manually decompress/merge values. Logical coordinates still isolate each
+occurrence of shared data. The compressed base remains byte-for-byte unchanged.
+
+SOV2 contains one combined sparse change packet instead of separate dense-shaped
+replacement and deletion packets. The outer header remains 128 bytes and binds
+the snapshot to the base hash, generation and dimensions. Its SPC1 child has a
+64-byte root and the same symmetric spatial branching and translated child
+references used in the earlier experiment. Only regions containing changes
+are built. Encoding no longer allocates full-sized sparse value and deletion
+arrays; it groups the latest coordinate changes into occupied leaves directly.
+The inherited writer still materializes the original base for no-op/revert
+detection. Optimizing that initialization is outside this retrieval attempt.
+
+Each leaf contains an exact changed-slot index, deletion information and a
+packed vector of replacement values. The index uses sorted 16-bit slot codes
+for small counts (high bit marks deletion), or a 512-bit change mask plus an
+optional deletion mask when shorter. There are at most 32 sparse codes without
+deletions, or 64 with deletions; larger sets use the bitmaps. The leaf's first
+replacement value becomes its incoming anchor, so its first normalized value
+is implicit zero. Only the remaining live values need payload bytes. The old
+native raw/SNZ/SFL/SNZ(SFL) selection encodes that compact tail exactly.
+
+Read the slot index before requesting any values. Intersect it with the query,
+derive the live-value rank of each matching slot, and retrieve only those
+values. Raw tails permit individual 8-byte reads. Compressed tails decode only
+the stored changed values in that leaf, not a padded 512-value array. Deletes
+need no value payload. An unchanged point reads no replacement values; a fully
+overridden point or selection can skip the original base. Equal encoded leaves
+and branches retain exact sharing, with value translations on incoming edges.
+
+Comparison and measured results
+Both versions read the SAME immutable base and return identical current arrays
+and occupancy. Previous saved packets are checked against their recorded hashes.
+The new packets are written, reopened, and checked against the prior independent
+source-value hashes. Timed calls use the common select API on both versions,
+not a faster new API compared with a different old operation. There are three
+warmups and 19 retained samples, alternating version order per repetition.
+Per-query caches start empty. Opening packets and hashing the base are outside
+the timed section; timings include Python traversal, required native decoding,
+and result assembly. All packets are already resident in memory.
+
+Fixture                      Old change bytes  New change bytes  Old/new decoded
+                                                               change words, full
+Same 512 edits                     10,371          10,203           512 / 1
+512 random positions               47,193          13,433       165,888 / 324
+1% random replacements            123,746          36,339       260,096 / 2,621
+10% random replacements           407,663         252,673       262,144 / 26,214
+50% random replacements         1,430,987       1,091,537       262,144 / 131,072
+
+Decoded-word counts count distinct normalized values materialized per query,
+including requested implicit first values. Reused leaves can therefore resolve
+many logical edits from fewer normalized words. They do not count output values
+as free: every requested result is still assembled with its appropriate anchor.
+
+Median milliseconds for a batch of 64 DISTINCT edited-point select requests:
+Fixture                         Previous reader   Sparse reader
+Same 512 edits                         11.820           5.049
+512 random positions                   11.763           4.730
+1% random replacements                 10.843           5.266
+10% random replacements                11.649           5.160
+50% random replacements                11.196           5.035
+
+These are about 2.06x-2.49x faster for this Python prototype on this machine.
+They are not native SQL latencies or a claim about end-to-end agent execution.
+The first 64 edited coordinates are distinct and queries have no retained
+decoded-leaf cache; this is not repeated retrieval of a single cached point.
+
+Example at 1% changes: a plane through edits (fixed Z) returns 4,096 values,
+including 31 replacements. Its change decoding drops from 32,256 words to 31,
+distinct encoded bytes touched drop from 24,097 to 11,290, and median select
+time drops from 8.445 ms to 3.603 ms. The other two measured axis planes also
+improve, from 8.779 to 3.935 ms and 5.567 to 2.150 ms. A changed point resolves
+one replacement word; an unchanged point resolves none before reading the base.
+
+Including the SAME 14,169-byte base, the 1% case now occupies 50,508 bytes
+instead of 137,915. Against the prior strongest six-axis-order linear packet
+of 2,097,216 bytes, its total size advantage increases from 15.207x to 41.522x.
+The random-one-change-per-region case occupies 27,602 bytes total, a 75.981x
+advantage over that linear comparison. The fixed-position case remains about
+86.05x. These compression multipliers still describe the favorable synthetic
+shared-base workload; retrieval comparisons use the very same data across
+versions rather than a new favorable fixture.
+
+Larger-request observation
+Edited planes improve in all three directions for the first four workloads.
+At 50% changes, plane latency rises from approximately 5.95-6.16 ms to
+7.03-7.98 ms, even though far fewer bytes and values are decoded. The current
+Python reader constructs and applies roughly two thousand individual change
+results one at a time. This identifies a concrete next refinement: batch
+construction/application for dense selections while keeping direct sparse
+lookup for points and lightly edited regions. No second on-disk copy or extra
+index was introduced just to favor one benchmark. The immutable-base and
+sparse slot-index gains can be retained while improving that execution path.
+
+Correctness and retained scope
+All five complete current views recover exactly after reopening the new change
+packet. Each has both versions checked on edited and unchanged points and
+three edited planes. The new get API also checks 64 distinct edited values per
+workload. A ragged 17x25x33 case checks insertions into absence, deletions,
+occupied zero, extreme 64-bit patterns, edits at region boundaries, pinned
+snapshots and restoration. One hundred current snapshots recover exactly;
+the latest change packet stays 381 bytes in that lifecycle case. Restoring
+the original states removes all changes and leaves a 192-byte empty overlay.
+
+Twenty additional cases straddle 1/31/32/33/63/64/65/127/256/512 changed slots,
+with and without deletions. Every changed point and each selected plane are
+checked, exercising both slot-list and bitmap metadata, deletion ranks, and
+compressed live-value tails. Checks are direct recovery exercises, not pytest
+or a security suite. No subagents were used. Main engine and doc2sql sources
+were not changed. Previous experimental formats/readers remain available.
+
+Reproduction
+If old comparison packets are absent, first run:
+  python experiments/exact_fold/overlays.py
+Then:
+  python experiments/exact_fold/retrieval.py
+Retained evidence: experiments/exact_fold/retrieval-results.json (not committed).
+New binary packets: build/math-exploration/retrieval/*.sov2.
+The evidence includes timings/samples, query-work counts, exact checks and
+source/library/base/overlay hashes. Sparse changes currently support numeric
+64-bit cells within an existing extent. Variable-length document cells and
+native SQL integration remain independent next steps.
+
+Decision at requested progress point
+Retain the sparse slot index and compact live-value representation. It improves
+the actual measured prototype retrieval path while reducing change storage,
+preserving exactness and retaining the existing native inner codecs. The next
+execution improvement is batching dense plane results; no change to the
+immutable-base concept is needed to pursue it.
+
+Pre-build consolidation review
+The user asked what to address across the codebase and retained experiments
+before compiling and stress testing. This is a readiness review, not a new
+experiment or a claim that all features must be adopted. No build or stress
+suite was launched in this review.
+
+Reviewed scope: Git state/history, SQLNEW native modules and compiler hooks,
+build and consumer entry points, current README/FORMAT/VALIDATION/BENCHMARKS,
+vector/text index APIs, and the folding/region/overlay/retrieval experiments.
+This is not an exhaustive line-by-line audit of the imported SQLite tree.
+
+Current feature inventory
+- HEAD is ed1db6f76 on sqlnew. The recent review fixes, native folding changes
+  and experiment files are still modified/untracked in the working tree.
+  Preserve them in a named source snapshot before version comparisons.
+- The engine already includes typed column storage, summaries, native batches,
+  sparse patches, optional covering indexes and SQLite-derived transactions.
+- Current working-tree native code adds SFL folding/merging and optional CSC1
+  numeric codec 2. sqlnew_columnar_folding defaults off. build.py automatically
+  compiles ext/sqlnew/*.c, including fold.c.
+- Shared region bases and SOV1/SOV2 change readers are Python scouts under
+  experiments/exact_fold. They are not compiled into sqlnew.exe/sqlnewdb.dll.
+- Vector and text search remain a Python index API over native SQL functions,
+  with their own authoritative row table, delta and publication transaction.
+- The doc2sql consumer integration remains paused in an isolated checkout.
+- Lattice visualization and rejected string-pooling/prepared-summary attempts
+  remain evidence; they are not required engine features.
+
+Concrete housekeeping before freezing a candidate
+1. Repair the consumer version handshake if doc2sql is part of that candidate:
+   sqlnew/python_runtime.py:31 requires 0.1.0-dev, while sqlnew/config.h:5
+   declares 0.2.0-dev. run_doc2sql.py selects build/doc2sql, not the user's main
+   C:/Users/mikea/Documents/projects/doc2sql checkout. Make the intended
+   checkout and library explicit, rather than silently swapping either.
+2. Move the retained native folding API, SFL1 format, CSC1 codec 2 and folding
+   setting into the normal format/API documentation. These are currently
+   described in this attempt log but absent from README/FORMAT. State how a
+   reader recognizes required features and rejects unsupported formats.
+   The present format-2 signature and 0.2 version do not identify every new
+   experimental capability. No legacy migration requirement is inferred.
+3. Capture source state, build identity, feature settings, dataset versions
+   and decoder versions together. Several existing comparisons depend on
+   frozen libraries/packets inside ignored build directories. A new comparison
+   runner should prepare or explicitly locate its baselines, and fail clearly
+   when they are absent. Label folding-on versus folding-off runs explicitly;
+   the old benchmark defaults would otherwise omit the new write path.
+
+Integration items if the shared-region reader joins the compiled candidate
+1. Promote one selected sparse reader/writer path into native code, expose it
+   through a consistent SQL/application adapter, and retain the current column
+   engine as a measured alternative. Resolve how an application key or doc2sql
+   evidence locator maps to its logical address. The caller should not manage
+   base/overlay packets or select codecs manually.
+2. Publish the base reference, current changes and derived index state in one
+   transaction/snapshot. Define rollback, savepoints, concurrent readers and
+   retention/reclamation. Current overlay scouts seal standalone files and
+   do not implement atomic durable publication. Existing column compaction
+   at 64 changed slots needs an explicit policy for immutable shared regions.
+   Compaction may publish a replacement region without modifying an older
+   region still required by a pinned reader.
+3. Ensure point/range reads, pruning metadata, summaries, covering indexes and
+   any connected text/vector index resolve the same current values. A fast
+   point path alone is insufficient if a stale bound can skip changed data.
+   Preserve SQL NULL/absence distinctions, text encoding, numeric types and
+   overflow/order semantics when adding any new optimized path.
+4. Define a representation for variable-length TEXT/BLOB cells before claiming
+   a general document backend. The region scouts preserve opaque 64-bit words;
+   the main column engine already supports TEXT/BLOB. Reuse that work through
+   appropriate extents/chunks, and let byte-preserving storage remain a
+   candidate when numeric normalization is unsuitable.
+5. Bound decoded caches, temporary arrays, snapshots and retained historical
+   regions. The existing column payload limit covers shared TEXT/BLOB payloads,
+   not every allocator/cache. Native region code should integrate accounting,
+   cancellation and clear resource-limit errors, with counters for bytes read,
+   decoded, written and retained. The current scout writer materializes its
+   original base; replace that initialization with selective original reads
+   where the target workload needs bounded mutation memory.
+
+Useful performance refinement before measuring combined retrieval
+Batch dense plane results while retaining direct sparse slot retrieval. The
+measured 50%-edited planes spend time constructing/applying individual changes.
+This is a contained execution improvement, separate from adopting more storage
+features. Also measure cold reads and multiple outstanding requests once a
+native adapter exists; resident Python packet results do not predict these.
+
+Scope of the next stress pass
+The present native engine can be compiled/stressed independently now. To
+stress the new combined storage behavior, first complete its adapter and
+snapshot/index semantics. A focused candidate need not adopt networking,
+layer encryption, cross-file federation, a new pager, or literal 3D rendering.
+Those remain independent optional directions from the user's concept.
+
+Prepare a version matrix: current native engine with folding off; the same
+engine with folding on; the selected shared-region candidate when integrated.
+Use matching inputs, answers, durability and cache settings. Include numerical
+structure, unique text, repeated text, large blobs, NULLs, skewed keys, sparse
+and dense edits, indexed updates, point reads, ranges, grouping, and a real
+doc2sql evidence retrieval task. Record complete database/index/change/history
+bytes, peak memory, p50/p95/p99 latency, throughput and write work. Retained
+existing benchmarks can provide baselines without making the old optional
+experiments mandatory features.
+
+Recommended order
+Freeze/document source and capabilities; resolve the consumer handshake for
+the selected workload; integrate sparse retrieval and transactional visibility;
+add bounded memory and dense batching; compile the candidate; run small exact
+workflows; then increase volume, mutation density and concurrent requests.
+Keep each source version independently buildable so a result can be attributed
+to the change that produced it.
+
+Attempt 11: Dev 0.2.1 native integration and version benchmarks
+2026-10-14. The user authorized implementing the best retained prototypes as
+Dev 0.2.1 and benchmarking the resulting engine. This is the assembled native
+candidate, not an assertion that every exploratory idea should be adopted.
+
+Implemented candidate
+- Version is 0.2.1-dev in the product configuration and extension fallback.
+- Existing writable columns, native aggregation/summaries, covering indexes,
+  vector/text APIs, review fixes and opt-in SFL numeric folding are retained.
+- New ext/sqlnew/region.c implements writable sqlnew_region(nx,ny,nz,TYPE).
+  TYPE is nullable INTEGER, REAL, TEXT or BLOB. Coordinates are unique, fixed
+  within the declared extent; rowid is x + nx*(y + ny*z), starting at zero.
+- The spatial unit is an 8x8x8 logical region with variable-sized physical
+  payloads. Occupancy and NULL are distinct. Numeric base words use exact
+  anchor normalization, reversible axis differences and native SFL/SNZ choices.
+  Content-equal complete encoded bases share one payload, established by
+  byte equality after hash lookup. No approximate numeric fitting is used.
+- Prototype upper-level DAG directories are replaced by a native spatial
+  block B-tree and shared base dictionary. This preserves the measured leaf
+  sharing while using the existing transactional storage engine. It is a
+  selected native design, not a literal import of the prototype packet formats.
+- Latest changes use a separate (block,slot) B-tree containing state and exact
+  word/value ID. The B-tree provides the sparse changed-slot index directly;
+  no dense 512-word change decoder is involved. Reads select intersecting
+  changed slots. A changed point can avoid base decoding. Coordinate changes,
+  insertion, deletion, NULL and exact restoration follow the same path.
+- Native range execution applies changes from bounded slot arrays, replacing
+  the Python per-change assembly bottleneck. One bounded decoded base cache
+  per table can serve later requests; each cursor copies its active leaf.
+  Cache state is invalidated at mutation/savepoint/transaction boundaries.
+- TEXT/BLOB bodies are independently compressed and content-shared. A point
+  fetch expands its body, rather than all other bodies in the region. Numeric
+  transformations do not touch text/blob bytes. The existing per-frame size
+  limit applies; there is not a new global region memory-budget interface.
+- Initial ingestion stages changes. Explicit compact seals current cells into
+  replacement shared bases, clears changes and collects unreferenced bases
+  and body payloads in one transaction. Older WAL readers retain their view.
+  Default edits do not rewrite shared base bytes. Restoration removes entries.
+- Monotone payload IDs and automatic UNIQUE(hash,id) lookup indexes avoid
+  reuse/cache ambiguity and index-name conflicts after table rename.
+- sqlnew_capabilities and sqlnew_region_stats expose the available native path
+  and its work counters. Qualified counter names support attached databases.
+- The CPython bridge checks the configured current version instead of the
+  stale 0.1 literal. SQLNEW_DOC2SQL_CHECKOUT selects the intended consumer.
+- build.json now records version, native/config/compiler-hook source hashes
+  and the core library hash. README/FORMAT/VALIDATION describe the new APIs.
+
+Integration corrections before the final benchmark
+A sparse/ragged read comparison caught missing slot-zero values before sealing.
+The cause was literal SQL modulo percent signs passing through sqlite3_mprintf.
+Escaping them as %% restored exact intersection behavior. Point reads had not
+been affected. Independent input equality is now checked before compaction as
+well as after it; no performance result from that broken path was retained.
+Rename/recreation review also replaced explicitly named hash indexes with
+automatic constraints so an old table name can be reused while the renamed
+table still exists. Both corrections pass the final direct workflows.
+
+A first native comparison showed repeated base decoding across point requests.
+The bounded immutable base cache was retained after exact snapshot/rollback
+checks and another measurement. Its earlier source, binary and results remain
+under build/dev021/cache-before/. An intermediate cache-enabled comparison is
+build/dev021/cache-after-benchmark.json. The final report refers to the final
+assembled source/library hashes, including the index/namespace corrections.
+
+Build and direct verification
+python sqlnew/build.py passes native compilation and extension /W4 /WX on
+Windows x64. No generated files or src/ source files were edited in this pass.
+The inherited compiler hooks remain unchanged. Existing native library/source
+state was saved before edits at build/dev021/before, including a manifest.
+This before-version includes the earlier working-tree review fixes and folding
+implementation; it is not a clean historical Git HEAD. Folding is off in its
+benchmark arm.
+
+sqlnew/exercise_dev021.py verifies independent input equality, sparse ragged
+dimensions, nullable signed-int64 values, unchanged bases under edits, precise
+restoration, nested savepoint rollback including compaction, old WAL readers
+across publication, all axis/range/fractional predicates, grouping/aggregates,
+coordinate uniqueness/IGNORE/REPLACE/relocation, REAL bit patterns, large and
+empty TEXT/BLOB bodies, embedded NUL and Unicode, rename/recreation, attached
+joins with scoped counters, checkpoint/reopen and old column modes. It also
+reruns the 360 direct canonical fold split/merge/recovery cases.
+
+Additional direct workflows cover 1%, 50% and 100% edit density over 32,768
+cells. All three axis planes and an independent exact integer sum agree; base
+bytes remain unchanged. One hundred successive edits to one coordinate leave
+one current patch; restoration removes it. UTF-16 region sorting/extrema match
+an ordinary table. The retained vector index's exact versus exhaustive search,
+compressed body read and deletion also agree. These checks use normal APIs,
+not pytest, security tools, sanitizers or subagents.
+
+Four-arm file-backed benchmark
+sqlnew/benchmark_dev021.py compares:
+  v020_columnar        saved current 0.2 native column engine, folding off
+  v021_columnar_fold   0.2.1 column engine, optional folding on
+  v021_region          0.2.1 optional native region store
+  sqlite_indexed       pristine imported-revision SQLite, three axis indexes
+
+All use fresh files, 4 KiB pages, WAL FULL, 64 MiB cache, mmap off, memory temp
+storage and one SQL worker. Input-source preparation is excluded. Ingestion,
+region sealing and SQLite index creation are measured separately and included
+in ready time. The fixture table is removed, then VACUUM and a truncating
+checkpoint precede full initial-file sizing. File sizes include storage metadata
+and indexes, not just compressed frames. They describe the sealed initial
+dataset, not a worst-case retained-WAL or historical-version footprint.
+
+Each query has two warmups and 13 retained samples using prepared SQL. Timing
+includes ctypes result copying and complete requested output assembly. Per-arm
+full answers, types, changes, restoration, integrity and reopen are checked.
+Arms run sequentially with reversed order on alternate datasets; this is not
+an interleaved randomized trial. P95 uses a lower empirical quantile. Setup
+and update-commit costs are single observations and are more sensitive to
+filesystem scheduling than the sampled reads. No cold-cache claim is made.
+
+Complete initial database bytes:
+Fixture                  0.2 columns   0.2.1 folded columns  0.2.1 regions  SQLite indexed
+translated_motif          2,457,600       2,457,600              53,248       13,570,048
+quadratic_clock           1,712,128         274,432             237,568       13,053,952
+independent_bits          2,457,600       2,457,600           2,420,736       13,570,048
+doc2sql_source_passages   1,675,264       1,675,264           9,342,976       17,907,712
+
+Median milliseconds for 64 distinct point requests (current SQL values):
+Fixture                  0.2 columns   0.2.1 folded columns  0.2.1 regions  SQLite indexed
+translated_motif             4.711           4.673               1.609          0.550
+quadratic_clock              3.384           3.375               2.299          0.556
+independent_bits             4.713           4.863               2.588          0.582
+doc2sql_source_passages     678.578         668.731               3.948          1.578
+
+The first three datasets each have 262,144 INTEGER values. The motif remains
+deliberately favorable: one irregular shape repeats with different region
+anchors. Its native region file is 46.154x smaller than the 0.2 column file,
+with 2.929x faster warm point retrieval. The folded column clock file is
+6.239x smaller; region clock storage is 7.207x smaller with 1.472x faster points.
+Independent random bits remain effectively incompressible; region file savings
+are only about 1.5% while point retrieval improves about 1.82x.
+
+The last dataset has 2,048 approximately 8 KiB passages sampled as overlapping
+windows from the current doc2sql codec source files, with unique passage labels.
+It is actual source text in constructed windows, not a representative document
+corpus. Individual native body reads are 171.888x faster than column-group
+point retrieval here, but their file is 5.58x larger than the column file.
+Against indexed row SQLite, it is about 1.92x smaller and about 2.50x slower
+for these warm points. Do not present the 172x as a win over indexed row lookup.
+The compression across overlapping long values is a real column-store benefit.
+
+Other costs and the selected blend
+Region ready times for the numeric datasets are about 0.75-0.82 seconds,
+versus about 0.08-0.10 seconds for columns. Region ingestion stages cell edits
+then seals regions; that work is included. Whole-table metadata summaries in
+the column engine remain much faster: around 0.4-0.5 ms for numeric COUNT/MIN/MAX
+versus 22.7-28.2 ms for the region's general SQL scan. Indexed row SQLite remains
+the fastest warm point path in every dataset. Region X planes improve over
+columns, while already favorable contiguous Z planes can favor columns.
+
+These results support retaining multiple table backends: shared regions for
+repeated shape and selective body retrieval, column storage for its compression
+across long columns and metadata/batch analytics, and ordinary indexed rows
+where their lookup behavior is preferable. No automatic routing heuristic has
+been imposed on CREATE TABLE. No claim is made that one backend wins all tasks.
+
+Actual consumer handoff
+The current C:/Users/mikea/Documents/projects/doc2sql checkout successfully
+ingested its README through run_doc2sql.py into a SQLNEW-signature library.
+One source/page was published, its evidence-text hash matches the source hash,
+and an optional native TEXT region copy reads exactly. The original FTS lookup
+still works. This validates the version/library handoff and a real native
+consumer value path. It does not automatically replace doc2sql's ordinary
+evidence tables or validate batch/worker subprocess bootstrap. That repository
+was not modified or published.
+
+Retained outputs and scope
+  build/sqlnew/sqlnew.exe, sqlnewdb.dll and sqlnew.dll: current native build
+  build/dev021/release/: named compiled candidate and build manifest
+  sqlnew/results/dev021-benchmark.json: all 16 arms, timings and work counters
+  sqlnew/results/dev021-contracts.json: native direct workflow checks
+  sqlnew/results/dev021-density.json: dense edits, UTF-16 and vector compatibility
+  sqlnew/results/dev021-doc2sql.json: current consumer handoff
+
+README/FORMAT/VALIDATION carry operational details; this remains the sole
+narrative attempt log. The native design is optional and has fixed extents,
+one typed value per region table, per-table sharing, general SQL aggregates,
+no secondary value indexes and no explicit historical-generation API. Committed
+snapshot visibility and collection use the existing pager. Network federation,
+encryption, upper-level shared DAGs, variable-size per-value chunk streaming
+and automatic backend routing remain independent experiments.
+
+Decision for Dev 0.2.1
+Retain the exact fold codec, native shared base representation, coordinate-local
+sparse retrieval, bounded base cache and separate text/blob bodies. Keep the
+existing column and row paths available. The assembled version compiles, serves
+normal SQL, survives the direct transaction/recovery workflows and has measured
+file-backed version comparisons. Full production stress/crash scheduling and
+cross-platform validation have not been substituted by these benchmarks.
+
+
+Attempt 12 - Upstream connection and selective intake review (2026-10-14)
+======================================================================
+Question
+Can SQLNEW still use SQLite's published changes, or has the fork structurally
+moved far enough away that most of them no longer apply?
+
+Reference points and evidence
+Import: f3b9f74d81132426dee1ccc07a67fdad2ccfeaa9 (2026-09-04).
+Fork HEAD: ed1db6f76474bcff2e53bf82a8bcef4ca4ca358b; the Dev 0.2.1 work
+remains in the working tree. Existing work and the named release build were
+preserved. Refreshed the official Git mirror's upstream/master and fetched
+branch-3.54 into its own remote-tracking ref; no checkout, merge or rebase.
+
+Published stable SQLite 3.54.0: 6932c59ee5c280599dfae9e7b431698a7cab9687,
+2026-10-09. There are 160 reachable commits after our import through this tag.
+Official release notes: https://sqlite.org/changes.html
+Maintenance candidate: 23500fbf19d6d412f3326614ce3bac2fbab7564f,
+2026-10-14T13:39:28Z. It is 35 commits past that release. Its VERSION says
+3.54.1, but it is development on branch-3.54, not a published 3.54.1 release.
+Trunk reviewed: 90687aa700d1d0a7af8fe95f8a4c841df6fa15ba,
+2026-10-14T20:07:19Z. Since import: 237 reachable commits, 167 on the
+first-parent chain. These counts include intermediate fixes and merges, not
+237 independent new features. Net changed paths: 239, including 39 src files.
+The new vec1 extension alone accounts for 59 paths and 22,431 inserted lines.
+
+Our committed modifications to existing src files consist of exactly one
+file, src/select.c, with 231 added lines under SQLITE_ENABLE_SQLNEW for
+columnar summary/batch paths. There are no current uncommitted src changes.
+The region, columnar, folding and compression implementations live in
+ext/sqlnew. SQLite's B-tree, pager, WAL, Windows VFS, expression engine and
+ordinary SQL execution remain the inherited implementations. SQLNEW's custom
+file header and module registration are build configuration, not replacement
+pager or transaction algorithms. The two net paths changed by both upstream
+and our committed fork are README.md and src/select.c.
+
+Read-only application checks
+Generated binary-safe diffs with git diff --binary from the import to each
+candidate, and passed them to git apply --check --whitespace=nowarn over the
+CURRENT working tree. All checks below returned zero:
+  * Entire trunk src delta (39 files, +1385/-620 lines).
+  * Maintenance src delta (37 files, +941/-417 lines).
+  * Maintenance src plus ext/fts5 and ext/rtree delta.
+  * Entire maintenance delta excluding README.md, which contains our product
+    documentation and would need an intentional document reconciliation.
+The README was not checked for applicability. No patch was applied. These
+checks establish textual fit only: no compile, result equivalence or speed
+claim follows. Generated sources would be regenerated through normal builds.
+No src edits were made, so no new devtest run was required for this review.
+
+Significant concrete finding: failed statement retains partial writes
+Ran both upstream conflict.test regression examples against the CURRENT
+build/sqlnew/sqlnew.exe, using separate :memory: databases. Each CLI run
+returned exit 1 and a datatype mismatch error, as expected for the rejected
+statement. The stored results after committing were wrong:
+
+  CREATE TABLE t1(a INTEGER PRIMARY KEY);
+  BEGIN;
+  INSERT OR REPLACE INTO t1 VALUES(1),('a'); -- expected error
+  COMMIT;
+  SELECT count(*) FROM t1;
+  Expected: 0. Observed on Dev 0.2.1: 1.
+
+  CREATE TABLE t1(a INTEGER PRIMARY KEY,b);
+  INSERT INTO t1 VALUES(1,'x'),(2,'y');
+  BEGIN;
+  UPDATE OR REPLACE t1 SET a=CASE a WHEN 1 THEN 10 ELSE 'z' END;
+    -- expected error
+  COMMIT;
+  SELECT a,b FROM t1 ORDER BY a;
+  Expected: (1,'x'),(2,'y'). Observed: (2,'y'),(10,'x').
+
+Fix: 8532bf12f45ba35d156fcbfc1afa0d808435e63b (2026-10-05), already
+in released 3.54.0. It marks relevant OP_MustBeInt paths as potentially
+aborting so statement rollback is generated. It changes insert.c, select.c,
+update.c and vdbeaux.c and supplies test/conflict.test cases.
+https://github.com/sqlite/sqlite/commit/8532bf12f45ba35d156fcbfc1afa0d808435e63b
+This reproduces on ordinary row tables; it is not evidence of a specific
+region codec failure. Previous validation did not cover these failing SQL
+statements. The current candidate has a known inherited correctness defect;
+the earlier checks remain valid within their stated coverage. No fix has
+been applied in this review. Stop engine work at this finding for discussion.
+
+Proposed intake, in priority order
+1. Retain shared-core correctness fixes. Prioritize the demonstrated rollback
+   fix above, then these directly relevant inherited paths:
+   * 466e0851d9159ca355faa1ba63eb8cf6d11884e6: fix index-cell byte accounting
+     during B-tree deletion. Shadow indexes and ordinary tables still use it.
+     This path was inspected, not reproduced here.
+     https://github.com/sqlite/sqlite/commit/466e0851d9159ca355faa1ba63eb8cf6d11884e6
+   * 5ee733befea57e6a12943273fe98b4f3d722b8f6: Windows WAL recovery with a
+     still-mapped shared-memory file. Directly relevant to our Windows host;
+     source and supplied win32shm.test reviewed, not executed here.
+     https://github.com/sqlite/sqlite/commit/5ee733befea57e6a12943273fe98b4f3d722b8f6
+   * 6013371a4: json_each root result lifetime fix; plus outer-join, collation,
+     generated-column and expression-index result corrections as applicable.
+   * FTS5 contentless-delete accounting/error fixes b0d5cbda9 and 7a5d84c68;
+     classify by whether a consumer uses that mode. FTS5 remains enabled.
+   * IN-expression register handling: take the final 9266f1518/eba536e8f
+     correction sequence together. The latter corrects the former's attempted
+     fix of an older bug. This is separate from statement recompilation.
+   Preserve related upstream regression cases with the code intake. Scope the
+   follow-up to correctness, not a separate security-audit workstream.
+2. Benchmark targeted performance changes separately from feature additions:
+   * 7936c5107: BINARY text comparison fast path for temporary indexes;
+     relevant to transient query work, not a new region compression codec.
+   * 48fedaa40 plus e037ddd70: reduce needless prepared-statement recompiles
+     for parameterized queries. Include the related VDBE metadata reset fix
+     0fbd83dc9. Do not take only the attractive performance commits while
+     omitting corrections to the state introduced by those changes.
+   * 264c92b92 / 5e19f7e4b: ASCII substr scanning improvement; evaluate against
+     actual text slicing before assigning benefit.
+   * b99380fcc / equivalent 77e097ea6: B-tree balancing bookkeeping change
+     on trunk; defer until an isolated write benchmark shows value.
+   No performance improvements were measured during this review. Some changes
+   listed by the 3.54.0 release announcement predate our import already; its
+   overall speed percentage must not be claimed as prospective SQLNEW gain.
+3. Keep feature candidates separate from maintenance:
+   * vec1: imported 277113a47, ANN extension with training/quantization,
+     supporting L2 and cosine. Worth an optional comparison with our vector
+     path; not an automatic replacement and not a proof of exact recall or
+     lossless region compression. Source overview inspected only.
+   * Tree-Tracker/JoinMiss: fc96a3c45 (after 3.54.0 release), subsequent
+     a32ed5cef and correctness fix 422652215. Leave out of first maintenance
+     intake and compare later. A trunk feature plus its fixes is a bundle.
+   * CLI presentation, optname, WASM, session, rtree/geopoly and platform-only
+     features: keep those needed by our shipped build or actual consumers;
+     avoid adopting them simply to increase a feature count. An unused
+     subsystem can remain present without being built or exposed.
+
+Recommended next implementation boundary
+Use a pinned branch-3.54 maintenance snapshot as the first integration
+candidate, with its dependency chains intact, instead of taking trunk's
+latest feature set or manually scattering dozens of fragile hunks. Keep
+SQLNEW's product README, format header, extension sources and columnar hooks.
+Any newer trunk-only result fix should be reviewed separately with its tests.
+This is a recommendation, not a completed port. The maintenance branch is an
+unreleased candidate and still requires validation. Build in an isolated
+checkout/worktree; run required SQLite devtest after src changes, our direct
+Dev 0.2.1 contracts, the two failing statements, and the existing four-arm
+benchmarks. Compare answers and file format behavior before comparing speed.
+No pytest, agents, security tooling or stress campaign was launched here.
+
+Conclusion of attempt
+SQLNEW has independent storage representations but is not disconnected from
+SQLite's execution/storage infrastructure. Selective intake is appropriate;
+rejecting most upstream fixes on assumed incompatibility is not supported by
+the source comparison. Actual partial-write reproduction makes inherited
+correctness fixes a concrete next step before wider stress or promotion.
+
+
+Attempt 13 - Maintenance intake and source-project preparation (2026-10-14)
+========================================================================
+Authorized scope
+Prepare the reviewed maintenance intake, clean the root, organize experiments,
+archive unused material, and prepare for the owner's private GitHub commit.
+Work alone; preserve prior work and evidence. No GitHub repository was created,
+no commit/index update or push was made, and no consumer checkout was changed.
+
+Integrated boundary
+Applied the net upstream delta from original import
+f3b9f74d81132426dee1ccc07a67fdad2ccfeaa9 to pinned maintenance commit
+23500fbf19d6d412f3326614ce3bac2fbab7564f, excluding the product README.
+Fossil identity: e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bb3716.
+This is branch-3.54 development with VERSION 3.54.1, not a released 3.54.1.
+The intake keeps dependent maintenance fixes together. Trunk-only Tree-Tracker
+and other newer trunk features were not integrated. Optional upstream vec1 and
+other extension sources are retained as part of the coherent source snapshot;
+no new upstream optional module was registered in the SQLNEW build.
+
+Relative to the pinned upstream src tree, the only difference remains the
+existing 231-line SQLNEW addition in select.c. The SQLNEW format-2 header,
+extension implementations and existing user review fixes were preserved.
+Pre-existing dirty native files, fold.c and region.c were compared byte for
+byte with the pre-integration backup and remain unchanged by this intake.
+upstream.json retains both the new pin and the original import metadata.
+
+Reversibility and Git preparation
+Before applying changes, retained working-tree.patch, working-files.zip,
+status.txt, native binaries, build metadata and upstream-intake.patch under
+build/preparation/pre-integration. Earlier build/dev021/release remains intact.
+The original clone had a shallow boundary. Completed official Git history with
+git fetch --unshallow upstream branch-3.54 master --no-tags; Git now reports
+is-shallow-repository=false. HEAD remains the owner's existing fork commit;
+all preparation changes remain available for review and the owner's commit.
+The Git index was checked empty and was not changed by preparation.
+
+Source organization
+The root README now introduces SQLNEW and links its build/API, format,
+validation, benchmark, contributor and experiment guides. The upstream overview
+is retained under doc/upstream/README.md, with relative links adjusted.
+SQLite's required root build infrastructure and canonical source layout remain
+in place; moving those files into an archive would break generation and tests.
+
+Created CONTRIBUTING.md, CHANGELOG.md, requirements-dev.txt, GitHub bug/PR
+templates, and build/validation CI for Windows and Linux plus Linux core devtest.
+CI configuration was parsed locally; hosted jobs await the first GitHub push.
+Preserved public-domain/blessing conventions and bundled tool license notices.
+No licensing headers were added to source files.
+
+All standalone exact-fold, spatial, overlay and retrieval prototypes moved to
+experiments/archive/exact_fold. Their historical JSON measurements are intact.
+The old lattice-warp source and viewer template moved to
+experiments/archive/lattice_warp, with saved-results/{results.json,report.md}.
+Generated HTML, GIF/PNG and .lat files remain locally under ignored
+build/archive/lattice-warp-output and can be regenerated by the archived script.
+Early architecture and validation notes moved from sqlnew/archive to
+experiments/archive/early-sqlnew. Relative source/document links were corrected.
+The paused consumer note is in experiments/archive/doc2sql; its private-consumer
+patch is retained locally at build/archive/private-consumers/doc2sql.patch,
+outside the source distribution. The optional Windows bridge remains available.
+
+experiments/README.md and sqlnew/results/README.md distinguish live code from
+historical evidence. THIS file remains the single narrative attempt journal at
+its original path. Original journal paths/hashes describe the original runs;
+archive path repairs do not retroactively validate or rewrite those results.
+Build products, editor state, virtual environments and local configuration are
+ignored; SQLite's required tracked database fixtures are preserved.
+
+Fresh-clone usability corrections
+Extracted the 360 canonical native folding cases into sqlnew/fold_contracts.py.
+The active exercise no longer imports archived native.py or NumPy. Its report
+now records runtime version, source identity, backend and library hash; reports
+default to ignored build/dev021/contracts.json with an explicit --output option.
+
+benchmark_dev021.py now defaults to current columns, folded columns, regions
+and revision-matched indexed SQLite. --previous-library adds a fifth arm rather
+than requiring an unversioned saved DLL. Default text windows come from this
+repository's native sources, with source hashes and Python/NumPy versions;
+--text-source allows another explicit source directory. There is no dependency
+on a private sibling doc2sql checkout. Reports default to build/dev021/benchmark.json
+and require --output to update a retained report.
+
+benchmark_build.py namespaces generated baseline files by upstream commit,
+avoiding stale amalgamations when the pin changes. --fetch-upstream explicitly
+permits fetching the official pin if a new clone lacks that Git object. The
+native SQLNEW build itself still makes no downloads. Baseline shared-library
+suffix/link options now follow the existing macOS/Linux build conventions;
+macOS validation has not been performed. Build manifests retain generated
+sqlite3.c, sqlite3.h and shell.c hashes. The forced-scalar switch now applies
+to the loadable extension as well as the core library.
+
+Failures resolved during preparation
+The first nmake devtest invocation failed parsing a DEBUG expression before
+tests began. The explicit DEBUG=0 invocation completed the full matrix. The
+product suite first rejected the new core because one test hard-coded the
+September source version/timestamp. It now checks the pinned metadata instead;
+all other tests passed and the complete suite was rerun after correction.
+The report-assembly script needed Windows CRLF-aware log matching; this affected
+report parsing, not a product test. Its final verification completed successfully.
+
+Correctness and build evidence
+  Optimized Windows product suite: 56 methods, zero failures/errors.
+  Clean-output-directory product suite: 56 methods, zero failures/errors.
+  Scalar product suite: 56 methods, zero failures/errors.
+  Direct workflows: 10 groups and 360 canonical cases per configuration, exact.
+  Required nmake devtest: 881,423 checks, zero errors, 10:46 elapsed;
+    6 builds, 2,580 Tcl jobs and 16 corpus jobs.
+Core devtest does not enable SQLNEW registration; the product suite and direct
+workflows cover the enabled hooks and modules. Both optimized and scalar
+loadable extensions passed folding and native TEXT-region smoke checks. The
+isolated Windows CPython bridge reports SQLNEW 0.2.1-dev and SQLite 3.54.1.
+Fresh and reused build directories generated identical amalgamation, header
+and shell hashes. Native extension compilation retained /W4 /WX.
+
+Both ordinary-row failed-REPLACE regressions from Attempt 12 are corrected.
+The saved previous library leaves 1 row after rejected INSERT and retains
+(2,'y'),(10,'x') after rejected UPDATE. Optimized and scalar current libraries
+leave 0 rows after the INSERT and restore (1,'x'),(2,'y') after the UPDATE.
+These cases are retained in sqlnew/test_upstream.py.
+
+New five-arm comparison
+Command:
+  python sqlnew/benchmark_dev021.py
+    --previous-library build/preparation/pre-integration/sqlnewdb.dll
+    --output sqlnew/results/dev021-maintenance-benchmark.json
+Four fixtures and five arms produced 20 file-backed databases; all exact input,
+timed query answers, sparse updates/restoration, base immutability where
+applicable, integrity, checkpoint and reopen checks passed. Tests, compilation
+and Git history completion had ended before benchmark timing began.
+
+Complete initial database bytes:
+Fixture              Current columns  Folded columns  Regions     Indexed SQLite
+translated_motif          2,457,600       2,457,600       53,248      13,570,048
+quadratic_clock           1,712,128         274,432      237,568      13,053,952
+independent_bits          2,457,600       2,457,600    2,420,736      13,570,048
+source_passages           1,638,400       1,638,400    9,695,232      17,907,712
+The saved previous column engine has identical file sizes to current columns
+on all four fixtures. Numeric storage results preserve the earlier measurements.
+Text input now uses 2,048 overlapping approximately 8 KiB native-source windows
+with unique labels, not the historical doc2sql-source fixture or a document corpus.
+
+Median milliseconds for 64 prepared point requests including result copying:
+Fixture              Previous columns  Current columns  Regions  Indexed SQLite
+translated_motif             4.692            4.406       1.772       0.670
+quadratic_clock              3.437            3.206       2.364       0.554
+independent_bits             4.693            4.368       2.685       0.551
+source_passages            669.413          672.099       4.155       1.388
+Current folded columns take 2.865 ms for clock points in this run. The numerical
+region ingestion+seal cost is about 0.8 seconds versus about 0.09 for columns.
+Prepared warm calls, two warmups, 13 retained samples, lower empirical p95,
+WAL FULL, 4 KiB pages, 64 MiB cache, mmap off and sequential/reversed arm orders
+retain the prior protocol. One sequential run does not prove a general speedup
+from maintenance fixes. Indexed rows remain the fastest warm point path here.
+Region text bodies trade cross-value compression for selective retrieval: the
+region text file is about 5.92x larger than columns and its 64-point batch is
+about 162x faster than columns, while indexed rows are about 3x faster than
+regions for those points. Retaining all backends remains the supported blend.
+
+Reviewable outputs
+  sqlnew/results/dev021-maintenance-validation.json: completed checks/hashes
+  sqlnew/results/dev021-maintenance-benchmark.json: all 20 measured arms
+  sqlnew/results/dev021-contracts.json: current optimized direct workflows
+  build/dev021/maintenance-release/: local named compiled candidate, public
+    header/import library, configuration, native source snippets and manifest
+  build/preparation/: raw local logs, backups and clean/scalar build outputs
+Current optimized core library SHA-256:
+  5ad28bb4cb3419a9856f3affade0ecc08106ae10e104e570185c899ededd8faa
+The snapshot binaries match the benchmarked current library. All project-local
+documentation links resolve and no new generated native/data artifacts are
+present in the source commit set. Existing historical reports remain available.
+
+Decision and remaining scope
+The maintenance candidate resolves the demonstrated statement-atomicity bug,
+passes native and inherited-core checks, preserves compression behavior and is
+organized for an experimental source-project commit. It remains 0.2.1-dev.
+Hosted GitHub CI, new Linux/ARM validation and broader production crash,
+multiwriter and cold-storage scheduling are not represented as completed.
+No agent delegation, pytest or separate security-audit campaign was used.
+
+
+Landing-page follow-up (2026-10-14)
+=================================
+The owner clarified that the root README should introduce the project through
+a blend of vision, product and research, with comparative results and links to
+project files. Reworked the opening around exact compression, shared structure
+and selective retrieval for people and agent workflows. Linked current native
+implementations, the experiment archive and this journal. Detailed build and
+upstream-maintenance information remains in the linked developer guides.
+
+Added current whole-file KiB and 64-point-request comparisons for columns,
+folded columns, regions and indexed SQLite, using the recorded maintenance
+benchmark. Added explicitly historical 0.1/0.2 comparisons for H2O summaries,
+taxi grouping, sparse updates and point reads. Both favorable and unfavorable
+comparisons are visible; fixture construction, index costs and warm single-host
+scope accompany the tables. Linked raw JSON reports, benchmark code, baseline
+builder and full methods. Numeric table values were checked against their
+source reports and local file links resolve. No engine code, binaries or
+benchmark results changed, and no new performance run was implied.

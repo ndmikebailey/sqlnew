@@ -1,0 +1,26 @@
+{
+  "density": [
+    {
+      "fraction": 0.01,
+      "changed_cells": 327,
+      "planes_and_sum_exact": true,
+      "base_unchanged": true
+    },
+    {
+      "fraction": 0.5,
+      "changed_cells": 16384,
+      "planes_and_sum_exact": true,
+      "base_unchanged": true
+    },
+    {
+      "fraction": 1.0,
+      "changed_cells": 32768,
+      "planes_and_sum_exact": true,
+      "base_unchanged": true
+    }
+  ],
+  "repeat_edits_consolidated": true,
+  "utf16_native_region_semantics": true,
+  "vector_and_compressed_text_api": true,
+  "region_source_sha256": "380ff02666363634e0ce89c0c76277c480b5d9003781b64a7c99cf5a89dd68d2"
+}

@@ -1,0 +1,14 @@
+{
+  "version": "0.2.1-dev",
+  "doc2sql_checkout": "C:\\Users\\mikea\\Documents\\projects\\doc2sql",
+  "source": "C:\\Users\\mikea\\Documents\\projects\\doc2sql\\README.md",
+  "source_sha256": "7d287ec38eb924594932887a4479daf193c056661279f63668e169ffa3eba309",
+  "publication_count": 1,
+  "pages": 1,
+  "evidence_text_sha256": "7d287ec38eb924594932887a4479daf193c056661279f63668e169ffa3eba309",
+  "native_region_copy_exact": true,
+  "original_fts_preserved": true,
+  "database": "C:\\Users\\mikea\\Documents\\projects\\SQLNEW\\build\\dev021\\doc2sql-library.sqlnew",
+  "signature": "SQLNEW format 2\u0000",
+  "consumer_mode": "in-process CLI native ingestion; no subprocess worker claim"
+}

@@ -1,0 +1,157 @@
+{
+  "timestamp_utc": "2026-09-06T01:50:47.050768+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "product": "SQLNEW",
+  "seed": 20260905,
+  "rows_per_workload": 131072,
+  "block_rows": 1024,
+  "scope": "This engine only; warm SQL scans; no upstream build comparison.",
+  "limitations": [
+    "Explicit blocks, not automatic columnar table storage.",
+    "Packing time includes Python JSON serialization and SQL ingestion.",
+    "Every scan validates the whole block before applying predicates.",
+    "Logical int64 bytes are an encoding reference, not another database's size."
+  ],
+  "workloads": {
+    "constant": {
+      "non_null_rows": 131072,
+      "frame_bytes": 5120,
+      "logical_non_null_int64_bytes": 1048576,
+      "frame_bits_per_row": 0.3125,
+      "packing_ms": 41.8925000121817,
+      "predicate": {
+        "lower": 123456789,
+        "upper": 123456789,
+        "matched": 131072
+      },
+      "query_ms": {
+        "median": 4.703799961134791,
+        "samples": [
+          4.828899982385337,
+          4.413799964822829,
+          4.6545000514015555,
+          4.696200019679964,
+          4.411599948070943,
+          4.703799961134791,
+          4.893900011666119,
+          4.704499966464937,
+          4.808400059118867
+        ]
+      }
+    },
+    "all_null": {
+      "non_null_rows": 0,
+      "frame_bytes": 21504,
+      "logical_non_null_int64_bytes": 0,
+      "frame_bits_per_row": 1.3125,
+      "packing_ms": 29.054900049231946,
+      "predicate": {
+        "lower": -10,
+        "upper": 10,
+        "matched": 0
+      },
+      "query_ms": {
+        "median": 0.6695000920444727,
+        "samples": [
+          0.6796000525355339,
+          0.6714999908581376,
+          0.664499937556684,
+          0.6685999687761068,
+          0.6655000615864992,
+          0.6620999192818999,
+          0.6695000920444727,
+          0.726299942471087,
+          0.8638000581413507
+        ]
+      }
+    },
+    "narrow_nullable": {
+      "non_null_rows": 120989,
+      "frame_bytes": 87040,
+      "logical_non_null_int64_bytes": 967912,
+      "frame_bits_per_row": 5.3125,
+      "packing_ms": 41.88609996344894,
+      "predicate": {
+        "lower": 1000004,
+        "upper": 1000007,
+        "matched": 30304
+      },
+      "query_ms": {
+        "median": 3.762899897992611,
+        "samples": [
+          4.022800014354289,
+          4.171700100414455,
+          3.6835999926552176,
+          3.7267000880092382,
+          3.572499961592257,
+          3.790399990975857,
+          3.7957000313326716,
+          3.762899897992611,
+          3.432400058954954
+        ]
+      }
+    },
+    "sequential": {
+      "non_null_rows": 131072,
+      "frame_bytes": 168960,
+      "logical_non_null_int64_bytes": 1048576,
+      "frame_bits_per_row": 10.3125,
+      "packing_ms": 48.02750004455447,
+      "predicate": {
+        "lower": 43690,
+        "upper": 43789,
+        "matched": 100
+      },
+      "query_ms": {
+        "median": 1.92760000936687,
+        "samples": [
+          1.9984999671578407,
+          2.02819996047765,
+          1.7058000667020679,
+          2.1388999884948134,
+          1.92760000936687,
+          1.6475999727845192,
+          1.5957000432536006,
+          1.9277000101283193,
+          1.8469999777153134
+        ]
+      }
+    },
+    "full_int64": {
+      "non_null_rows": 131072,
+      "frame_bytes": 1053696,
+      "logical_non_null_int64_bytes": 1048576,
+      "frame_bits_per_row": 64.3125,
+      "packing_ms": 62.58779997006059,
+      "predicate": {
+        "lower": -2305843009213693952,
+        "upper": 2305843009213693951,
+        "matched": 32580
+      },
+      "query_ms": {
+        "median": 8.250200073234737,
+        "samples": [
+          8.419099962338805,
+          8.156399941071868,
+          8.1859000492841,
+          8.26150004286319,
+          8.250200073234737,
+          8.356699952855706,
+          8.10600002296269,
+          8.337400038726628,
+          8.123900042846799
+        ]
+      }
+    }
+  },
+  "version": "0.2.0-dev",
+  "backend": "avx2-f64",
+  "engine_source_id": "2026-09-04 14:20:44 4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+  "integrity_check": "ok",
+  "checkpoint": [
+    0,
+    0,
+    0
+  ],
+  "database_bytes": 1880064
+}

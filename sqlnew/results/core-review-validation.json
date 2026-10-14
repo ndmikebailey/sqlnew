@@ -1,0 +1,739 @@
+{
+  "recorded_utc": "2026-09-06T14:50:14.395363+00:00",
+  "version": "0.2.0-dev",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "scope": "Fresh synthetic within-fork validation. No external datasets, old benchmark evidence, or upstream build comparison.",
+  "product_test_methods": 54,
+  "new_review_test_methods": 9,
+  "native": {
+    "allocation_failure_positions": 6000,
+    "injected_faults": 3159,
+    "malformed_frames": 20000
+  },
+  "native_live_sqlite_allocations": 0,
+  "sanitizer_scope": "AddressSanitizer on SQLNEW modules and harness; linked core object is the normal Windows build.",
+  "findings": {
+    "utf16_binary_order": "Reproduced and fixed with engine text-collation fallback; tested UTF-8, UTF-16le/be, indexed/base scans, grouping, extrema, updates, pending writes, and reopening.",
+    "index_name_conflict": "Reproduced and fixed by preflight before storage changes and non-ignorable errors for unexpected storage constraints; tested IGNORE/FAIL/ABORT/REPLACE and root reuse.",
+    "dictionary_and_snapshot_memory": "Reproduced and fixed using shared immutable payloads, with an adjustable 64 MiB connection payload budget.",
+    "parameterized_text_count": "Small SELECT count(*) FROM t WHERE s<? sample passed; this does not reproduce every condition of the earlier incomplete review."
+  },
+  "memory_sample": {
+    "rows": 256,
+    "repeated_blob_bytes": 16384,
+    "measurement": "Peak SQLite heap increase during the query, excluding memory already live before it; not process RSS.",
+    "decoded_read": {
+      "before_bytes": 4230640,
+      "after_bytes": 50704
+    },
+    "pending_snapshot": {
+      "before_bytes": 4246712,
+      "after_bytes": 50360
+    }
+  },
+  "additional_change": "Flush encoding reuses previously computed statistics; stored column frames matched the baseline.",
+  "sample_runs": {
+    "initial_retained_changes": {
+      "rows": 2048,
+      "repetitions": 11,
+      "queries_per_repetition": 20,
+      "source": "deterministic synthetic fixture",
+      "units": "milliseconds",
+      "scope": "Warm single-process microchecks; no claim about large datasets or other platforms.",
+      "implementations": {
+        "before": {
+          "library_sha256": "cd401f02d69c39a7ce5965488bff9e202c5582e885e9519cb51dc749e72b3957",
+          "column_frames_sha256": "123df12493c5b0fdfce96d9a84941f8af5037d117c75f6fdc004c3de43bbc9c3",
+          "timings": {
+            "summary": [
+              0.130115,
+              0.142985,
+              0.13928000000000001,
+              0.22214,
+              0.127555,
+              0.11896999999999999,
+              0.16089,
+              0.11825000000000001,
+              0.11827499999999999,
+              0.13509500000000002,
+              0.140265
+            ],
+            "grouping": [
+              1.024405,
+              0.77012,
+              0.8795949999999999,
+              0.81483,
+              0.7347349999999999,
+              0.77382,
+              0.734715,
+              1.05905,
+              1.01569,
+              0.81709,
+              0.8456049999999999
+            ],
+            "range": [
+              0.08388999999999999,
+              0.08434,
+              0.09689,
+              0.114245,
+              0.10338499999999999,
+              0.10366500000000001,
+              0.08382500000000001,
+              0.144095,
+              0.13535,
+              0.08854,
+              0.132795
+            ],
+            "point": [
+              0.368325,
+              0.379585,
+              0.36058500000000004,
+              0.38123,
+              0.588545,
+              0.379295,
+              0.35623,
+              0.45187,
+              0.516615,
+              0.349585,
+              0.363565
+            ],
+            "eight_updates_commit": [
+              2.0636,
+              1.7589,
+              2.1419,
+              1.8232,
+              2.7682,
+              2.0634,
+              1.6963,
+              1.6479,
+              1.9911,
+              1.5981,
+              1.6055
+            ]
+          },
+          "medians": {
+            "summary": 0.13509500000000002,
+            "grouping": 0.81709,
+            "range": 0.10338499999999999,
+            "point": 0.379295,
+            "eight_updates_commit": 1.8232
+          }
+        },
+        "after": {
+          "library_sha256": "2319831ff5f0543a82bd35937fbbe8f73857bc623c7289a4f8ea756332b56eae",
+          "column_frames_sha256": "123df12493c5b0fdfce96d9a84941f8af5037d117c75f6fdc004c3de43bbc9c3",
+          "timings": {
+            "summary": [
+              0.14291,
+              0.14105,
+              0.209835,
+              0.204195,
+              0.147085,
+              0.12287999999999999,
+              0.12340999999999999,
+              0.14013,
+              0.155215,
+              0.12972999999999998,
+              0.15787
+            ],
+            "grouping": [
+              0.622255,
+              0.56203,
+              0.682545,
+              0.9680249999999999,
+              0.61123,
+              0.533315,
+              0.514815,
+              0.57659,
+              0.5673,
+              0.56016,
+              0.511035
+            ],
+            "range": [
+              0.12472000000000001,
+              0.086335,
+              0.20933000000000002,
+              0.12423500000000001,
+              0.08945499999999999,
+              0.0861,
+              0.08990000000000001,
+              0.08645,
+              0.140215,
+              0.08961,
+              0.10952500000000001
+            ],
+            "point": [
+              0.25487000000000004,
+              0.17765999999999998,
+              0.313345,
+              0.25478,
+              0.180875,
+              0.16208499999999998,
+              0.15966,
+              0.177655,
+              0.18355,
+              0.17250000000000001,
+              0.16299
+            ],
+            "eight_updates_commit": [
+              2.6836,
+              2.3978,
+              7.696,
+              2.2519,
+              1.9551,
+              2.009,
+              1.7591,
+              1.665,
+              1.924,
+              1.7905,
+              1.6521
+            ]
+          },
+          "medians": {
+            "summary": 0.14291,
+            "grouping": 0.5673,
+            "range": 0.08990000000000001,
+            "point": 0.17765999999999998,
+            "eight_updates_commit": 1.9551
+          }
+        }
+      }
+    },
+    "retained_changes_repeat": {
+      "rows": 2048,
+      "repetitions": 11,
+      "queries_per_repetition": 20,
+      "source": "deterministic synthetic fixture",
+      "units": "milliseconds",
+      "scope": "Warm single-process microchecks; no claim about large datasets or other platforms.",
+      "implementations": {
+        "before": {
+          "library_sha256": "cd401f02d69c39a7ce5965488bff9e202c5582e885e9519cb51dc749e72b3957",
+          "column_frames_sha256": "123df12493c5b0fdfce96d9a84941f8af5037d117c75f6fdc004c3de43bbc9c3",
+          "timings": {
+            "summary": [
+              0.12287999999999999,
+              0.24602,
+              0.15125,
+              0.14209,
+              0.19705,
+              0.16508,
+              0.16199,
+              0.13355999999999998,
+              0.12377,
+              0.142705,
+              0.200775
+            ],
+            "grouping": [
+              1.104165,
+              1.415025,
+              0.963665,
+              0.90206,
+              0.80457,
+              0.790305,
+              0.845585,
+              0.74109,
+              1.053625,
+              0.9829650000000001,
+              0.91851
+            ],
+            "range": [
+              0.28115999999999997,
+              0.42211499999999996,
+              0.127295,
+              0.08828,
+              0.11775500000000001,
+              0.089605,
+              0.083815,
+              0.08499,
+              0.125945,
+              0.13869499999999998,
+              0.09550499999999999
+            ],
+            "point": [
+              1.032385,
+              0.874185,
+              0.365585,
+              0.514475,
+              0.399125,
+              0.41581999999999997,
+              0.37808,
+              0.41189,
+              0.6585,
+              0.65108,
+              0.44465000000000005
+            ],
+            "eight_updates_commit": [
+              4.2275,
+              1.7317,
+              1.749,
+              1.7369,
+              2.2781,
+              2.3272,
+              2.1933,
+              1.7691,
+              2.9942,
+              2.6011,
+              3.112
+            ]
+          },
+          "medians": {
+            "summary": 0.15125,
+            "grouping": 0.91851,
+            "range": 0.11775500000000001,
+            "point": 0.44465000000000005,
+            "eight_updates_commit": 2.2781
+          }
+        },
+        "after": {
+          "library_sha256": "ec2d73105b5540aa859a7483257f6b804fb776b738f386f75f7961a04634f1d8",
+          "column_frames_sha256": "123df12493c5b0fdfce96d9a84941f8af5037d117c75f6fdc004c3de43bbc9c3",
+          "timings": {
+            "summary": [
+              0.227585,
+              0.278665,
+              0.191685,
+              0.12879000000000002,
+              0.19325,
+              0.1253,
+              0.12275499999999999,
+              0.17055499999999998,
+              0.20546999999999999,
+              0.14958,
+              0.130685
+            ],
+            "grouping": [
+              0.9594150000000001,
+              0.9869450000000001,
+              0.5285650000000001,
+              0.6270249999999999,
+              0.60368,
+              0.60639,
+              0.629695,
+              0.5347999999999999,
+              0.718915,
+              0.636795,
+              0.642105
+            ],
+            "range": [
+              0.14489000000000002,
+              0.14461,
+              0.103365,
+              0.088755,
+              0.10243,
+              0.08501,
+              0.085385,
+              0.11216999999999999,
+              0.12345999999999999,
+              0.096095,
+              0.153055
+            ],
+            "point": [
+              0.38033,
+              0.29504,
+              0.16081499999999999,
+              0.19314499999999998,
+              0.16179,
+              0.224735,
+              0.19233,
+              0.16463,
+              0.19691,
+              0.28346,
+              0.188015
+            ],
+            "eight_updates_commit": [
+              4.7709,
+              4.1065,
+              1.6637,
+              1.8123,
+              2.5289,
+              1.6453,
+              1.6459,
+              1.6041,
+              1.7419,
+              2.3854,
+              2.7611
+            ]
+          },
+          "medians": {
+            "summary": 0.17055499999999998,
+            "grouping": 0.629695,
+            "range": 0.103365,
+            "point": 0.19314499999999998,
+            "eight_updates_commit": 1.8123
+          }
+        }
+      }
+    },
+    "final_retained_build": {
+      "rows": 2048,
+      "repetitions": 11,
+      "queries_per_repetition": 20,
+      "source": "deterministic synthetic fixture",
+      "units": "milliseconds",
+      "scope": "Warm single-process microchecks; no claim about large datasets or other platforms.",
+      "implementations": {
+        "before": {
+          "library_sha256": "cd401f02d69c39a7ce5965488bff9e202c5582e885e9519cb51dc749e72b3957",
+          "column_frames_sha256": "123df12493c5b0fdfce96d9a84941f8af5037d117c75f6fdc004c3de43bbc9c3",
+          "timings": {
+            "summary": [
+              0.13198000000000001,
+              0.15558,
+              0.131585,
+              0.13466499999999998,
+              0.113565,
+              0.14147,
+              0.11274500000000001,
+              0.142225,
+              0.12142,
+              0.13603,
+              0.191435
+            ],
+            "grouping": [
+              0.727865,
+              0.722715,
+              0.75278,
+              0.72364,
+              0.68945,
+              0.725605,
+              0.7026049999999999,
+              0.74688,
+              0.785355,
+              0.724125,
+              0.74032
+            ],
+            "range": [
+              0.08746000000000001,
+              0.080595,
+              0.09747,
+              0.080905,
+              0.09146,
+              0.110595,
+              0.09372,
+              0.081015,
+              0.08285000000000001,
+              0.08456,
+              0.08055
+            ],
+            "point": [
+              0.34721,
+              0.36651500000000004,
+              0.36354000000000003,
+              0.392785,
+              0.353345,
+              0.37233499999999997,
+              0.35642999999999997,
+              0.35133000000000003,
+              0.356045,
+              0.370415,
+              0.352395
+            ],
+            "eight_updates_commit": [
+              1.6035,
+              2.1235,
+              1.6172,
+              2.2402,
+              1.6493,
+              1.683,
+              1.7881,
+              1.6256,
+              1.9386,
+              1.6176,
+              2.0185
+            ]
+          },
+          "medians": {
+            "summary": 0.13466499999999998,
+            "grouping": 0.725605,
+            "range": 0.08456,
+            "point": 0.35642999999999997,
+            "eight_updates_commit": 1.683
+          }
+        },
+        "after": {
+          "library_sha256": "e2b27354f5037adc314cd4a80d3a6972eb21c3626d4795b0eaccaf60063cd77f",
+          "column_frames_sha256": "123df12493c5b0fdfce96d9a84941f8af5037d117c75f6fdc004c3de43bbc9c3",
+          "timings": {
+            "summary": [
+              0.15835,
+              0.12877,
+              0.116645,
+              0.14803,
+              0.11599,
+              0.13215,
+              0.11652499999999999,
+              0.117235,
+              0.115425,
+              0.11736500000000001,
+              0.11396500000000001
+            ],
+            "grouping": [
+              0.5448649999999999,
+              0.540845,
+              0.561415,
+              0.49779,
+              0.53076,
+              0.49444499999999997,
+              0.553925,
+              0.5316,
+              0.5499050000000001,
+              0.548295,
+              0.55948
+            ],
+            "range": [
+              0.13514500000000002,
+              0.08591,
+              0.08199999999999999,
+              0.09026999999999999,
+              0.085565,
+              0.08264,
+              0.09603,
+              0.08277,
+              0.082975,
+              0.082355,
+              0.11095999999999999
+            ],
+            "point": [
+              0.27458,
+              0.1961,
+              0.19778500000000002,
+              0.15698499999999999,
+              0.17597000000000002,
+              0.193315,
+              0.18971,
+              0.18714999999999998,
+              0.17255,
+              0.173865,
+              0.17954
+            ],
+            "eight_updates_commit": [
+              2.7173,
+              1.8674,
+              1.8607,
+              1.6312,
+              1.678,
+              1.7581,
+              2.1679,
+              2.1846,
+              2.0338,
+              1.6592,
+              1.7259
+            ]
+          },
+          "medians": {
+            "summary": 0.117235,
+            "grouping": 0.5448649999999999,
+            "range": 0.085565,
+            "point": 0.18714999999999998,
+            "eight_updates_commit": 1.8607
+          }
+        }
+      }
+    }
+  },
+  "rejected_experiment": {
+    "name": "Prepared summary statement reuse",
+    "reason": "Did not improve the small samples; removed from product code.",
+    "archive": "build/review-fixes/rejected-summary-cache.c",
+    "samples": {
+      "rows": 2048,
+      "repetitions": 11,
+      "queries_per_repetition": 20,
+      "source": "deterministic synthetic fixture",
+      "units": "milliseconds",
+      "scope": "Warm single-process microchecks; no claim about large datasets or other platforms.",
+      "implementations": {
+        "before": {
+          "library_sha256": "ec2d73105b5540aa859a7483257f6b804fb776b738f386f75f7961a04634f1d8",
+          "column_frames_sha256": "123df12493c5b0fdfce96d9a84941f8af5037d117c75f6fdc004c3de43bbc9c3",
+          "timings": {
+            "summary": [
+              0.12653,
+              0.221945,
+              0.112115,
+              0.12999,
+              0.114475,
+              0.10815999999999999,
+              0.13866,
+              0.11296999999999999,
+              0.154325,
+              0.18787,
+              0.125065
+            ],
+            "grouping": [
+              0.54853,
+              0.5542900000000001,
+              0.522685,
+              0.52354,
+              0.5608500000000001,
+              0.678285,
+              0.536015,
+              0.578025,
+              0.72498,
+              0.56436,
+              0.589635
+            ],
+            "range": [
+              0.087925,
+              0.126915,
+              0.08258499999999999,
+              0.083235,
+              0.07968,
+              0.088315,
+              0.091475,
+              0.08125,
+              0.110635,
+              0.12786999999999998,
+              0.083535
+            ],
+            "point": [
+              0.165845,
+              0.179005,
+              0.16364499999999998,
+              0.151105,
+              0.176115,
+              0.18636999999999998,
+              0.172015,
+              0.228295,
+              0.23643,
+              0.16244,
+              0.202455
+            ],
+            "eight_updates_commit": [
+              2.1056,
+              1.9526,
+              1.7561,
+              1.9191,
+              1.8686,
+              1.7573,
+              1.8109,
+              1.8186,
+              2.359,
+              2.2829,
+              1.7539
+            ]
+          },
+          "medians": {
+            "summary": 0.12653,
+            "grouping": 0.5608500000000001,
+            "range": 0.087925,
+            "point": 0.176115,
+            "eight_updates_commit": 1.8686
+          }
+        },
+        "after": {
+          "library_sha256": "1bb71cd810e26b4784b7c7531d28de5041c6c07c8082874e32396939d5a43371",
+          "column_frames_sha256": "123df12493c5b0fdfce96d9a84941f8af5037d117c75f6fdc004c3de43bbc9c3",
+          "timings": {
+            "summary": [
+              0.13549,
+              0.144035,
+              0.124005,
+              0.1508,
+              0.11724000000000001,
+              0.20326499999999997,
+              0.137685,
+              0.136175,
+              0.16563,
+              0.13391,
+              0.178775
+            ],
+            "grouping": [
+              0.656065,
+              0.6125,
+              0.569125,
+              0.61871,
+              0.60309,
+              0.578335,
+              0.66717,
+              0.642915,
+              0.7368750000000001,
+              0.867705,
+              0.6256700000000001
+            ],
+            "range": [
+              0.112285,
+              0.108955,
+              0.083845,
+              0.09308,
+              0.07868,
+              0.10203,
+              0.089665,
+              0.091165,
+              0.11048500000000001,
+              0.09587999999999999,
+              0.119115
+            ],
+            "point": [
+              0.171755,
+              0.22403,
+              0.171405,
+              0.16763999999999998,
+              0.1958,
+              0.15294000000000002,
+              0.224565,
+              0.170805,
+              0.28494,
+              0.21234999999999998,
+              0.21335500000000002
+            ],
+            "eight_updates_commit": [
+              1.9077,
+              2.1487,
+              1.7265,
+              1.6879,
+              1.8417,
+              2.5235,
+              1.7086,
+              2.0754,
+              2.112,
+              2.3023,
+              2.7994
+            ]
+          },
+          "medians": {
+            "summary": 0.137685,
+            "grouping": 0.6256700000000001,
+            "range": 0.09587999999999999,
+            "point": 0.1958,
+            "eight_updates_commit": 2.0754
+          }
+        }
+      }
+    }
+  },
+  "remaining_optimization_candidates": [
+    "Fuse compatible aggregate metadata traversals",
+    "Use measured statistics in planner estimates"
+  ],
+  "sources_sha256": {
+    "ext/sqlnew/columnar.c": "a0319595a74d3dfeb429bce44a413c20a8896f47ff0aa062c60e90716e6a8882",
+    "ext/sqlnew/intblock.c": "490a7d2fc52f641aa84de927f524e510177cb997ba87d5b98008f0d1dae329d6",
+    "ext/sqlnew/sqlnew.c": "35fa43f1bbbeaaca7fde750c5ce3f5ff3ec68d729ef09af1accfd9bd09136516",
+    "ext/sqlnew/columnar_batch.inc": "2551b650794f1c20a93f5c695e6e32c8aadd6b947522e3d8fcb01fa33aff43b3",
+    "ext/sqlnew/columnar_index.inc": "1da73feedce3f675ecaf8f733408d6681d1be789e9685d8b0c79f5a6630cb357",
+    "ext/sqlnew/columnar_write.inc": "847bf32140bf41787024170d04a9cab6c32238a9e730eed947aabd267a2ac891",
+    "src/select.c": "83cc899c13580b553a1a8fb6a3187029843e04abb05e83a774803e0b613debf9",
+    "sqlnew/config.h": "70f9ef8fb5c3ab91e624b0dbdaad3b64c8fca5457ccf056a93f556890d0f9be3",
+    "sqlnew/test_core_review.py": "7e90df061278b063fa72cd71f5d32bc473b5f0708371765f7f99be4952c27f78",
+    "sqlnew/sample_core_review.py": "22c3868cb9cfe85ad0343a18ff4312a7c9738c0252e838239b1516c7b9872c83",
+    "sqlnew/native_check.c": "6ac31585a1fc97a30c570c3c659b12d83909d33ab5cfd5c207b83045aa3f4f69",
+    "sqlnew/build.py": "f82ab827036297b1841b9284da88da4d60927e27a070000b559b9cdb80eec823"
+  },
+  "artifacts_sha256": {
+    "build/sqlnew/sqlnewdb.dll": "e2b27354f5037adc314cd4a80d3a6972eb21c3626d4795b0eaccaf60063cd77f",
+    "build/sqlnew/sqlnew.exe": "330cc0b3c483c46ce53860ab329126d7b4ce79a426e9c501620af143269561fc",
+    "build/sqlnew/sqlnew.dll": "d4036f67b1abfa153920caf9b1696fde6ac1f5df3ef0797acc97fa31be4df691",
+    "build/native-check/native_check.exe": "b01460f3ae1408b1fd667057b14aff9ce3ccfe070c3cea58e14e39d7275b85a0",
+    "build/review-fixes/final-build.log": "079b7d4417d336ab270df5ca8286d9dd6caf30ceef647d65aa0467f20c4bfee1",
+    "build/review-fixes/final-tests.log": "83965376ac3a7d1ba62b5b9227a2e3af9f09df1e3a61dd9488c5626eef381fc0",
+    "build/review-fixes/final-native-check.log": "ba955fabe52adf11be504e53c04b93b84b4e987b3c6cd485d09d8fa0a2a5d9f4"
+  },
+  "limits": [
+    "This pass did not run Linux, ARM, or a separate forced-scalar build.",
+    "No src/ files changed this pass; the earlier core development matrix was not reused as validation of these fixes.",
+    "Tiny warm timings are observational and do not establish general performance or release readiness.",
+    "The payload budget does not bound pager memory, SQL sorter memory, cell arrays, or temporary codec buffers."
+  ]
+}

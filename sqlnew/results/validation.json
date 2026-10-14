@@ -1,0 +1,113 @@
+{
+  "timestamp_utc": "2026-09-06T01:41:50.928951+00:00",
+  "product": "SQLNEW 0.2.0-dev",
+  "upstream_git_commit": "f3b9f74d81132426dee1ccc07a67fdad2ccfeaa9",
+  "windows": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "compiler": "MSVC 19.44.35228 for x64",
+    "avx2_tests_passed": 45,
+    "forced_scalar_tests_passed": 45,
+    "test_methods": {
+      "previous_columnar": 13,
+      "new_batch_patch_index": 13,
+      "byte_integer_vector_index": 19
+    },
+    "asan": {
+      "allocation_positions": 6000,
+      "injected_faults": 3767,
+      "malformed_inputs": 20000,
+      "live_sqlite_allocations_after_shutdown": 0,
+      "instrumented": "SQLNEW modules and harness; regular core object"
+    }
+  },
+  "core_devtest": {
+    "status": "passed",
+    "test_cases": 880666,
+    "errors": 0,
+    "build_jobs": 6,
+    "tcl_jobs": 2486,
+    "fuzz_jobs": 16,
+    "elapsed": "08:02",
+    "environment": "Native Windows, local MSVC and Tcl 8.6.18; no Docker",
+    "command": "nmake /f Makefile.msc devtest DEBUG=0",
+    "configuration_note": "Core matrix without SQLNEW registration. Enabled compiler paths exercised by product tests."
+  },
+  "source_sha256": {
+    "ext/sqlnew/columnar.c": "571387e9727cbc5da7923b8fe10b9c751d9d63cbafb35c63f466d9da403804c8",
+    "ext/sqlnew/intblock.c": "490a7d2fc52f641aa84de927f524e510177cb997ba87d5b98008f0d1dae329d6",
+    "ext/sqlnew/sqlnew.c": "35fa43f1bbbeaaca7fde750c5ce3f5ff3ec68d729ef09af1accfd9bd09136516",
+    "ext/sqlnew/columnar_batch.inc": "51f69a8db3812e5b72d7fa0b7d1c435ab712e85ff9dcd0cd1a3d094580d003c9",
+    "ext/sqlnew/columnar_index.inc": "d8218712bbf8c0ab3f3a1fe42f442c080de5fe196a6d19b9a4a646b28a88216d",
+    "ext/sqlnew/columnar_write.inc": "13732522bbee141a63ad0552129c8bef6fef1d6e8eb46c4e35ebe4d04b4ab5e1",
+    "src/select.c": "83cc899c13580b553a1a8fb6a3187029843e04abb05e83a774803e0b613debf9",
+    "sqlnew/config.h": "70f9ef8fb5c3ab91e624b0dbdaad3b64c8fca5457ccf056a93f556890d0f9be3",
+    "sqlnew/build.py": "f82ab827036297b1841b9284da88da4d60927e27a070000b559b9cdb80eec823",
+    "sqlnew/check_native.py": "534424d4eb10a3dcc3360d4347c2435e8067018612332cc500195b32e57f30e8",
+    "sqlnew/native_check.c": "6ac31585a1fc97a30c570c3c659b12d83909d33ab5cfd5c207b83045aa3f4f69",
+    "sqlnew/db.py": "4596f6af166581a152adf840f44aea61106c7909dbe9a820946cb365fc2b3015",
+    "sqlnew/test_columnar.py": "c65f2f323986c5cb2f85a8b2d49f271cde9d02bdef28246abb77e7f380d31970",
+    "sqlnew/test_columnar_v2.py": "92d01b868bea89b1431f383a381a39a581cc8ff8436f06ba4c8f989cd8abd19c",
+    "sqlnew/test_sqlnew.py": "6d11272147a8968e397d437576048c4d1cf1f317d90b4ee52e6bba425a593a82",
+    "sqlnew/check_linux.sh": "744aca019711e2c6943f4bd51956f18d7a2e3c27f18d410fdcad3d096be213e9"
+  },
+  "library_sha256": {
+    "build/sqlnew/sqlnewdb.dll": "8a1307fade7b675bad5835be1e0062c07324012558407d6a7c2a51890c435ccc",
+    "build/scalar-v2/sqlnew/sqlnewdb.dll": "f5e83674897b730d264eb25b0d381d453b85e4f60860f69bda7b8c128474f3d0"
+  },
+  "logs": {
+    "build/v2-product-validation.log": "40a289c6e4794e456d222f89d9e5775f073b56a1280da5c349d6a2228598abee",
+    "build/v2-scalar-validation.log": "1fa5b86ef16ddd7d61b414213d6b429f01e4ee08a80b72651c68ad1e18a0b43e",
+    "build/v2-native-check.log": "6eb7285d90efb35c1a5ad74dcd0057ada92929b46d7d7219ba22e846c7e4970e",
+    "build/v2-devtest.log": "86b452ca398f0b4dc3d874f39704201e715a3ad7dd72d287ad8d4eeba55da6f2",
+    "build/v2-comparison-final.log": "88a7caf204689bf915b59146c59b95aa137b5092f4f7de1a6b6a249f7fa9df43",
+    "build/v2-columnar-exercise.log": "9e19351be2c83add0e810990ff18c95a4acdf82a817a1e42a4676e2364d53db9",
+    "build/v2-columns-exercise.log": "955ca6c553114ffff2a98c01b67f5ee10cd646f88ce8945a215d57a49def0b17",
+    "build/v2-vectors-exercise.log": "5dccd5b9a64fa3b1da16d01a4414600055f5e8facce6a40fbbfaecad1aac1b11"
+  },
+  "limits": [
+    "Windows x86-64 only for this pass; prior Linux results apply to 0.1.",
+    "Windows ASan does not instrument the linked core object.",
+    "No exhaustive VFS/power-loss injection, full release matrix, or exhaustive concurrency validation."
+  ],
+  "historical_validation": "validation-0.1.json",
+  "completed_utc": "2026-09-06T01:52:14.479869+00:00",
+  "benchmarks": {
+    "final_samples": 525,
+    "initial_samples": 1050,
+    "engines_per_dataset": 5,
+    "datasets": 2,
+    "full_restored_hashes": true,
+    "all_integrity_and_reopen_checks": true,
+    "final_report": "comparison-v2.json",
+    "initial_report": "comparison-v2-initial.json"
+  },
+  "exercises": {
+    "columnar": {
+      "report": "columnar-v2.json",
+      "sha256": "d16b18afbc75818836e38fc94dfbc9ca773ccfd572524307aca1d8e6b9586de4",
+      "database_bytes": 28274688,
+      "integrity": "ok",
+      "rows": 1000000,
+      "reopen": true
+    },
+    "columns": {
+      "report": "columns-v2.json",
+      "sha256": "259aebf57fb0df409603d7dcc9556e86d667fa43195c48cacc1e34ce8e5be8d4",
+      "database_bytes": 1880064,
+      "integrity": "ok",
+      "rows": 655360
+    },
+    "vectors": {
+      "report": "vectors-v2.json",
+      "sha256": "8206537dbde339179109779b965450d945bd950c95c8ba80f03b9098c6f6b7fc",
+      "database_bytes": 10412032,
+      "integrity": "ok",
+      "rows": 10000,
+      "mean_recall_at_10": 1.0
+    }
+  },
+  "result_sha256": {
+    "comparison-v2.json": "815b1b6cf72ee30044256073e9a317695416f9530b03508d685be0e17dbbe84b",
+    "comparison-v2-initial.json": "d82a4d817b527af871b587afee997995c4e89b03d4b8aa4db81ffb1832a846c9"
+  }
+}

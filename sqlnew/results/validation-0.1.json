@@ -1,0 +1,156 @@
+{
+  "timestamp_utc": "2026-09-05T18:06:03.058210+00:00",
+  "product": "SQLNEW 0.1.0-dev",
+  "upstream_git_commit": "f3b9f74d81132426dee1ccc07a67fdad2ccfeaa9",
+  "windows": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "compiler": "Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64",
+    "tests_passed": 32,
+    "backend": "avx2-f64",
+    "asan": {
+      "allocation_positions": 1800,
+      "injected_faults": 1177,
+      "malformed_inputs": 20000,
+      "live_sqlite_allocations_after_shutdown": 0,
+      "instrumented": "SQLNEW modules and harness; regular core object"
+    },
+    "test_methods": {
+      "columnar": 13,
+      "byte_integer_vector_index": 19
+    }
+  },
+  "linux": {
+    "environment": "Debian bookworm-slim, Docker Desktop/WSL, x86-64",
+    "compiler": "GCC 12.2.0-14+deb12u1",
+    "python": "3.11.2",
+    "avx2_tests_passed": 32,
+    "forced_scalar_tests_passed": 32,
+    "asan_ubsan": {
+      "allocation_positions": 1800,
+      "injected_faults": 1100,
+      "malformed_inputs": 20000,
+      "live_sqlite_allocations_after_shutdown": 0,
+      "instrumented": "complete core, SQLNEW modules, and harness",
+      "extra_link_flags": [
+        "-fno-pie",
+        "-no-pie"
+      ]
+    },
+    "diagnostic_issue": "Default PIE sanitizer executable entered a fatal-signal loop. An empty C program reproduced it in 6/20 launches; a fixed-address sanitizer executable passed 20/20. Instrumentation and signal diagnostics remain enabled.",
+    "test_methods": {
+      "columnar": 13,
+      "byte_integer_vector_index": 19
+    }
+  },
+  "checks": {
+    "readme_sql_example": "passed",
+    "integer_in_or_null_ordering": "passed",
+    "integer_exercise_rows": 655360,
+    "vector_exercise_rows": 10000,
+    "exercise_integrity_checks": "ok",
+    "columnar_process_exit_recovery": "passed: rollback journal and WAL; Windows and Linux",
+    "columnar_exercise_rows": 1000000,
+    "core_devtest": {
+      "status": "passed",
+      "command": "make devtest TSTRNNR_OPTS=--jobs 4",
+      "environment": "unprivileged user in disposable Linux compiler container",
+      "configuration_note": "Core matrix without SQLNEW registration; enabled optimizer exercised by product tests and Linux sanitizer harness.",
+      "test_cases": 977772,
+      "errors": 0,
+      "build_jobs": 10,
+      "tcl_jobs": 2486,
+      "fuzz_jobs": 54,
+      "final_job_states": [
+        [
+          "done",
+          2550
+        ]
+      ],
+      "sanitizer_fuzz_retry": {
+        "jobs": 18,
+        "flags": [
+          "-fsanitize=address",
+          "-fno-pie",
+          "-no-pie"
+        ],
+        "elf_type": "EXEC (2)",
+        "reason": "Default PIE ASan executable repeated DEADLYSIGNAL, matching the host runtime issue reproduced with an empty C program."
+      }
+    },
+    "columnar_exercise": {
+      "report": "columnar.json",
+      "rows": 1000000,
+      "database_bytes": 28262400,
+      "ingest_seconds": 1.527546999976039,
+      "summary_ms": 1.7029999289661646,
+      "time_slice_ms": 0.498599954880774,
+      "point_ms": 0.17010001465678215,
+      "integrity": "ok",
+      "reopen_verified": true,
+      "compiler_container_removed": true,
+      "docker_desktop_stopped": true
+    },
+    "public_workload_comparison": {
+      "status": "passed",
+      "run_started_utc": "2026-09-05T19:19:13.098077+00:00",
+      "report": "comparison.json",
+      "methodology": "../BENCHMARKS.md",
+      "datasets": {
+        "groupby": 1000000,
+        "taxi": 2171187
+      },
+      "configurations": [
+        "sqlite",
+        "sqlite_indexed",
+        "sqlnew_columnar"
+      ],
+      "workload_cases": 17,
+      "validated_timed_samples": 306,
+      "repetitions": 6,
+      "full_typed_input_hashes": "passed before measurement and after exact update restoration in all six databases",
+      "independent_query_answers": "passed: Arrow/NumPy expected values and Python typed SHA3 framing",
+      "integrity_and_reopen": "passed in all six databases",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "engine_source_unchanged_since_prior_validation": true
+    },
+    "update_phase_diagnostic": {
+      "status": "passed",
+      "report": "update-phases.json",
+      "run_started_utc": "2026-09-05T21:36:37.407527+00:00",
+      "validated_timed_samples": 18,
+      "operations_per_sample": 100,
+      "full_restored_data_hash_integrity_reopen": "passed for all three copies",
+      "original_comparison_files_unchanged": true,
+      "note": "Follow-up diagnostic with a truncating checkpoint outside each sample; no engine changes."
+    }
+  },
+  "limits": [
+    "Performance comparison covers two adapted public workloads on one Windows machine; warm single-connection measurements, no general superiority claim.",
+    "Complete release suite and comprehensive VFS power-loss injection not run.",
+    "ARM, 32-bit targets, and macOS not validated.",
+    "Random native malformed-frame loop covers byte, integer-block and vector interfaces; selected CSC1 corruption cases are in product tests.",
+    "Portability containers are compiler environments, not database servers."
+  ],
+  "source_sha256": {
+    "ext/sqlnew/columnar.c": "dbaedab99f6203e7b29a9f138a5758499f48d1fe47bcdf82d9778f151556ae78",
+    "ext/sqlnew/intblock.c": "490a7d2fc52f641aa84de927f524e510177cb997ba87d5b98008f0d1dae329d6",
+    "ext/sqlnew/sqlnew.c": "22718b54f4e805d3036f8c18026ddc9863f0561d3fab3eadb3aed7c95f874808",
+    "sqlnew/build.py": "bd004bdf1097c35c78677d0afc57e2440a2e0f5e0aa3064709d1fe949a9e378e",
+    "sqlnew/check_linux.sh": "4c4d465645c8ad25159940f84bc929b1246e3804843d94e5a0051aa04a9c965d",
+    "sqlnew/check_native.py": "038cb9b7339719baf6c1cae5769d392c8ef2a2644c0671642253b643e88bb3fd",
+    "sqlnew/config.h": "fd84dcb0afc570c4243d6bd0634d45ee1a21e5f8f0ce5aceb65f6ca7797a0028",
+    "sqlnew/db.py": "4596f6af166581a152adf840f44aea61106c7909dbe9a820946cb365fc2b3015",
+    "sqlnew/exercise_columnar.py": "0c8ab4518e47b37db4f97c927bc45dcd42e7834661a3eca596e8fc318aac16fc",
+    "sqlnew/index.py": "dd448b16937bb4e900ec1b9e2a485d1399d0bcdb7a0ba0e0db128d09aae771f8",
+    "sqlnew/native_check.c": "497866dd9b75378f3641e97047f2e8a509394efd6ef155213dfe3b465d039965",
+    "sqlnew/test_columnar.py": "c65f2f323986c5cb2f85a8b2d49f271cde9d02bdef28246abb77e7f380d31970",
+    "sqlnew/test_sqlnew.py": "6d11272147a8968e397d437576048c4d1cf1f317d90b4ee52e6bba425a593a82",
+    "src/select.c": "e64d618fd1c8cbffa904c3f7153e24efc6ac84633ccd45e93aa1895ec662c103"
+  },
+  "hardware": {
+    "cpu": "Intel Core i7-10750H @ 2.60GHz",
+    "physical_cores": 6,
+    "logical_cpus": 12
+  },
+  "updated_utc": "2026-09-05T21:38:22.699231+00:00"
+}

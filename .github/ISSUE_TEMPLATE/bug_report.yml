@@ -1,0 +1,23 @@
+name: Bug report
+description: A reproducible SQLNEW behavior or build failure
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Small reproduction
+      description: Include SQL or commands and synthetic data where possible.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Build and environment
+      description: SQLNEW version, commit, OS, compiler and relevant build flags.
+    validations:
+      required: true

@@ -1,0 +1,245 @@
+{
+  "timestamp_utc": "2026-09-05T21:36:37.407527+00:00",
+  "source_run": "C:\\Users\\mikea\\Documents\\projects\\SQLNEW\\build\\comparison\\runs\\20260905T191913096690Z",
+  "input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+  "operations_per_sample": 100,
+  "protocol": "Copies of validated taxi files; same 100 points and FULL/WAL settings; one checked warmup, six sequential balanced repetitions. WAL truncated before each sample outside timer. Commit includes module flush and pager work, not just fsync. Exact originals restored outside timer.",
+  "source_sha256": {
+    "sqlnew/diagnose_updates.py": "8a88edbff1709a78c5aeeae4d2b80636c4062a3dfad5bb8421831d31e687de5a",
+    "sqlnew/benchmark_compare.py": "ab0861b0d9073e8828e00fb139652ea6a9792d3e48ac2285edf2fe11bc1518b6",
+    "sqlnew/db.py": "4596f6af166581a152adf840f44aea61106c7909dbe9a820946cb365fc2b3015",
+    "ext/sqlnew/columnar.c": "dbaedab99f6203e7b29a9f138a5758499f48d1fe47bcdf82d9778f151556ae78"
+  },
+  "measurements": {
+    "sqlite": {
+      "samples": [
+        {
+          "updates_ms": 0.5634999834001064,
+          "commit_ms": 3.5040000220760703,
+          "total_ms": 4.067500005476177,
+          "wal_bytes": 412032,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 0.5163999740034342,
+          "commit_ms": 3.1458999728783965,
+          "total_ms": 3.6622999468818307,
+          "wal_bytes": 412032,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 0.825099996291101,
+          "commit_ms": 3.2372999703511596,
+          "total_ms": 4.0623999666422606,
+          "wal_bytes": 412032,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 0.7882000645622611,
+          "commit_ms": 2.6621000142768025,
+          "total_ms": 3.4503000788390636,
+          "wal_bytes": 412032,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 0.5973000079393387,
+          "commit_ms": 2.3444000398740172,
+          "total_ms": 2.941700047813356,
+          "wal_bytes": 412032,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 0.631700037047267,
+          "commit_ms": 2.062999992631376,
+          "total_ms": 2.6947000296786427,
+          "wal_bytes": 412032,
+          "validated": true,
+          "work": {}
+        }
+      ],
+      "median_updates_ms": 0.6145000224933028,
+      "median_commit_ms": 2.9039999935775995,
+      "median_total_ms": 3.556300012860447,
+      "median_wal_bytes": 412032.0
+    },
+    "sqlite_indexed": {
+      "samples": [
+        {
+          "updates_ms": 0.81769993994385,
+          "commit_ms": 4.615900106728077,
+          "total_ms": 5.433600046671927,
+          "wal_bytes": 1227792,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 1.0949999559670687,
+          "commit_ms": 4.713200032711029,
+          "total_ms": 5.808199988678098,
+          "wal_bytes": 1227792,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 1.4412000309675932,
+          "commit_ms": 5.596200004220009,
+          "total_ms": 7.037400035187602,
+          "wal_bytes": 1227792,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 0.8236999856308103,
+          "commit_ms": 4.22989996150136,
+          "total_ms": 5.05359994713217,
+          "wal_bytes": 1227792,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 0.8195999544113874,
+          "commit_ms": 4.312200006097555,
+          "total_ms": 5.131799960508943,
+          "wal_bytes": 1227792,
+          "validated": true,
+          "work": {}
+        },
+        {
+          "updates_ms": 0.8520000847056508,
+          "commit_ms": 4.0219000075012445,
+          "total_ms": 4.873900092206895,
+          "wal_bytes": 1227792,
+          "validated": true,
+          "work": {}
+        }
+      ],
+      "median_updates_ms": 0.8378500351682305,
+      "median_commit_ms": 4.464050056412816,
+      "median_total_ms": 5.282700003590435,
+      "median_wal_bytes": 1227792.0
+    },
+    "sqlnew_columnar": {
+      "samples": [
+        {
+          "updates_ms": 150.35530005116016,
+          "commit_ms": 6.637899903580546,
+          "total_ms": 156.9931999547407,
+          "wal_bytes": 1446152,
+          "validated": true,
+          "work": {
+            "blocks_read": 100,
+            "columns_decoded": 3600,
+            "compressed_bytes_read": 5321610,
+            "rows_emitted": 100,
+            "summary_blocks": 0,
+            "blocks_written": 100
+          }
+        },
+        {
+          "updates_ms": 150.3487000009045,
+          "commit_ms": 7.042999961413443,
+          "total_ms": 157.39169996231794,
+          "wal_bytes": 1446152,
+          "validated": true,
+          "work": {
+            "blocks_read": 100,
+            "columns_decoded": 3600,
+            "compressed_bytes_read": 5321610,
+            "rows_emitted": 100,
+            "summary_blocks": 0,
+            "blocks_written": 100
+          }
+        },
+        {
+          "updates_ms": 180.21679995581508,
+          "commit_ms": 7.892000023275614,
+          "total_ms": 188.1087999790907,
+          "wal_bytes": 1446152,
+          "validated": true,
+          "work": {
+            "blocks_read": 100,
+            "columns_decoded": 3600,
+            "compressed_bytes_read": 5321610,
+            "rows_emitted": 100,
+            "summary_blocks": 0,
+            "blocks_written": 100
+          }
+        },
+        {
+          "updates_ms": 166.45520005840808,
+          "commit_ms": 7.173600024543703,
+          "total_ms": 173.62880008295178,
+          "wal_bytes": 1446152,
+          "validated": true,
+          "work": {
+            "blocks_read": 100,
+            "columns_decoded": 3600,
+            "compressed_bytes_read": 5321610,
+            "rows_emitted": 100,
+            "summary_blocks": 0,
+            "blocks_written": 100
+          }
+        },
+        {
+          "updates_ms": 144.30970000103116,
+          "commit_ms": 6.368200061842799,
+          "total_ms": 150.67790006287396,
+          "wal_bytes": 1446152,
+          "validated": true,
+          "work": {
+            "blocks_read": 100,
+            "columns_decoded": 3600,
+            "compressed_bytes_read": 5321610,
+            "rows_emitted": 100,
+            "summary_blocks": 0,
+            "blocks_written": 100
+          }
+        },
+        {
+          "updates_ms": 146.27089991699904,
+          "commit_ms": 6.594000034965575,
+          "total_ms": 152.86489995196462,
+          "wal_bytes": 1446152,
+          "validated": true,
+          "work": {
+            "blocks_read": 100,
+            "columns_decoded": 3600,
+            "compressed_bytes_read": 5321610,
+            "rows_emitted": 100,
+            "summary_blocks": 0,
+            "blocks_written": 100
+          }
+        }
+      ],
+      "median_updates_ms": 150.35200002603233,
+      "median_commit_ms": 6.840449932496995,
+      "median_total_ms": 157.19244995852932,
+      "median_wal_bytes": 1446152.0
+    }
+  },
+  "final_validation": {
+    "sqlite": {
+      "restored_full_input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+      "integrity": "ok",
+      "reopen": true,
+      "final_database_bytes": 197709824
+    },
+    "sqlite_indexed": {
+      "restored_full_input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+      "integrity": "ok",
+      "reopen": true,
+      "final_database_bytes": 336023552
+    },
+    "sqlnew_columnar": {
+      "restored_full_input_hash": "FE3AC81BBD9859C16BD3DB0F87D06FD3685C405FDC4580DA728908CD74385B71",
+      "integrity": "ok",
+      "reopen": true,
+      "final_database_bytes": 74145792
+    }
+  }
+}
