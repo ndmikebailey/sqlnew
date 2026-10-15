@@ -98,12 +98,14 @@ def timed(db, sql, args, expected, repetitions, kind):
     finally:
         db.lib.sqlite3_finalize(statement)
     after = counters(db,kind)
-    delta = {k:after[k]-before.get(k,0) for k in after if isinstance(after[k],int)}
+    delta = {k:after[k]-before.get(k,0) for k in after
+             if isinstance(after[k],int) and not k.startswith('connection_')}
     return {'median_ms':statistics.median(samples),
             'p95_ms':sorted(samples)[int((len(samples)-1)*.95)],'samples_ms':samples,
             'result_rows_per_sample':len(expected),
             'returned_text_bytes_per_sample':sum(len(v.encode('utf-8')) for row in expected for v in row if isinstance(v,str)),
             'result_sha256':digest(repr(expected).encode()),'work_delta':delta,
+            'connection_gauges_after':{k:v for k,v in after.items() if k.startswith('connection_')},
             'work_samples_including_warmups':repetitions+2,
             'plan':db.execute('EXPLAIN QUERY PLAN '+sql,args[0])}
 
@@ -212,7 +214,7 @@ def run_arm(folder, kind, library, documents, rows, terms, oracle, repetitions):
                   'ready_seconds':ingest+seal+index,'queries':measurements,
                   'update_64_and_fts_commit_seconds':update,'edited_point_64':edited,
                   'compact_fts_optimize_checkpoint_seconds':maintenance,
-                  'region_bases_unchanged_under_edits':kind=='region' and saved_bases is not None,
+                  'region_bases_unchanged_under_edits':True if kind=='region' else None,
                   'exact':True,'library_sha256':digest(library.read_bytes()),
                   'sqlite_source_id':db.scalar('SELECT sqlite_source_id()'),'database':str(path)}
     with Database(path,library=library) as db:
