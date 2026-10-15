@@ -1,0 +1,11 @@
+{
+  "name": "public-documents-v1",
+  "release": "v0.2.1-dev.1",
+  "url": "https://github.com/ndmikebailey/sqlnew/releases/download/v0.2.1-dev.1/public-documents-v1.zip",
+  "bytes": 1089199,
+  "sha256": "d60540629e899c764b500f4cd6db45e65af37d5bc8e47ca2ba8667d829b196bc",
+  "original_manifest": "public-documents.json",
+  "sources": 7,
+  "logical_utf8_bytes": 2863312,
+  "notes": "Unmodified pinned originals, source manifest and restore instructions. Original ebook notices remain included. The native build does not download this corpus."
+}

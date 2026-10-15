@@ -1569,3 +1569,63 @@ GitHub project details
   selective retrieval in an independent embedded SQLite fork. Added SQL,
   embedded-database, sqlite-fork, compression, columnar, information-retrieval
   and experimental topics. No repository visibility or access settings changed.
+
+Completed document measurements and preview publication
+  After compilation, core checks and the slow initial per-file Git inspection
+  had ended, ran all three storage arms at passage maxima of 1,024, 4,096 and
+  16,384 characters. Nine final arms passed; full source bytes, search answers,
+  changes, restoration, base immutability and reopened results stayed exact.
+  Corrected reporter bookkeeping to keep connection memory gauges separate
+  from cumulative work counters. Preserved both passes' raw timing samples in
+  sqlnew/results/dev021-documents-repeat.json; native binaries, originals and
+  initial file sizes match across passes. The correction did not change SQL,
+  stored data or native code. Public final reports use separate gauges.
+
+  Final whole-file KiB, including the common FTS index and document catalog:
+  Passage maximum    Passages    Columns    Regions    Indexed SQLite
+     1,024             3,486       3,468      4,632          4,796
+     4,096               763       3,428      4,500          4,864
+    16,384               181       3,588      3,564          4,252
+  Final median milliseconds per 64 prepared point requests:
+     1,024                        138.427      2.640          0.703
+     4,096                        171.627      3.193          1.013
+    16,384                        183.032      7.379          6.628
+  The 4,096-character keyword workflow returned 85 passages over seven requests
+  in 173.416 / 2.771 / 0.884 ms for columns / regions / indexed SQLite. A whole
+  first document took 2.965 / 3.004 / 1.237 ms. Region text retrieval avoids
+  column-group expansion: the point batch counts 237,065 native compressed
+  input bytes versus 36,545,207 for columns. These are cached decoder inputs,
+  not physical disk reads, and exclude the common FTS index.
+  Larger passages return more context, change row counts and change the storage
+  balance. At 16,384 characters region and column files differ by just 24 KiB,
+  while region points take about 25x less time. This is useful evidence about
+  granularity, not proof of a universal compression multiplier. Indexed rows
+  remain fastest for points. SQLite's large-passage point median varied from
+  2.988 to 6.628 ms across the two passes; all repeats and regressions remain
+  visible. Setup, FTS-synchronized updates, compaction and grown file sizes are
+  disclosed in BENCHMARKS.md and raw reports. Timings use /O2 /MD, not the /MT
+  Windows download build. No further storage design was selected from this run.
+
+  Created a 1,089,199-byte corpus archive containing all seven original files
+  unchanged, including the complete ebook notices, source manifest and restore
+  commands. Its SHA-256 is
+    d60540629e899c764b500f4cd6db45e65af37d5bc8e47ca2ba8667d829b196bc
+  A fresh ignored cache restored all original hashes and 763 default passages
+  without a download or engine-source edit. This preserves reproducibility if
+  source-site editions change. The source manifest remains unchanged.
+
+  Published v0.2.1-dev.1 from 39acb4af7b0d86908c0b11f9977e932a6ecd7e9a.
+  Tagged hosted run 38666524200 passed on Windows and Linux: 56 product methods,
+  10 workflows and 360 fold cases per optimized/scalar configuration, all four
+  extracted package checks, and 979,196 Linux core checks with zero errors in
+  7:05. Downloaded all four hosted artifacts, verified file manifests, and reran
+  both downloaded Windows CLIs. /MT imports only Windows system libraries.
+  Release archive hashes match those verified packages. The publicly downloaded
+  corpus ZIP matches its pin. Seven release assets include four native packages,
+  their SHA256SUMS, the corpus ZIP and its own checksum. The published preview
+  record retains source/job/archive identities. Binaries remain outside Git.
+
+  Reversed the previous root-layout recommendation after concrete verification:
+  a separate inherited-engine directory works and is clearer. AGENTS.md now
+  describes SQLNEW alone. No agents, pytest, separate security campaign, new
+  codec, native engine edit or file-format change was introduced in this pass.

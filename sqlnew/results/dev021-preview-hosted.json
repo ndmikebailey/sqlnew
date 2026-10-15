@@ -1,0 +1,185 @@
+{
+  "release": "v0.2.1-dev.1",
+  "commit": "39acb4af7b0d86908c0b11f9977e932a6ecd7e9a",
+  "run_id": 38666524200,
+  "url": "https://github.com/ndmikebailey/sqlnew/actions/runs/38666524200",
+  "conclusion": "success",
+  "product_jobs": [
+    {
+      "job_id": 116199627599,
+      "suites": [
+        {
+          "methods": 56,
+          "seconds": 2.462
+        },
+        {
+          "methods": 56,
+          "seconds": 2.351
+        }
+      ],
+      "reports": [
+        {
+          "groups": 10,
+          "canonical_fold_cases": 360,
+          "exact": true,
+          "runtime": {
+            "version": "0.2.1-dev",
+            "sqlite_source_id": "2026-10-14 13:39:28 e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bbalt1",
+            "backend": "avx2-f64",
+            "library_sha256": "b1a38dfbe55dbba95d4d7d318f3326796283266e128647fcf9c5c9608c6ef919"
+          }
+        },
+        {
+          "groups": 10,
+          "canonical_fold_cases": 360,
+          "exact": true,
+          "runtime": {
+            "version": "0.2.1-dev",
+            "sqlite_source_id": "2026-10-14 13:39:28 e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bbalt1",
+            "backend": "scalar-f64",
+            "library_sha256": "13d40a53ea7cc122adf9fa83bac558a8725fdf4c018e1686544b4ea64d6d8cdb"
+          }
+        }
+      ],
+      "runner": "ubuntu-latest"
+    },
+    {
+      "job_id": 116199627753,
+      "suites": [
+        {
+          "methods": 56,
+          "seconds": 7.284
+        },
+        {
+          "methods": 56,
+          "seconds": 7.327
+        }
+      ],
+      "reports": [
+        {
+          "groups": 10,
+          "canonical_fold_cases": 360,
+          "exact": true,
+          "runtime": {
+            "version": "0.2.1-dev",
+            "sqlite_source_id": "2026-10-14 13:39:28 e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bbalt1",
+            "backend": "avx2-f64",
+            "library_sha256": "8b2c8d3861e286d7b17ed13cc2a9cde1ae280a84389983cd370a5d4c5e3ffb24"
+          }
+        },
+        {
+          "groups": 10,
+          "canonical_fold_cases": 360,
+          "exact": true,
+          "runtime": {
+            "version": "0.2.1-dev",
+            "sqlite_source_id": "2026-10-14 13:39:28 e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bbalt1",
+            "backend": "scalar-f64",
+            "library_sha256": "993da29a74cc5bf0b4d65f2c044deee6017bbb4e128eb44a1bc2320a22222399"
+          }
+        }
+      ],
+      "runner": "windows-latest"
+    }
+  ],
+  "core": {
+    "job_id": 116199627830,
+    "errors": 0,
+    "tests": 979196,
+    "elapsed": "07:05"
+  },
+  "package_verification": "All four hosted archives extracted and exercised in their respective jobs. Downloaded artifacts verified against their per-file manifests; both downloaded Windows CLIs reran the walkthrough locally. Windows /MT binaries import only Windows system libraries.",
+  "scope": "Experimental preview; correctness/build checks, not Linux performance or production stress certification.",
+  "release_url": "https://github.com/ndmikebailey/sqlnew/releases/tag/v0.2.1-dev.1",
+  "published": {
+    "tag": "v0.2.1-dev.1",
+    "url": "https://github.com/ndmikebailey/sqlnew/releases/tag/v0.2.1-dev.1",
+    "published_at": "2026-10-15T01:44:07Z",
+    "assets": [
+      {
+        "name": "public-documents-v1.zip",
+        "size": 1089199,
+        "browser_download_url": "https://github.com/ndmikebailey/sqlnew/releases/download/v0.2.1-dev.1/public-documents-v1.zip",
+        "digest": "sha256:d60540629e899c764b500f4cd6db45e65af37d5bc8e47ca2ba8667d829b196bc"
+      },
+      {
+        "name": "public-documents-v1.zip.sha256",
+        "size": 91,
+        "browser_download_url": "https://github.com/ndmikebailey/sqlnew/releases/download/v0.2.1-dev.1/public-documents-v1.zip.sha256",
+        "digest": "sha256:8cdc90d099aa501e4421339c5d51c9abe12e26b264d5dc8363fffeddac82a612"
+      },
+      {
+        "name": "SHA256SUMS",
+        "size": 484,
+        "browser_download_url": "https://github.com/ndmikebailey/sqlnew/releases/download/v0.2.1-dev.1/SHA256SUMS",
+        "digest": "sha256:3978b9c4ccd3d19b4d227b600667cd91500da554a903199e97eec8a13c2371f4"
+      },
+      {
+        "name": "sqlnew-0.2.1-dev-linux-x86_64-optimized-39acb4af7.tar.gz",
+        "size": 2500141,
+        "browser_download_url": "https://github.com/ndmikebailey/sqlnew/releases/download/v0.2.1-dev.1/sqlnew-0.2.1-dev-linux-x86_64-optimized-39acb4af7.tar.gz",
+        "digest": "sha256:c404981fa9543ba95ab2543dd5bd1e301a2a5835d976cb17081feb6bf7f07370"
+      },
+      {
+        "name": "sqlnew-0.2.1-dev-linux-x86_64-scalar-39acb4af7.tar.gz",
+        "size": 2488227,
+        "browser_download_url": "https://github.com/ndmikebailey/sqlnew/releases/download/v0.2.1-dev.1/sqlnew-0.2.1-dev-linux-x86_64-scalar-39acb4af7.tar.gz",
+        "digest": "sha256:7c9b14a849d394f7a3fdd5cbc6c0cc868f9c16c474574d9c28d5bad321020894"
+      },
+      {
+        "name": "sqlnew-0.2.1-dev-windows-x86_64-optimized-39acb4af7.zip",
+        "size": 2521355,
+        "browser_download_url": "https://github.com/ndmikebailey/sqlnew/releases/download/v0.2.1-dev.1/sqlnew-0.2.1-dev-windows-x86_64-optimized-39acb4af7.zip",
+        "digest": "sha256:759669f62ebb64d9a725c39fd0ff8a677308320834bfd2b19866282750183d31"
+      },
+      {
+        "name": "sqlnew-0.2.1-dev-windows-x86_64-scalar-39acb4af7.zip",
+        "size": 2519815,
+        "browser_download_url": "https://github.com/ndmikebailey/sqlnew/releases/download/v0.2.1-dev.1/sqlnew-0.2.1-dev-windows-x86_64-scalar-39acb4af7.zip",
+        "digest": "sha256:fb5e50de33a77f8777098ce0f3510a62ba224da9410650bc2dc3e58107e58a5c"
+      }
+    ]
+  },
+  "downloaded_binary_archives": [
+    {
+      "artifact": "sqlnew-Windows-scalar",
+      "artifact_id": 11941900320,
+      "archive": "sqlnew-0.2.1-dev-windows-x86_64-scalar-39acb4af7.zip",
+      "sha256": "fb5e50de33a77f8777098ce0f3510a62ba224da9410650bc2dc3e58107e58a5c",
+      "bytes": 2519815,
+      "files_verified": 11,
+      "source_commit": "39acb4af7b0d86908c0b11f9977e932a6ecd7e9a",
+      "local_cli_check": "passed"
+    },
+    {
+      "artifact": "sqlnew-Linux-scalar",
+      "artifact_id": 11941710764,
+      "archive": "sqlnew-0.2.1-dev-linux-x86_64-scalar-39acb4af7.tar.gz",
+      "sha256": "7c9b14a849d394f7a3fdd5cbc6c0cc868f9c16c474574d9c28d5bad321020894",
+      "bytes": 2488227,
+      "files_verified": 10,
+      "source_commit": "39acb4af7b0d86908c0b11f9977e932a6ecd7e9a",
+      "local_cli_check": "not run on Windows host; passed in Linux CI"
+    },
+    {
+      "artifact": "sqlnew-Windows-optimized",
+      "artifact_id": 11940903924,
+      "archive": "sqlnew-0.2.1-dev-windows-x86_64-optimized-39acb4af7.zip",
+      "sha256": "759669f62ebb64d9a725c39fd0ff8a677308320834bfd2b19866282750183d31",
+      "bytes": 2521355,
+      "files_verified": 11,
+      "source_commit": "39acb4af7b0d86908c0b11f9977e932a6ecd7e9a",
+      "local_cli_check": "passed"
+    },
+    {
+      "artifact": "sqlnew-Linux-optimized",
+      "artifact_id": 11940799445,
+      "archive": "sqlnew-0.2.1-dev-linux-x86_64-optimized-39acb4af7.tar.gz",
+      "sha256": "c404981fa9543ba95ab2543dd5bd1e301a2a5835d976cb17081feb6bf7f07370",
+      "bytes": 2500141,
+      "files_verified": 10,
+      "source_commit": "39acb4af7b0d86908c0b11f9977e932a6ecd7e9a",
+      "local_cli_check": "not run on Windows host; passed in Linux CI"
+    }
+  ]
+}

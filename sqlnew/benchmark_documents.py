@@ -46,7 +46,10 @@ def corpus(fetch=False, size=4096):
     cache = BUILD/'document-corpus'
     documents, rows = [], []
     for doc, source in enumerate(spec['sources']):
-        if 'path' in source:
+        cached = cache/source.get('cache_file',Path(source.get('path','')).name)
+        if cached.exists():
+            path = cached
+        elif 'path' in source:
             path = ROOT/source['path']
         else:
             path = cache/source['cache_file']

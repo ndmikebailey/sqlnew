@@ -15,8 +15,28 @@ isolated extraction. [dev021-layout-validation.json](results/dev021-layout-valid
 records configurations and hashes. Hosted preview publication additionally
 requires Windows/Linux product jobs and Linux core devtest on its tagged commit.
 
+That [tagged run](https://github.com/ndmikebailey/sqlnew/actions/runs/38666524200)
+has passed: both platforms completed 56 product methods and 360 folding cases
+per configuration, all four archives passed their extracted walkthroughs, and
+Linux core devtest passed **979,196 checks with zero errors** in 7:05. The
+[preview](https://github.com/ndmikebailey/sqlnew/releases/tag/v0.2.1-dev.1) is
+published. [dev021-preview-hosted.json](results/dev021-preview-hosted.json)
+retains jobs, runtime hashes, archive identities and download verification.
+
 Historical source paths and measurements below describe their original runs.
 No native codec, engine behavior or database format changed in this relocation.
+
+## Public-document retrieval
+
+The public-document comparison passed all nine final file-backed arms: three
+storage methods at three passage sizes. Seven originals reconstruct their
+UTF-8 hashes exactly, FTS candidates match pinned pristine SQLite, edited values
+and FTS updates commit together, region bases stay unchanged under edits,
+and compaction, full restoration, integrity and reopen checks pass.
+The [benchmark notes](BENCHMARKS.md#public-documents-and-passage-retrieval) link
+raw measurements and two-pass variation. The [corpus archive](corpora/public-documents-archive.json)
+also passed an independent restore into a fresh cache, with no downloads or
+engine-source edits. This is a bounded lexical retrieval workload.
 
 ## Current 0.2.1 maintenance preparation — October 14
 

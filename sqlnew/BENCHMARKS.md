@@ -1,5 +1,94 @@
 # SQLNEW benchmarks
 
+## Public documents and passage retrieval
+
+The [document runner](benchmark_documents.py) compares indexed pristine SQLite,
+SQLNEW regions and SQLNEW columns over **seven complete originals / 2,863,312
+UTF-8 bytes**: four public books and three technical documents. The
+[manifest](corpora/public-documents.json) pins their source identities. Passages
+do not overlap or repeat padding; joining them reconstructs each original hash.
+This is a bounded English prose/technical collection, not an enterprise corpus.
+
+All three arms include the same contentless FTS5 candidate index and a document
+catalog. SQLite also has a `(doc,ordinal)` index. The keyword workflow finds
+candidate rowids, then fetches their bodies through the chosen storage method;
+callers do not provide coordinates. Seven fixed terms return up to 16 passages
+each, ordered by rowid. This measures lexical retrieval and exact body recovery,
+not semantic relevance or ranked-search quality. Pristine FTS5 supplies the
+candidate oracle; bodies independently match the original text.
+
+Complete initial database sizes, **KiB**, and median milliseconds for **64 point
+requests** in the final pass:
+
+| Maximum passage characters | Passages | Columns KiB | Regions KiB | SQLite KiB | Columns ms | Regions ms | SQLite ms |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 1,024 | 3,486 | 3,468 | 4,632 | 4,796 | 138.427 | 2.640 | 0.703 |
+| 4,096 | 763 | 3,428 | 4,500 | 4,864 | 171.627 | 3.193 | 1.013 |
+| 16,384 | 181 | 3,588 | 3,564 | 4,252 | 183.032 | 7.379 | 6.628 |
+
+For the default 4,096-character passages, median milliseconds:
+
+| Workload | Columns | Regions | Indexed SQLite |
+|---|---:|---:|---:|
+| Seven keyword context requests, 85 returned passages | 173.416 | 2.771 | 0.884 |
+| Complete first document, 607,606 bytes | 2.965 | 3.004 | 1.237 |
+
+With default passages, regions use about 31% more space than columns and take
+about 54x less time for the 64 point requests. Their native compressed-payload
+counter records **237,065 bytes per batch**, versus **36,545,207 bytes** for
+columns. Those are decoder-input counts including cached reads, excluding FTS
+and physical I/O. They explain the work avoided; they are not disk-bandwidth
+measurements. Connection memory gauges are recorded separately.
+
+At 16,384 characters the complete region and column files differ by only
+**24 KiB**, while regions take about 25x less time for points in this run.
+Larger passages change row counts, FTS granularity and returned bytes: the
+64-point batches return about 998 KB there, versus 243 KB at the default size.
+Compare storage methods within each row; passage sizes are different retrieval
+units. Indexed SQLite has the fastest points in all three final comparisons.
+
+Edits synchronize the common FTS index in the same FULL-synchronous transaction.
+At the default size, 64 updates and commit took **197.40 / 23.33 / 19.73 ms** for
+columns / regions / SQLite. Native compaction where applicable, FTS optimization
+and a truncating checkpoint took **75.88 / 36.02 / 41.29 ms**. These are single
+setup/maintenance observations, not sampled medians. Reports retain ingestion,
+sealing, indexing and larger files after edits/compaction; no implicit VACUUM
+shrinks those costs away. Region base payloads stayed unchanged under edits.
+Full restoration, original hashes, integrity and reopen checks passed in all
+nine final arms.
+
+Two passes used the same native binaries and original corpus hashes. Timings
+varied: SQLite's 16,384-character point median ranged from **2.988 to 6.628 ms**,
+and regions from **7.379 to 7.525 ms**. Complete file sizes and answers matched.
+The [repeat record](results/dev021-documents-repeat.json) retains both sets of
+raw timing samples. These are warm, single-host Windows observations, with
+prepared calls, result copying, two warmups and 13 retained samples; p95 is the
+lower empirical quantile. Compilation and core checks ended before timing.
+All files use 4 KiB pages, WAL FULL, a 64 MiB cache and no mmap.
+These timings use the retained MSVC `/O2 /MD` core. Windows download builds
+use `/MT`; their package validation is separate from this timing run.
+
+Raw final reports: [1,024](results/dev021-documents-1024.json),
+[4,096](results/dev021-documents-4096.json),
+[16,384](results/dev021-documents-16384.json). This preserves the measured
+compression/retrieval blend; it does not establish a universal storage winner.
+
+To reproduce, build SQLNEW and the pinned baseline, then either fetch the
+originals or restore the [versioned corpus archive](corpora/public-documents-archive.json):
+
+```console
+python sqlnew/benchmark_build.py --fetch-upstream
+python sqlnew/corpus_archive.py --extract PATH/TO/public-documents-v1.zip
+python sqlnew/benchmark_documents.py
+python sqlnew/benchmark_documents.py --passage-chars 1024
+python sqlnew/benchmark_documents.py --passage-chars 16384
+```
+
+`--fetch-corpus` downloads originals instead; every pin must still match.
+The corpus archive preserves their original bytes and notices if remote editions
+change. Outputs default to ignored `build/documents/benchmark.json`; explicit
+`--output` paths retain distinct runs. Corpus preparation is outside timing.
+
 ## Current 0.2.1 comparison
 
 Run `python sqlnew/benchmark_build.py --fetch-upstream` after building SQLNEW,

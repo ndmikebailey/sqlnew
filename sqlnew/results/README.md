@@ -6,6 +6,9 @@ the original run; generated databases and binaries remain under ignored `build/`
 
 | Reports | Scope |
 |---|---|
+| [Published preview validation](dev021-preview-hosted.json) | Tagged Windows/Linux product/core checks, all four package identities and published download verification |
+| [Documents: 1,024](dev021-documents-1024.json), [4,096](dev021-documents-4096.json), [16,384](dev021-documents-16384.json) | Nine exact real-text arms; common FTS5 discovery, points, whole documents, changes and compaction |
+| [Document repeats](dev021-documents-repeat.json) | Both passes' raw timing samples; matched originals, native binaries and file sizes, including observed timing variation |
 | [Layout and package validation](dev021-layout-validation.json) | Relocated inherited tree, fresh generation, core devtest, optimized/scalar Windows static-runtime packages |
 | [Hosted CI](dev021-hosted-ci.json) | Initial public commit: Windows/Linux optimized and scalar product checks, Linux core devtest |
 | [Maintenance validation](dev021-maintenance-validation.json) | Local maintenance intake, product checks and core devtest summary; its pending CI list predates the hosted run |

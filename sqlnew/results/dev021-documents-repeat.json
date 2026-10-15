@@ -1,0 +1,1379 @@
+{
+  "description": "Two complete, sequential passes over the same corpus and native binaries. Final reports separate connection gauges from work counters. Earlier-pass timing samples are retained here to expose variation; no pooled winner score.",
+  "passes": [
+    {
+      "label": "first",
+      "passage_characters_max": 1024,
+      "rows": 3486,
+      "recorded_utc": "2026-10-15T01:36:09.960598+00:00",
+      "script_sha256": "5c2b6a633b43bbaa2e676baa109418943cf27771cf13c614a624036ad7056a0a",
+      "corpus_manifest_sha256": "39b2a3218fe8b5a9394595703b65206b98be811e2841a7a0fd8aac826871847f",
+      "arms": {
+        "row": {
+          "database_bytes": 4911104,
+          "library_sha256": "3a099c915cc275db628649891670490115f49222465f14138be82a9dec6a8338",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 0.7456,
+              "p95_ms": 0.8968,
+              "samples_ms": [
+                0.8968,
+                0.7508,
+                0.8526,
+                0.9252,
+                0.8396,
+                0.8046,
+                0.7456,
+                0.7413,
+                0.7437,
+                0.7355,
+                0.7345,
+                0.739,
+                0.7377
+              ],
+              "result_sha256": "487a68c7dd55757df90bafc048d7f0aec2b578c99973e130bcceda16c2272644",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 53099
+            },
+            "keyword_context": {
+              "median_ms": 0.6772,
+              "p95_ms": 0.8756,
+              "samples_ms": [
+                0.658,
+                0.6522,
+                0.7611,
+                0.9659,
+                0.8756,
+                0.6937,
+                0.6778,
+                0.6856,
+                0.6726,
+                0.673,
+                0.6772,
+                0.67,
+                0.6717
+              ],
+              "result_sha256": "b4431a359ac3d7fb3596c1250e28780474a90048109286075f1fd14feca6d895",
+              "result_rows_per_sample": 96,
+              "returned_text_bytes_per_sample": 83911
+            },
+            "whole_document": {
+              "median_ms": 3.1971,
+              "p95_ms": 3.675,
+              "samples_ms": [
+                3.7527,
+                3.1833,
+                3.147,
+                3.4454,
+                3.3353,
+                3.675,
+                3.2806,
+                3.1352,
+                3.1198,
+                3.4273,
+                3.1971,
+                3.1359,
+                3.1827
+              ],
+              "result_sha256": "8d40cde8c44aa73e0542f6517f174f8778627ef7b39d9d5f90a2e50b58913730",
+              "result_rows_per_sample": 716,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "region": {
+          "database_bytes": 4743168,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 2.7147,
+              "p95_ms": 2.942,
+              "samples_ms": [
+                2.941,
+                2.5194,
+                2.7968,
+                3.0734,
+                2.5298,
+                2.5031,
+                2.5285,
+                2.7626,
+                2.5734,
+                2.7147,
+                2.5711,
+                2.7706,
+                2.942
+              ],
+              "result_sha256": "487a68c7dd55757df90bafc048d7f0aec2b578c99973e130bcceda16c2272644",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 53099
+            },
+            "keyword_context": {
+              "median_ms": 2.3888,
+              "p95_ms": 2.9301,
+              "samples_ms": [
+                3.2044,
+                2.3037,
+                2.342,
+                2.3577,
+                2.4019,
+                2.2856,
+                2.4582,
+                2.3888,
+                2.3177,
+                2.2821,
+                2.4338,
+                2.6133,
+                2.9301
+              ],
+              "result_sha256": "b4431a359ac3d7fb3596c1250e28780474a90048109286075f1fd14feca6d895",
+              "result_rows_per_sample": 96,
+              "returned_text_bytes_per_sample": 83911
+            },
+            "whole_document": {
+              "median_ms": 5.7896,
+              "p95_ms": 6.3356,
+              "samples_ms": [
+                5.4543,
+                5.3018,
+                5.7896,
+                5.7685,
+                5.7836,
+                5.367,
+                5.3899,
+                5.8463,
+                5.8869,
+                6.3356,
+                5.8002,
+                6.4964,
+                6.0524
+              ],
+              "result_sha256": "8d40cde8c44aa73e0542f6517f174f8778627ef7b39d9d5f90a2e50b58913730",
+              "result_rows_per_sample": 716,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "columnar": {
+          "database_bytes": 3551232,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 125.5669,
+              "p95_ms": 150.3726,
+              "samples_ms": [
+                124.3314,
+                128.448,
+                125.0611,
+                124.222,
+                125.5669,
+                122.1653,
+                123.9029,
+                150.3726,
+                131.3672,
+                125.367,
+                155.7314,
+                130.4083,
+                130.0231
+              ],
+              "result_sha256": "487a68c7dd55757df90bafc048d7f0aec2b578c99973e130bcceda16c2272644",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 53099
+            },
+            "keyword_context": {
+              "median_ms": 147.5877,
+              "p95_ms": 149.2901,
+              "samples_ms": [
+                151.5962,
+                148.6835,
+                148.5921,
+                149.2901,
+                147.5877,
+                149.1373,
+                145.1251,
+                142.2166,
+                141.2698,
+                146.95,
+                147.4826,
+                147.2464,
+                149.1818
+              ],
+              "result_sha256": "b4431a359ac3d7fb3596c1250e28780474a90048109286075f1fd14feca6d895",
+              "result_rows_per_sample": 96,
+              "returned_text_bytes_per_sample": 83911
+            },
+            "whole_document": {
+              "median_ms": 5.035,
+              "p95_ms": 6.1487,
+              "samples_ms": [
+                6.2369,
+                4.9609,
+                4.9097,
+                5.1615,
+                4.8584,
+                5.4267,
+                5.8846,
+                4.9673,
+                5.035,
+                5.2256,
+                4.9209,
+                4.9569,
+                6.1487
+              ],
+              "result_sha256": "8d40cde8c44aa73e0542f6517f174f8778627ef7b39d9d5f90a2e50b58913730",
+              "result_rows_per_sample": 716,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "first",
+      "passage_characters_max": 4096,
+      "rows": 763,
+      "recorded_utc": "2026-10-15T01:35:59.403936+00:00",
+      "script_sha256": "5c2b6a633b43bbaa2e676baa109418943cf27771cf13c614a624036ad7056a0a",
+      "corpus_manifest_sha256": "39b2a3218fe8b5a9394595703b65206b98be811e2841a7a0fd8aac826871847f",
+      "arms": {
+        "row": {
+          "database_bytes": 4980736,
+          "library_sha256": "3a099c915cc275db628649891670490115f49222465f14138be82a9dec6a8338",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 0.9916,
+              "p95_ms": 1.1393,
+              "samples_ms": [
+                0.9815,
+                0.9654,
+                1.0676,
+                0.9993,
+                0.9782,
+                0.9853,
+                1.098,
+                1.3099,
+                1.1393,
+                1.064,
+                0.9916,
+                0.9866,
+                0.9843
+              ],
+              "result_sha256": "93512f6ca5753abe87d43e709dd485d674d8bc95c48063416426a15aeb8b1b20",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 243417
+            },
+            "keyword_context": {
+              "median_ms": 0.8748,
+              "p95_ms": 1.0068,
+              "samples_ms": [
+                0.8895,
+                0.8677,
+                0.8733,
+                0.8703,
+                1.047,
+                1.0068,
+                0.9258,
+                0.8829,
+                0.8701,
+                0.8609,
+                0.8622,
+                0.8748,
+                0.9053
+              ],
+              "result_sha256": "08a539c7e9b0411c828cff5efc639b9e26f266a53f030190b2af3f81b5ef55af",
+              "result_rows_per_sample": 85,
+              "returned_text_bytes_per_sample": 328872
+            },
+            "whole_document": {
+              "median_ms": 1.2099,
+              "p95_ms": 1.4338,
+              "samples_ms": [
+                1.2099,
+                1.429,
+                1.2471,
+                1.3886,
+                1.2288,
+                1.198,
+                1.2076,
+                1.1874,
+                1.1927,
+                1.1857,
+                1.4338,
+                1.2066,
+                1.5412
+              ],
+              "result_sha256": "d956bf50d93ed4a2f079385286b9db0c278d646a4e4b4c0c4399c34e4907daa1",
+              "result_rows_per_sample": 157,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "region": {
+          "database_bytes": 4608000,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 3.5009,
+              "p95_ms": 3.7651,
+              "samples_ms": [
+                3.3402,
+                3.3978,
+                3.5727,
+                3.5009,
+                3.3785,
+                3.3686,
+                3.4909,
+                3.7797,
+                3.5932,
+                3.6616,
+                3.7228,
+                3.7651,
+                3.3344
+              ],
+              "result_sha256": "93512f6ca5753abe87d43e709dd485d674d8bc95c48063416426a15aeb8b1b20",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 243417
+            },
+            "keyword_context": {
+              "median_ms": 2.8356,
+              "p95_ms": 3.11,
+              "samples_ms": [
+                3.0912,
+                3.1362,
+                2.8901,
+                2.9775,
+                2.772,
+                2.7453,
+                2.9249,
+                2.74,
+                2.8356,
+                2.7702,
+                2.7394,
+                2.7502,
+                3.11
+              ],
+              "result_sha256": "08a539c7e9b0411c828cff5efc639b9e26f266a53f030190b2af3f81b5ef55af",
+              "result_rows_per_sample": 85,
+              "returned_text_bytes_per_sample": 328872
+            },
+            "whole_document": {
+              "median_ms": 2.9391,
+              "p95_ms": 3.0905,
+              "samples_ms": [
+                2.6732,
+                3.0711,
+                2.7409,
+                2.9462,
+                2.6632,
+                2.6408,
+                2.6311,
+                2.9391,
+                3.061,
+                3.0389,
+                3.2261,
+                3.0905,
+                2.8535
+              ],
+              "result_sha256": "d956bf50d93ed4a2f079385286b9db0c278d646a4e4b4c0c4399c34e4907daa1",
+              "result_rows_per_sample": 157,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "columnar": {
+          "database_bytes": 3510272,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 166.0352,
+              "p95_ms": 186.9081,
+              "samples_ms": [
+                186.9081,
+                166.0352,
+                162.6187,
+                168.2949,
+                181.3518,
+                189.963,
+                173.3923,
+                170.0052,
+                165.8257,
+                163.905,
+                164.5062,
+                161.8759,
+                162.2795
+              ],
+              "result_sha256": "93512f6ca5753abe87d43e709dd485d674d8bc95c48063416426a15aeb8b1b20",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 243417
+            },
+            "keyword_context": {
+              "median_ms": 169.0826,
+              "p95_ms": 178.3985,
+              "samples_ms": [
+                167.6065,
+                162.9887,
+                167.6225,
+                167.0657,
+                172.7232,
+                177.2023,
+                169.0826,
+                164.2291,
+                178.3985,
+                170.5302,
+                181.3432,
+                170.6739,
+                168.8379
+              ],
+              "result_sha256": "08a539c7e9b0411c828cff5efc639b9e26f266a53f030190b2af3f81b5ef55af",
+              "result_rows_per_sample": 85,
+              "returned_text_bytes_per_sample": 328872
+            },
+            "whole_document": {
+              "median_ms": 2.8249,
+              "p95_ms": 3.1552,
+              "samples_ms": [
+                3.1552,
+                3.0133,
+                2.8249,
+                2.7517,
+                2.7449,
+                2.7053,
+                3.2075,
+                2.8945,
+                2.7349,
+                2.7254,
+                2.7045,
+                2.8609,
+                2.84
+              ],
+              "result_sha256": "d956bf50d93ed4a2f079385286b9db0c278d646a4e4b4c0c4399c34e4907daa1",
+              "result_rows_per_sample": 157,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "first",
+      "passage_characters_max": 16384,
+      "rows": 181,
+      "recorded_utc": "2026-10-15T01:36:19.056231+00:00",
+      "script_sha256": "5c2b6a633b43bbaa2e676baa109418943cf27771cf13c614a624036ad7056a0a",
+      "corpus_manifest_sha256": "39b2a3218fe8b5a9394595703b65206b98be811e2841a7a0fd8aac826871847f",
+      "arms": {
+        "row": {
+          "database_bytes": 4354048,
+          "library_sha256": "3a099c915cc275db628649891670490115f49222465f14138be82a9dec6a8338",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 2.9881,
+              "p95_ms": 3.3017,
+              "samples_ms": [
+                3.1059,
+                2.8844,
+                2.8728,
+                3.1251,
+                2.8207,
+                2.7614,
+                2.8321,
+                2.8454,
+                3.8091,
+                3.3017,
+                2.9881,
+                2.9977,
+                3.039
+              ],
+              "result_sha256": "ddcb7356364ee0e9b5c8f972a3f3b8a108f0a494a6711bafd58943db1d384492",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 997957
+            },
+            "keyword_context": {
+              "median_ms": 2.372,
+              "p95_ms": 2.5532,
+              "samples_ms": [
+                2.5532,
+                2.494,
+                2.4476,
+                2.3696,
+                2.3526,
+                2.3567,
+                2.372,
+                2.3578,
+                2.5203,
+                2.5161,
+                2.3233,
+                2.654,
+                2.3479
+              ],
+              "result_sha256": "27bd2f39a4af5f37453b51eb199df75b1b4b0dfc1b528ac91959e45bba6e1003",
+              "result_rows_per_sample": 71,
+              "returned_text_bytes_per_sample": 1137925
+            },
+            "whole_document": {
+              "median_ms": 0.8958,
+              "p95_ms": 0.9811,
+              "samples_ms": [
+                1.0265,
+                0.9117,
+                0.906,
+                0.8939,
+                0.9018,
+                0.8947,
+                0.9051,
+                0.8958,
+                0.9811,
+                0.8807,
+                0.8743,
+                0.8616,
+                0.8598
+              ],
+              "result_sha256": "2379558fc7169833d342c25d255c92c217f4c17dd2f270aac60d16d2f1d5e387",
+              "result_rows_per_sample": 38,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "region": {
+          "database_bytes": 3649536,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 7.5245,
+              "p95_ms": 8.1684,
+              "samples_ms": [
+                7.3214,
+                7.0632,
+                6.9449,
+                7.2479,
+                6.9454,
+                7.2404,
+                7.8786,
+                7.9549,
+                8.1288,
+                7.5245,
+                8.1684,
+                7.8931,
+                10.0588
+              ],
+              "result_sha256": "ddcb7356364ee0e9b5c8f972a3f3b8a108f0a494a6711bafd58943db1d384492",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 997957
+            },
+            "keyword_context": {
+              "median_ms": 6.9099,
+              "p95_ms": 7.2274,
+              "samples_ms": [
+                6.7565,
+                6.8262,
+                6.8674,
+                6.9759,
+                7.0305,
+                6.7387,
+                6.9754,
+                6.9099,
+                7.2274,
+                6.6689,
+                8.1737,
+                6.9294,
+                6.6652
+              ],
+              "result_sha256": "27bd2f39a4af5f37453b51eb199df75b1b4b0dfc1b528ac91959e45bba6e1003",
+              "result_rows_per_sample": 71,
+              "returned_text_bytes_per_sample": 1137925
+            },
+            "whole_document": {
+              "median_ms": 2.7052,
+              "p95_ms": 2.8873,
+              "samples_ms": [
+                2.8861,
+                2.8873,
+                2.7052,
+                2.7465,
+                2.6925,
+                2.7047,
+                2.6384,
+                2.7453,
+                2.7732,
+                2.9236,
+                2.6812,
+                2.6494,
+                2.6278
+              ],
+              "result_sha256": "2379558fc7169833d342c25d255c92c217f4c17dd2f270aac60d16d2f1d5e387",
+              "result_rows_per_sample": 38,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "columnar": {
+          "database_bytes": 3674112,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 184.9582,
+              "p95_ms": 189.4543,
+              "samples_ms": [
+                206.9804,
+                184.9582,
+                184.0564,
+                188.0644,
+                185.9938,
+                183.9294,
+                189.4543,
+                183.4756,
+                174.2906,
+                186.7833,
+                188.8911,
+                181.0717,
+                179.5876
+              ],
+              "result_sha256": "ddcb7356364ee0e9b5c8f972a3f3b8a108f0a494a6711bafd58943db1d384492",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 997957
+            },
+            "keyword_context": {
+              "median_ms": 159.3809,
+              "p95_ms": 171.8126,
+              "samples_ms": [
+                157.1905,
+                156.7212,
+                173.7044,
+                156.1822,
+                160.4206,
+                157.9754,
+                165.803,
+                170.6443,
+                167.4052,
+                171.8126,
+                159.3809,
+                157.0717,
+                157.9654
+              ],
+              "result_sha256": "27bd2f39a4af5f37453b51eb199df75b1b4b0dfc1b528ac91959e45bba6e1003",
+              "result_rows_per_sample": 71,
+              "returned_text_bytes_per_sample": 1137925
+            },
+            "whole_document": {
+              "median_ms": 2.3699,
+              "p95_ms": 3.1067,
+              "samples_ms": [
+                2.5561,
+                2.4184,
+                2.3551,
+                2.2827,
+                2.3647,
+                2.6191,
+                2.2755,
+                2.2576,
+                2.5139,
+                3.1067,
+                2.3544,
+                3.1117,
+                2.3699
+              ],
+              "result_sha256": "2379558fc7169833d342c25d255c92c217f4c17dd2f270aac60d16d2f1d5e387",
+              "result_rows_per_sample": 38,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "final",
+      "passage_characters_max": 1024,
+      "rows": 3486,
+      "recorded_utc": "2026-10-15T01:38:14.292902+00:00",
+      "script_sha256": "b6bd458686ff8e82c0e59fe2936fa2914605f8bea5ec2b9d103777349ffe0b11",
+      "corpus_manifest_sha256": "39b2a3218fe8b5a9394595703b65206b98be811e2841a7a0fd8aac826871847f",
+      "arms": {
+        "row": {
+          "database_bytes": 4911104,
+          "library_sha256": "3a099c915cc275db628649891670490115f49222465f14138be82a9dec6a8338",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 0.703,
+              "p95_ms": 0.7176,
+              "samples_ms": [
+                0.6887,
+                0.692,
+                0.6817,
+                0.6819,
+                0.9995,
+                0.7086,
+                0.7176,
+                0.703,
+                0.7006,
+                0.7082,
+                0.7034,
+                0.7016,
+                0.7044
+              ],
+              "result_sha256": "487a68c7dd55757df90bafc048d7f0aec2b578c99973e130bcceda16c2272644",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 53099
+            },
+            "keyword_context": {
+              "median_ms": 0.62,
+              "p95_ms": 0.649,
+              "samples_ms": [
+                0.6248,
+                0.636,
+                0.6179,
+                0.6152,
+                0.623,
+                0.6198,
+                0.6169,
+                0.6212,
+                0.6144,
+                0.6148,
+                0.62,
+                0.649,
+                0.6981
+              ],
+              "result_sha256": "b4431a359ac3d7fb3596c1250e28780474a90048109286075f1fd14feca6d895",
+              "result_rows_per_sample": 96,
+              "returned_text_bytes_per_sample": 83911
+            },
+            "whole_document": {
+              "median_ms": 3.0508,
+              "p95_ms": 3.2467,
+              "samples_ms": [
+                2.991,
+                2.9197,
+                3.0508,
+                2.9016,
+                3.0117,
+                2.9105,
+                3.0807,
+                3.0902,
+                3.1177,
+                3.2467,
+                3.1153,
+                3.0183,
+                3.3266
+              ],
+              "result_sha256": "8d40cde8c44aa73e0542f6517f174f8778627ef7b39d9d5f90a2e50b58913730",
+              "result_rows_per_sample": 716,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "region": {
+          "database_bytes": 4743168,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 2.6402,
+              "p95_ms": 3.169,
+              "samples_ms": [
+                2.5435,
+                2.712,
+                2.5334,
+                2.5193,
+                2.6402,
+                2.9005,
+                3.1156,
+                3.1582,
+                3.4124,
+                2.5142,
+                2.5038,
+                2.6153,
+                3.169
+              ],
+              "result_sha256": "487a68c7dd55757df90bafc048d7f0aec2b578c99973e130bcceda16c2272644",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 53099
+            },
+            "keyword_context": {
+              "median_ms": 3.7516,
+              "p95_ms": 4.1354,
+              "samples_ms": [
+                2.5591,
+                3.7516,
+                4.1354,
+                4.4078,
+                4.0337,
+                3.7617,
+                4.084,
+                3.938,
+                2.3995,
+                2.3002,
+                3.481,
+                2.9018,
+                2.5715
+              ],
+              "result_sha256": "b4431a359ac3d7fb3596c1250e28780474a90048109286075f1fd14feca6d895",
+              "result_rows_per_sample": 96,
+              "returned_text_bytes_per_sample": 83911
+            },
+            "whole_document": {
+              "median_ms": 5.556,
+              "p95_ms": 6.2122,
+              "samples_ms": [
+                5.2918,
+                5.4341,
+                5.556,
+                5.2732,
+                6.2122,
+                5.7002,
+                5.2123,
+                5.3536,
+                5.5683,
+                5.2267,
+                5.6749,
+                5.9035,
+                6.4852
+              ],
+              "result_sha256": "8d40cde8c44aa73e0542f6517f174f8778627ef7b39d9d5f90a2e50b58913730",
+              "result_rows_per_sample": 716,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "columnar": {
+          "database_bytes": 3551232,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 138.427,
+              "p95_ms": 150.9114,
+              "samples_ms": [
+                136.4557,
+                157.4585,
+                150.9114,
+                142.2241,
+                148.194,
+                142.3323,
+                137.7191,
+                137.0905,
+                138.427,
+                135.1329,
+                145.1372,
+                136.1854,
+                133.0658
+              ],
+              "result_sha256": "487a68c7dd55757df90bafc048d7f0aec2b578c99973e130bcceda16c2272644",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 53099
+            },
+            "keyword_context": {
+              "median_ms": 140.6436,
+              "p95_ms": 145.5249,
+              "samples_ms": [
+                142.1025,
+                142.8794,
+                145.5249,
+                138.7782,
+                145.7793,
+                140.0862,
+                137.9229,
+                137.3965,
+                139.0397,
+                136.9829,
+                140.6436,
+                145.3642,
+                143.8087
+              ],
+              "result_sha256": "b4431a359ac3d7fb3596c1250e28780474a90048109286075f1fd14feca6d895",
+              "result_rows_per_sample": 96,
+              "returned_text_bytes_per_sample": 83911
+            },
+            "whole_document": {
+              "median_ms": 5.2593,
+              "p95_ms": 6.1736,
+              "samples_ms": [
+                5.0619,
+                5.0975,
+                6.05,
+                5.2066,
+                5.0286,
+                6.1736,
+                5.2593,
+                6.4726,
+                5.8474,
+                5.1974,
+                5.5821,
+                5.3811,
+                5.1052
+              ],
+              "result_sha256": "8d40cde8c44aa73e0542f6517f174f8778627ef7b39d9d5f90a2e50b58913730",
+              "result_rows_per_sample": 716,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "final",
+      "passage_characters_max": 4096,
+      "rows": 763,
+      "recorded_utc": "2026-10-15T01:38:03.616672+00:00",
+      "script_sha256": "b6bd458686ff8e82c0e59fe2936fa2914605f8bea5ec2b9d103777349ffe0b11",
+      "corpus_manifest_sha256": "39b2a3218fe8b5a9394595703b65206b98be811e2841a7a0fd8aac826871847f",
+      "arms": {
+        "row": {
+          "database_bytes": 4980736,
+          "library_sha256": "3a099c915cc275db628649891670490115f49222465f14138be82a9dec6a8338",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 1.013,
+              "p95_ms": 1.3496,
+              "samples_ms": [
+                1.6175,
+                1.3473,
+                1.3496,
+                1.013,
+                0.9861,
+                1.0026,
+                1.1476,
+                1.0504,
+                1.0029,
+                0.9973,
+                0.9855,
+                1.0041,
+                1.1364
+              ],
+              "result_sha256": "93512f6ca5753abe87d43e709dd485d674d8bc95c48063416426a15aeb8b1b20",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 243417
+            },
+            "keyword_context": {
+              "median_ms": 0.8837,
+              "p95_ms": 1.0179,
+              "samples_ms": [
+                1.0179,
+                0.9457,
+                0.8778,
+                1.0403,
+                0.8837,
+                0.885,
+                0.8704,
+                0.8774,
+                0.8689,
+                0.8749,
+                0.8672,
+                0.9474,
+                1.003
+              ],
+              "result_sha256": "08a539c7e9b0411c828cff5efc639b9e26f266a53f030190b2af3f81b5ef55af",
+              "result_rows_per_sample": 85,
+              "returned_text_bytes_per_sample": 328872
+            },
+            "whole_document": {
+              "median_ms": 1.2366,
+              "p95_ms": 1.3968,
+              "samples_ms": [
+                1.186,
+                1.2901,
+                1.2396,
+                1.2045,
+                1.2023,
+                1.196,
+                1.1809,
+                1.3179,
+                1.2022,
+                1.2366,
+                1.2594,
+                1.3968,
+                1.5
+              ],
+              "result_sha256": "d956bf50d93ed4a2f079385286b9db0c278d646a4e4b4c0c4399c34e4907daa1",
+              "result_rows_per_sample": 157,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "region": {
+          "database_bytes": 4608000,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 3.1928,
+              "p95_ms": 3.376,
+              "samples_ms": [
+                3.1153,
+                3.3736,
+                3.4364,
+                3.1584,
+                3.376,
+                3.0158,
+                3.2595,
+                3.2342,
+                2.9975,
+                3.1928,
+                3.1697,
+                3.0318,
+                3.2171
+              ],
+              "result_sha256": "93512f6ca5753abe87d43e709dd485d674d8bc95c48063416426a15aeb8b1b20",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 243417
+            },
+            "keyword_context": {
+              "median_ms": 2.7714,
+              "p95_ms": 2.9212,
+              "samples_ms": [
+                2.7653,
+                2.7701,
+                2.861,
+                2.7534,
+                2.9212,
+                2.7564,
+                2.7831,
+                2.7537,
+                3.1711,
+                2.7734,
+                2.9172,
+                2.7624,
+                2.7714
+              ],
+              "result_sha256": "08a539c7e9b0411c828cff5efc639b9e26f266a53f030190b2af3f81b5ef55af",
+              "result_rows_per_sample": 85,
+              "returned_text_bytes_per_sample": 328872
+            },
+            "whole_document": {
+              "median_ms": 3.004,
+              "p95_ms": 3.3859,
+              "samples_ms": [
+                2.8055,
+                3.0238,
+                3.004,
+                3.3859,
+                3.8536,
+                3.1989,
+                2.8051,
+                2.7579,
+                3.3022,
+                3.0979,
+                2.7867,
+                2.681,
+                2.6389
+              ],
+              "result_sha256": "d956bf50d93ed4a2f079385286b9db0c278d646a4e4b4c0c4399c34e4907daa1",
+              "result_rows_per_sample": 157,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "columnar": {
+          "database_bytes": 3510272,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 171.6266,
+              "p95_ms": 177.8057,
+              "samples_ms": [
+                165.0234,
+                169.3923,
+                169.5249,
+                179.5683,
+                173.0235,
+                176.3445,
+                167.0324,
+                171.6266,
+                172.1308,
+                166.8297,
+                177.8057,
+                173.6697,
+                171.3172
+              ],
+              "result_sha256": "93512f6ca5753abe87d43e709dd485d674d8bc95c48063416426a15aeb8b1b20",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 243417
+            },
+            "keyword_context": {
+              "median_ms": 173.4159,
+              "p95_ms": 182.6318,
+              "samples_ms": [
+                178.681,
+                173.4159,
+                171.5548,
+                170.1276,
+                179.0154,
+                179.2591,
+                196.2437,
+                181.9932,
+                168.7285,
+                170.9731,
+                165.7898,
+                182.6318,
+                173.1869
+              ],
+              "result_sha256": "08a539c7e9b0411c828cff5efc639b9e26f266a53f030190b2af3f81b5ef55af",
+              "result_rows_per_sample": 85,
+              "returned_text_bytes_per_sample": 328872
+            },
+            "whole_document": {
+              "median_ms": 2.9646,
+              "p95_ms": 3.2046,
+              "samples_ms": [
+                2.9646,
+                2.7545,
+                2.9642,
+                2.9084,
+                3.2046,
+                2.8101,
+                3.0318,
+                3.1107,
+                3.1253,
+                3.4162,
+                3.0118,
+                2.7757,
+                2.7733
+              ],
+              "result_sha256": "d956bf50d93ed4a2f079385286b9db0c278d646a4e4b4c0c4399c34e4907daa1",
+              "result_rows_per_sample": 157,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "final",
+      "passage_characters_max": 16384,
+      "rows": 181,
+      "recorded_utc": "2026-10-15T01:38:23.475520+00:00",
+      "script_sha256": "b6bd458686ff8e82c0e59fe2936fa2914605f8bea5ec2b9d103777349ffe0b11",
+      "corpus_manifest_sha256": "39b2a3218fe8b5a9394595703b65206b98be811e2841a7a0fd8aac826871847f",
+      "arms": {
+        "row": {
+          "database_bytes": 4354048,
+          "library_sha256": "3a099c915cc275db628649891670490115f49222465f14138be82a9dec6a8338",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 6.628,
+              "p95_ms": 10.0316,
+              "samples_ms": [
+                5.2345,
+                3.9476,
+                5.0582,
+                5.6151,
+                6.8633,
+                5.6571,
+                7.0235,
+                10.0316,
+                9.4907,
+                6.9106,
+                14.0118,
+                5.7959,
+                6.628
+              ],
+              "result_sha256": "ddcb7356364ee0e9b5c8f972a3f3b8a108f0a494a6711bafd58943db1d384492",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 997957
+            },
+            "keyword_context": {
+              "median_ms": 3.8283,
+              "p95_ms": 4.3399,
+              "samples_ms": [
+                4.3892,
+                4.0711,
+                2.9214,
+                3.8283,
+                3.2288,
+                4.0516,
+                3.6363,
+                3.8052,
+                4.0236,
+                3.8988,
+                3.152,
+                3.2178,
+                4.3399
+              ],
+              "result_sha256": "27bd2f39a4af5f37453b51eb199df75b1b4b0dfc1b528ac91959e45bba6e1003",
+              "result_rows_per_sample": 71,
+              "returned_text_bytes_per_sample": 1137925
+            },
+            "whole_document": {
+              "median_ms": 1.7735,
+              "p95_ms": 2.0067,
+              "samples_ms": [
+                1.9732,
+                1.4,
+                1.448,
+                1.3157,
+                2.0067,
+                2.6224,
+                1.0717,
+                1.2962,
+                1.8998,
+                1.975,
+                1.7971,
+                1.7735,
+                1.7185
+              ],
+              "result_sha256": "2379558fc7169833d342c25d255c92c217f4c17dd2f270aac60d16d2f1d5e387",
+              "result_rows_per_sample": 38,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "region": {
+          "database_bytes": 3649536,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 7.3788,
+              "p95_ms": 8.0382,
+              "samples_ms": [
+                7.3183,
+                7.1658,
+                7.3907,
+                7.0672,
+                7.2882,
+                7.2879,
+                8.0382,
+                7.3617,
+                7.5825,
+                7.4856,
+                8.4214,
+                7.6734,
+                7.3788
+              ],
+              "result_sha256": "ddcb7356364ee0e9b5c8f972a3f3b8a108f0a494a6711bafd58943db1d384492",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 997957
+            },
+            "keyword_context": {
+              "median_ms": 7.1704,
+              "p95_ms": 7.3974,
+              "samples_ms": [
+                7.2104,
+                6.867,
+                7.1704,
+                7.1519,
+                7.252,
+                7.3314,
+                6.7465,
+                7.3974,
+                6.8711,
+                7.4147,
+                6.8008,
+                7.3956,
+                6.7127
+              ],
+              "result_sha256": "27bd2f39a4af5f37453b51eb199df75b1b4b0dfc1b528ac91959e45bba6e1003",
+              "result_rows_per_sample": 71,
+              "returned_text_bytes_per_sample": 1137925
+            },
+            "whole_document": {
+              "median_ms": 2.6386,
+              "p95_ms": 3.0516,
+              "samples_ms": [
+                2.6872,
+                3.0516,
+                2.6488,
+                2.594,
+                2.5819,
+                2.6386,
+                2.5757,
+                3.0177,
+                2.6354,
+                2.5895,
+                2.5589,
+                3.2875,
+                2.7096
+              ],
+              "result_sha256": "2379558fc7169833d342c25d255c92c217f4c17dd2f270aac60d16d2f1d5e387",
+              "result_rows_per_sample": 38,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        },
+        "columnar": {
+          "database_bytes": 3674112,
+          "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+          "exact": true,
+          "queries": {
+            "point_64": {
+              "median_ms": 183.0325,
+              "p95_ms": 200.139,
+              "samples_ms": [
+                200.139,
+                205.7934,
+                199.3082,
+                186.4319,
+                198.5596,
+                176.7787,
+                183.0325,
+                187.0756,
+                175.5162,
+                182.6024,
+                181.8569,
+                173.3727,
+                174.237
+              ],
+              "result_sha256": "ddcb7356364ee0e9b5c8f972a3f3b8a108f0a494a6711bafd58943db1d384492",
+              "result_rows_per_sample": 64,
+              "returned_text_bytes_per_sample": 997957
+            },
+            "keyword_context": {
+              "median_ms": 166.4512,
+              "p95_ms": 170.7381,
+              "samples_ms": [
+                166.4512,
+                170.7381,
+                161.061,
+                167.492,
+                170.2956,
+                159.1628,
+                160.1872,
+                166.6359,
+                171.8306,
+                163.3595,
+                168.2234,
+                165.6186,
+                161.2665
+              ],
+              "result_sha256": "27bd2f39a4af5f37453b51eb199df75b1b4b0dfc1b528ac91959e45bba6e1003",
+              "result_rows_per_sample": 71,
+              "returned_text_bytes_per_sample": 1137925
+            },
+            "whole_document": {
+              "median_ms": 2.6994,
+              "p95_ms": 2.9437,
+              "samples_ms": [
+                2.8616,
+                2.5222,
+                2.6994,
+                2.5517,
+                2.9437,
+                2.846,
+                2.8228,
+                2.5416,
+                2.8532,
+                2.6111,
+                2.3498,
+                3.109,
+                2.5532
+              ],
+              "result_sha256": "2379558fc7169833d342c25d255c92c217f4c17dd2f270aac60d16d2f1d5e387",
+              "result_rows_per_sample": 38,
+              "returned_text_bytes_per_sample": 607606
+            }
+          }
+        }
+      }
+    }
+  ]
+}

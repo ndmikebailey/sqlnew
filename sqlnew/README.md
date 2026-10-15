@@ -104,6 +104,13 @@ upstream files are rejected. Non-overlapping passages preserve every original
 byte. All arms use a common contentless FTS5 candidate index and include its cost.
 See [benchmark methodology](BENCHMARKS.md) for scope and current measurements.
 
+For durable reproduction, download the versioned corpus ZIP identified by
+[public-documents-archive.json](corpora/public-documents-archive.json), then run
+`python sqlnew/corpus_archive.py --extract PATH/TO/public-documents-v1.zip`.
+This restores all seven originals into the ignored cache without network access
+or changes to engine source files. The benchmark verifies their pins again.
+`--create PATH` on the same helper preserves already-prepared originals.
+
 The benchmark builds its fixtures from deterministic numbers and source text in
 this repository. It compares current columns, folded columns, regions and the
 revision-matched indexed SQLite library prepared by `benchmark_build.py`.

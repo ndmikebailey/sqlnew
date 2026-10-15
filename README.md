@@ -93,6 +93,29 @@ random bits provide a control, and source windows are not a document corpus.
 [baseline builder](sqlnew/benchmark_build.py), and
 [full methodology and costs](sqlnew/BENCHMARKS.md).
 
+### Public documents and keyword retrieval
+
+A newer comparison uses **seven complete public books/technical documents**
+with non-overlapping passages. Every storage method includes the same FTS5
+candidate index, so keyword requests can find passages before fetching bodies.
+All nine final arms across three passage sizes passed exact restoration,
+update, compaction and reopen checks.
+
+At the default 4,096-character passage size:
+
+| Measurement | Columns | Regions | Indexed SQLite |
+|---|---:|---:|---:|
+| Complete database, KiB | 3,428 | 4,500 | 4,864 |
+| 64 point requests, median ms | 171.627 | 3.193 | 1.013 |
+| Seven keyword requests, median ms | 173.416 | 2.771 | 0.884 |
+
+At 16,384 characters, region and column files are nearly equal in size and
+regions take about 25x less time for point reads in this run. Passage size
+changes the amount of returned context. Indexed SQLite retains the fastest
+points. See [methods, setup costs and repeat variation](sqlnew/BENCHMARKS.md#public-documents-and-passage-retrieval),
+[raw default results](sqlnew/results/dev021-documents-4096.json) and the
+[corpus archive identity](sqlnew/corpora/public-documents-archive.json).
+
 ### Earlier development comparisons
 
 Earlier 0.1-to-0.2 measurements also captured progress and costs on larger
@@ -163,8 +186,8 @@ see the [build and usage guide](sqlnew/README.md).
 
 SQLNEW is an independent experimental SQLite fork at **0.2.1-dev**. Local
 validation includes 56 product tests in optimized and scalar builds, 360
-canonical folding cases per configuration, and 881,423 upstream core checks.
-See the [validation record](sqlnew/results/dev021-maintenance-validation.json)
+canonical folding cases per configuration, and 881,414 core checks after source relocation.
+See the [validation record](sqlnew/results/dev021-layout-validation.json)
 for exact sources, configurations and remaining coverage.
 
 The [first hosted run](https://github.com/ndmikebailey/sqlnew/actions/runs/38656971916)
