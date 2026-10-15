@@ -2,6 +2,11 @@
 
 ## 0.2.1-dev — development candidate
 
+- Move the inherited source tree intact under `engine/sqlite/` and rewrite
+  agent instructions around SQLNEW's own Git, build and contribution workflow.
+- Add verified preview packaging, Windows static-runtime downloads and tagged
+  Windows/Linux prereleases after hosted product/core checks pass.
+- Add a pinned public-document retrieval comparison with a common FTS5 index.
 - Add optional `sqlnew_region` tables with fixed three-dimensional extents,
   shared immutable bases, separate edits, selective large-value retrieval and
   transactional compaction.

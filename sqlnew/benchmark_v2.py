@@ -251,7 +251,7 @@ def main():
                                       'Temporary SQL sorting follows the connection temp-store setting; native hash state is capped.',
                                       'No combined winner score.']}, 'datasets': []}
     names = ['sqlnew/benchmark_v2.py', 'sqlnew/benchmark_compare.py', 'sqlnew/benchmark_data.py', 'sqlnew/db.py',
-             'sqlnew/build.py', 'sqlnew/config.h', 'src/select.c']
+             'sqlnew/build.py', 'sqlnew/config.h', 'engine/sqlite/src/select.c']
     names += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT / 'ext/sqlnew').iterdir()) if p.suffix in ('.c', '.inc')]
     report['source_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
     report['historical_baseline_build'] = json.loads((bench.BASE / 'build.json').read_text())

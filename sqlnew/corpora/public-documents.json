@@ -1,0 +1,73 @@
+{
+  "name": "public-documents-v1",
+  "description": "Four complete public books plus three technical documents; non-overlapping passages, no synthetic duplication. A bounded English-text workload, not an enterprise-document corpus.",
+  "download_policy": "Remote originals stay in ignored build/document-corpus; download only with --fetch-corpus. Verify every original SHA-256 before segmentation. Do not silently accept upstream edits.",
+  "sources": [
+    {
+      "id": "pg1661",
+      "title": "The Adventures of Sherlock Holmes",
+      "url": "https://www.gutenberg.org/ebooks/1661.txt.utf-8",
+      "catalog_url": "https://www.gutenberg.org/ebooks/1661",
+      "cache_file": "pg1661.txt",
+      "bytes": 607606,
+      "sha256": "922e2a12ccb43a4c9544c260b2166c6ad2097aeb5957faeee113f173bb857cd0"
+    },
+    {
+      "id": "pg1342",
+      "title": "Pride and Prejudice",
+      "url": "https://www.gutenberg.org/ebooks/1342.txt.utf-8",
+      "catalog_url": "https://www.gutenberg.org/ebooks/1342",
+      "cache_file": "pg1342.txt",
+      "bytes": 772386,
+      "sha256": "3f6bb9d6f78e0293b56acd4714dd68cb7d6d1d293402031ce9d5a216bcaf9d75"
+    },
+    {
+      "id": "pg11",
+      "title": "Alice's Adventures in Wonderland",
+      "url": "https://www.gutenberg.org/ebooks/11.txt.utf-8",
+      "catalog_url": "https://www.gutenberg.org/ebooks/11",
+      "cache_file": "pg11.txt",
+      "bytes": 174311,
+      "sha256": "01b38ea4c710a84bc18d0bd41271a5a1a92b94e97b2812f4dece97d4a694725e"
+    },
+    {
+      "id": "pg2701",
+      "title": "Moby Dick",
+      "url": "https://www.gutenberg.org/ebooks/2701.txt.utf-8",
+      "catalog_url": "https://www.gutenberg.org/ebooks/2701",
+      "cache_file": "pg2701.txt",
+      "bytes": 1276315,
+      "sha256": "b5e88b71a1cda068e9ab1d94344c9d932338ba6da1a66def97a1aecd9cfcc87d"
+    },
+    {
+      "id": "sqlite-jsonb",
+      "title": "SQLite JSONB format",
+      "path": "engine/sqlite/doc/jsonb.md",
+      "bytes": 13940,
+      "sha256": "1da378fac7795abf090b904b91c30daf4ec350a489f4f67ca6678ec46b54aeef"
+    },
+    {
+      "id": "sqlite-testrunner",
+      "title": "SQLite test runner",
+      "path": "engine/sqlite/doc/testrunner.md",
+      "bytes": 15100,
+      "sha256": "f792934beef638e31aa3b4d78a5739caa841bccab93f535c16de4928e96576f0"
+    },
+    {
+      "id": "sqlite-wal-lock",
+      "title": "SQLite WAL locking",
+      "path": "engine/sqlite/doc/wal-lock.md",
+      "bytes": 3654,
+      "sha256": "ff2e417755f4d9b07c968bd30f55adf2551f7b4ebd1276fe4c9c0a9d0b0dc3d2"
+    }
+  ],
+  "fts_terms": [
+    "sherlock",
+    "elizabeth",
+    "rabbit",
+    "whale",
+    "jsonb",
+    "wal",
+    "test"
+  ]
+}

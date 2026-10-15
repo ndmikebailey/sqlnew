@@ -1,147 +1,95 @@
-# AGENTS.md
+# Working on SQLNEW
 
-Guidance for AI coding agents working in this repository.
+SQLNEW is an independent experimental embedded SQL engine maintained in this
+Git repository: <https://github.com/ndmikebailey/sqlnew>. Use its issues and pull
+requests for SQLNEW work. The product is currently `0.2.1-dev`, with its own
+`SQLNEW format 2` database signature and no promised migration compatibility.
 
-## SQLNEW fork
+## Start here
 
-This repository is SQLNEW, an independent experimental SQLite fork maintained
-in Git at <https://github.com/ndmikebailey/sqlnew>. SQLNEW issues and pull
-requests belong here. Upstream SQLite's contribution and agent policies below
-describe the upstream project; they do not prohibit work on this fork.
+- `README.md`: purpose, supported features and recorded comparisons.
+- `sqlnew/README.md`: product build and SQL usage.
+- `CONTRIBUTING.md`: contribution scope and validation expectations.
+- `sqlnew/FORMAT.md`: native storage contracts and current limits.
+- `sqlnew/upstream.json`: exact inherited SQLite Git/Fossil provenance.
 
-- Read `sqlnew/README.md` for product builds and `CONTRIBUTING.md` for scope.
-- Build the enabled SQLNEW CLI and libraries with `python sqlnew/build.py`.
-  A plain upstream `make sqlite3` does not enable the SQLNEW product modules.
-- Native modules live in `ext/sqlnew/`; helpers and product checks in `sqlnew/`.
-- Run `python -m unittest discover -s sqlnew -p "test_*.py" -v` and
-  `python sqlnew/exercise_dev021.py` for product changes. The full Python suite
-  needs `requirements-dev.txt`; direct workflows use the standard library.
-- Changes to `src/` also require upstream `devtest`, as described below.
-- Keep narrative experiment summaries in `experiments/exact_fold/ATTEMPTS.txt`.
-  Preserve superseded prototypes under `experiments/archive/` and keep generated
-  databases, binaries and local consumer snapshots in ignored `build/`.
-- Source provenance is pinned in `sqlnew/upstream.json`. Files use SQLNEW
-  format 2; upstream SQLite's file-format documentation describes the inherited
-  machinery, not interoperability with SQLNEW files.
+## Repository layout
 
-## Project nature
+- `ext/sqlnew/`: SQLNEW native C modules, codecs, columns and regions.
+- `sqlnew/`: build/release tools, Python driver, workflows and product checks.
+- `engine/sqlite/`: inherited SQL compiler, pager, VFS, build tools and tests.
+  Its `src/select.c` contains SQLNEW compiler hooks behind `SQLITE_ENABLE_SQLNEW`.
+- `experiments/archive/`: preserved prototypes, outside the product build.
+- `experiments/exact_fold/ATTEMPTS.txt`: the single narrative attempt journal.
+- `build/`: ignored generated sources, binaries, databases, corpora and logs.
 
-SQLite is a self-contained, serverless SQL database engine written in C. The
-source is **public domain** — no copyright or license header should ever be
-added to any file. The blessing comment that appears at the top of each source
-file is intentional and should be preserved unchanged.
+Keep the inherited engine tree internally intact. Its generic build targets
+build the inherited core; the SQLNEW builder enables and links product modules.
+SQLite's own contribution rules and Fossil workflow apply to that separate
+upstream project. They are not this repository's contribution instructions.
 
-SQLite does not accept pull requests without prior agreement and/or
-accompanying legal paperwork that places the pull request in the public domain.
-However, the human SQLite developers will review a concise and well-written
-pull request as a proof-of-concept prior to reimplementing the changes
-themselves.
+## Build and check
 
-SQLite does not accept agentic code.  However the project
-will accept agentic bug reports that include a reproducible test case.
-Patches or pull requests demonstrating a possible fix, for documentation
-purposes, are welcomed.
+Python 3.12+ and a C compiler are required. Windows discovers Visual Studio C++
+Build Tools; Linux uses cc and make. Run from the repository root:
 
-SQLite uses the [Fossil](https://fossil-scm.org/) for version control,
-not Git.  The canonical repository is at <https://sqlite.org/src>.
-
-## Upstream core build
-
-The configure script uses [autosetup](https://msteveb.github.io/autosetup/),
-not GNU Autoconf.
-
-```bash
-apt install gcc make tcl-dev   # prerequisites (Debian/Ubuntu)
-
-./configure --dev              # debug build
-make sqlite3                   # CLI shell
-make sqlite3d                  # Debugging variant of the CLI shell
-make sqlite3.c                 # amalgamation (single-file distribution form)
-make testfixture               # test runner binary (requires tcl-dev)
-make tclextension-install      # install TCL extension before running tests
+```console
+python sqlnew/build.py
+python -m pip install -r requirements-dev.txt
+python -m unittest discover -s sqlnew -p "test_*.py" -v
+python sqlnew/exercise_dev021.py
 ```
 
-## Upstream core testing
+`SQLNEW_BUILD_DIR` selects an alternate output root. Set the same value for the
+builder, driver and validation processes. `SQLNEW_DISABLE_SIMD=1` builds the
+scalar backend; keep that variable set during its product checks to assert it.
 
-Tests are TCL scripts run through the `testfixture` enhanced interpreter.
+After any change to `engine/sqlite/src/`, also run at least core `devtest`.
+For Linux, from `build/core-devtest/`:
 
-```bash
-# From the build directory:
-./testfixture test/main.test   # single test file
-test/testrunner.tcl            # quick suite
-test/testrunner.tcl full       # full suite
-test/testrunner.tcl fts5%      # pattern match
-
-# Check for failures:
-grep '!' testrunner.log
+```sh
+../../engine/sqlite/configure --dev
+make tclextension-install
+make -j2 devtest
 ```
 
-`make devtest` is the fastest way to run a representative subset. Always run
-at least `devtest` after any change to `src/`.
+This needs Tcl development libraries and a writable Tcl package directory.
+The GitHub workflow shows the hosted installation commands. On Windows use
+`engine/sqlite/Makefile.msc` with `TOP` pointing to that engine directory and a
+working Tcl toolchain, from a separate build directory. Core devtest does not
+register SQLNEW; product checks cover the enabled modules and compiler hooks.
 
-## Architecture
+Use checks appropriate to the change. Do not delegate work, introduce pytest,
+or start a separate security/sanitizer campaign unless the owner requests it.
 
-SQL text → **tokenizer** (`tokenize.c`) → **parser** (`parse.y` / Lemon) →
-**code generator** (`build.c`, `select.c`, `insert.c`, `update.c`, `delete.c`,
-`expr.c`) → **optimizer** (`where*.c`) → **VDBE** (`vdbe.c`) → **B-Tree**
-(`btree.c`) → **Pager** (`pager.c`) → **WAL** (`wal.c`) → **VFS**
-(`os_unix.c`, `os_win.c`).
+## Editing rules
 
-The master internal header is `src/sqliteInt.h`. Major subsystems have private
-headers: `vdbeInt.h`, `btreeInt.h`, `whereInt.h`. The public API is defined in
-`src/sqlite.h.in` (template) which generates `sqlite3.h`.
+- Preserve upstream blessing comments unchanged. Do not add copyright or
+  license headers. Preserve notices for bundled build tools in `LICENSE.md`.
+- Use C89/C99-compatible C, SQLite allocators (`sqlite3Malloc`,
+  `sqlite3_malloc64`, `sqlite3MallocZero`), and `SQLITE_*` error codes.
+- Use `i64`/`sqlite3_int64`, `u32` and `u64` for stored widths; avoid bare `long`
+  or `int` for values that may exceed 2 GiB. Keep invariant assertions.
+- Edit source templates, not generated amalgamations, parser files, opcode
+  tables or headers. Generators live under `engine/sqlite/tool/`.
+- Grammar changes belong in `engine/sqlite/src/parse.y`; new PRAGMAs belong in
+  `engine/sqlite/tool/mkpragmatab.tcl`; opcodes start in `src/vdbe.c` there.
+- The internal core header is `engine/sqlite/src/sqliteInt.h`; the public API
+  template is `engine/sqlite/src/sqlite.h.in`. SQLNEW configuration is in
+  `sqlnew/config.h`.
 
-## Do not edit generated files
+## Experiments and evidence
 
-These files are produced by scripts and must not be edited by hand:
+Record hypotheses, unsuccessful attempts, corrections and decisions in the
+single attempt journal. Keep prototypes reproducible and archive superseded
+ones. Do not make the native product depend on archived experiments.
 
-| File | Regenerate with |
-|---|---|
-| `sqlite3.h` | `tool/mksqlite3h.tcl` |
-| `parse.c`, `parse.h` | build lemon (`tool/lemon.c`) then run on `src/parse.y` |
-| `opcodes.h` | `tool/mkopcodeh.tcl` (reads `src/vdbe.c`) |
-| `opcodes.c` | `tool/mkopcodec.tcl` (reads `opcodes.h`) |
-| `keywordhash.h` | `tool/mkkeywordhash.c` |
-| `pragma.h` | `tool/mkpragmatab.tcl` |
-| `sqlite3.c` | `tool/mksqlite3c.tcl` (the amalgamation) |
+Benchmark exact results before timing. Disclose setup, complete file sizes,
+index costs, changes/compaction, hardware and regressions. Native payload
+counters are not measurements of operating-system I/O. Keep fixture identities
+and source/library hashes with small reports in `sqlnew/results/`; preserve
+historical reports unchanged. Generated output belongs in ignored `build/`.
 
-Editing rules:
-- To add a PRAGMA: edit `tool/mkpragmatab.tcl`, then regenerate `pragma.h`.
-- To add a VDBE opcode: add the `case OP_Xxx:` handler in `src/vdbe.c`; the
-  opcode number and name are extracted automatically by `mkopcodeh.tcl`.
-- To change the SQL grammar: edit `src/parse.y`, not `parse.c`.
-
-## Coding conventions
-
-- C89/C99 compatible C only. No C++, no STL, no exceptions, no VLAs.
-- All memory allocation goes through `sqlite3Malloc` / `sqlite3_malloc64`
-  (never raw `malloc`). The `sqlite3MallocZero` variant zero-initializes.
-- Integer widths: use `i64` (`sqlite3_int64`) for 64-bit values, `u32`/`u64`
-  for unsigned. Avoid bare `long` or `int` for values that could exceed 2G.
-- Error propagation: functions return `SQLITE_OK` (0) on success and a
-  `SQLITE_*` error code on failure. Many routines also set `db->mallocFailed`
-  on OOM, allowing deferred error checking.
-- Assert liberally for invariants that must hold in correct code; use
-  `ALWAYS(x)` / `NEVER(x)` for conditions that are logically always
-  true/false but that the compiler cannot prove.
-
-## Extensions (`ext/`)
-
-Extensions are compiled separately from the core and are not part of the
-amalgamation by default (except where explicitly included). Major subsystems:
-
-- `ext/fts5/` — Full-Text Search 5 (current)
-- `ext/rtree/` — R-Tree spatial indexing
-- `ext/session/` — Changesets and sessions
-- `ext/recover/` — Database file recovery
-- `ext/misc/` — Single-file utility extensions (many included in the CLI)
-- `ext/qrf/` — Query Result Formatter utility library
-
-## Useful references
-
-- Architecture: <https://sqlite.org/arch.html>
-- File format: <https://sqlite.org/fileformat2.html>
-- VDBE opcodes: <https://sqlite.org/opcode.html>
-- Query planner: <https://sqlite.org/optoverview.html>
-- Lemon parser generator: <https://sqlite.org/doc/trunk/doc/lemon.html>
-- Compile-time options: <https://sqlite.org/compile.html>
+Pin coherent upstream intakes in `sqlnew/upstream.json`, preserve SQLNEW hooks,
+and rerun product and core checks. Document format changes explicitly. SQLNEW
+does not imply upstream SQLite authorship or acceptance of fork changes.

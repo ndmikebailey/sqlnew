@@ -1,5 +1,5 @@
 > Upstream source overview for the pinned SQLite snapshot. Relative links have
-> been adjusted for this location. Start with the [SQLNEW guide](../../README.md)
+> been adjusted for this location. Start with the [SQLNEW guide](../../../../README.md)
 > for this fork's build and usage.
 
 <h1 align="center">SQLite Source Repository</h1>

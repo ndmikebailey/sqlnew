@@ -1,0 +1,173 @@
+{
+  "source_layout": "engine/sqlite",
+  "relocated_files": 2289,
+  "native_source_bytes_unchanged": true,
+  "generated_inputs_match_previous_candidate": true,
+  "core_devtest": {
+    "tests": 881414,
+    "errors": 0,
+    "elapsed": "07:55",
+    "builds": 6,
+    "tcl_jobs": 2580,
+    "corpus_jobs": 16,
+    "registration": "Inherited core, SQLNEW modules checked separately"
+  },
+  "product_checks": {
+    "fresh_relocated_default_runtime": {
+      "methods": 56,
+      "direct_workflow_groups": 10,
+      "canonical_fold_checks": 360
+    },
+    "windows_static_runtime_optimized": {
+      "methods": 56,
+      "direct_workflow_groups": 10,
+      "canonical_fold_checks": 360,
+      "extracted_package_quickstart": true
+    },
+    "windows_static_runtime_scalar": {
+      "methods": 56,
+      "direct_workflow_groups": 10,
+      "canonical_fold_checks": 360,
+      "extracted_package_quickstart": true
+    }
+  },
+  "source_pin": "23500fbf19d6d412f3326614ce3bac2fbab7564f",
+  "notes": [
+    "Inherited source relocated intact; only overview README links changed inside that tree.",
+    "Packaged product uses /MT on Windows; source builds retain /MD by default.",
+    "No new engine format or codec changes."
+  ],
+  "builds": {
+    "optimized": {
+      "version": "0.2.1-dev",
+      "compiler": [
+        "cl",
+        "/nologo",
+        "/O2",
+        "/MT",
+        "/utf-8"
+      ],
+      "defines": [
+        "SQLITE_ENABLE_FTS5",
+        "SQLITE_ENABLE_RTREE",
+        "SQLITE_ENABLE_MATH_FUNCTIONS",
+        "SQLITE_ENABLE_EXPLAIN_COMMENTS",
+        "SQLITE_ENABLE_SQLNEW"
+      ],
+      "platform": "win32",
+      "source_sha256": {
+        "ext/sqlnew/columnar.c": "f44fe8f55d75a3b1114e82a5abff3714cb27785240db14f165a547cbc60b67b8",
+        "ext/sqlnew/fold.c": "20d722b4130f0f5978035df1ae9941aa1aa8b6142c33d51138a640877d669e5a",
+        "ext/sqlnew/intblock.c": "490a7d2fc52f641aa84de927f524e510177cb997ba87d5b98008f0d1dae329d6",
+        "ext/sqlnew/region.c": "380ff02666363634e0ce89c0c76277c480b5d9003781b64a7c99cf5a89dd68d2",
+        "ext/sqlnew/sqlnew.c": "10f8c1afe8c71fbbfeefcd343ecbfd0829eebfa4fcb03c9c50909af06e89b58a",
+        "ext/sqlnew/columnar_batch.inc": "2551b650794f1c20a93f5c695e6e32c8aadd6b947522e3d8fcb01fa33aff43b3",
+        "ext/sqlnew/columnar_index.inc": "1da73feedce3f675ecaf8f733408d6681d1be789e9685d8b0c79f5a6630cb357",
+        "ext/sqlnew/columnar_write.inc": "847bf32140bf41787024170d04a9cab6c32238a9e730eed947aabd267a2ac891",
+        "sqlnew/config.h": "0ca080a93effb1e7e2f02949d92d6fc81a48367c7667784318a8a66951243a34",
+        "sqlnew/build.py": "356ce97de14b6df01360b223ea3cceb32a0a125915b70b26bc8b8a71601c3e14",
+        "engine/sqlite/src/select.c": "82b762ab75c86af1b54e61ce626d63059075f17ccb0cd53fe2ef05f3f2e20111",
+        "engine/sqlite/VERSION": "ac00bc246f381662294505074279244edd1d23f6e18455d7820852e6c5c37d8d",
+        "engine/sqlite/manifest.uuid": "d1da49d5209c3006031521f71859daf3cc4f3fba92fe3dbb26353492bfbf0028"
+      },
+      "generated_sha256": {
+        "sqlite3.c": "989c65ea0ba3ba0834baa69abc8f5fb4e8131458f50d47300127bb23ab962ec9",
+        "sqlite3.h": "6dd87faf17eecd2547462da1581dec8238219532beaa2a1cd349d42e5a183a4a",
+        "shell.c": "00c5cba13701f8c02771f147190aca4faacdf6f6b0def48246fc6c2af656e9ee"
+      },
+      "library_sha256": "0d586c1b56ab41d0e296ad725f081101525a356e240eeae4775d0b4fe55b9102",
+      "upstream": {
+        "retrieved_on": "2026-10-14",
+        "source": "https://github.com/sqlite/sqlite.git",
+        "canonical_source": "https://sqlite.org/src",
+        "branch": "branch-3.54",
+        "git_commit": "23500fbf19d6d412f3326614ce3bac2fbab7564f",
+        "fossil_commit": "e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bb3716",
+        "commit_time_utc": "2026-10-14T13:39:28Z",
+        "version": "3.54.1",
+        "status": "Unreleased 3.54.1 maintenance snapshot following published 3.54.0; pinned for SQLNEW validation.",
+        "integration": "Net source delta from original import; SQLNEW select.c hooks and product README retained. No trunk-only feature intake. Optional upstream extensions remain unregistered unless explicitly built.",
+        "original_import": {
+          "retrieved_on": "2026-09-05",
+          "source": "https://github.com/sqlite/sqlite.git",
+          "canonical_source": "https://sqlite.org/src",
+          "branch": "master",
+          "git_commit": "f3b9f74d81132426dee1ccc07a67fdad2ccfeaa9",
+          "fossil_commit": "4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+          "commit_time_utc": "2026-09-04T14:20:44Z",
+          "version": "3.54.0",
+          "status": "development trunk; latest published stable release is 3.53.4",
+          "history": "Shallow clone of the official upstream mirror. Full source and upstream tests are present."
+        },
+        "source_directory": "engine/sqlite",
+        "layout": "Inherited tree relocated intact from the repository root; SQLNEW modules remain in ext/sqlnew. Historical evidence retains original paths."
+      }
+    },
+    "scalar": {
+      "version": "0.2.1-dev",
+      "compiler": [
+        "cl",
+        "/nologo",
+        "/O2",
+        "/MT",
+        "/utf-8"
+      ],
+      "defines": [
+        "SQLITE_ENABLE_FTS5",
+        "SQLITE_ENABLE_RTREE",
+        "SQLITE_ENABLE_MATH_FUNCTIONS",
+        "SQLITE_ENABLE_EXPLAIN_COMMENTS",
+        "SQLITE_ENABLE_SQLNEW",
+        "SQLNEW_DISABLE_SIMD"
+      ],
+      "platform": "win32",
+      "source_sha256": {
+        "ext/sqlnew/columnar.c": "f44fe8f55d75a3b1114e82a5abff3714cb27785240db14f165a547cbc60b67b8",
+        "ext/sqlnew/fold.c": "20d722b4130f0f5978035df1ae9941aa1aa8b6142c33d51138a640877d669e5a",
+        "ext/sqlnew/intblock.c": "490a7d2fc52f641aa84de927f524e510177cb997ba87d5b98008f0d1dae329d6",
+        "ext/sqlnew/region.c": "380ff02666363634e0ce89c0c76277c480b5d9003781b64a7c99cf5a89dd68d2",
+        "ext/sqlnew/sqlnew.c": "10f8c1afe8c71fbbfeefcd343ecbfd0829eebfa4fcb03c9c50909af06e89b58a",
+        "ext/sqlnew/columnar_batch.inc": "2551b650794f1c20a93f5c695e6e32c8aadd6b947522e3d8fcb01fa33aff43b3",
+        "ext/sqlnew/columnar_index.inc": "1da73feedce3f675ecaf8f733408d6681d1be789e9685d8b0c79f5a6630cb357",
+        "ext/sqlnew/columnar_write.inc": "847bf32140bf41787024170d04a9cab6c32238a9e730eed947aabd267a2ac891",
+        "sqlnew/config.h": "0ca080a93effb1e7e2f02949d92d6fc81a48367c7667784318a8a66951243a34",
+        "sqlnew/build.py": "356ce97de14b6df01360b223ea3cceb32a0a125915b70b26bc8b8a71601c3e14",
+        "engine/sqlite/src/select.c": "82b762ab75c86af1b54e61ce626d63059075f17ccb0cd53fe2ef05f3f2e20111",
+        "engine/sqlite/VERSION": "ac00bc246f381662294505074279244edd1d23f6e18455d7820852e6c5c37d8d",
+        "engine/sqlite/manifest.uuid": "d1da49d5209c3006031521f71859daf3cc4f3fba92fe3dbb26353492bfbf0028"
+      },
+      "generated_sha256": {
+        "sqlite3.c": "989c65ea0ba3ba0834baa69abc8f5fb4e8131458f50d47300127bb23ab962ec9",
+        "sqlite3.h": "6dd87faf17eecd2547462da1581dec8238219532beaa2a1cd349d42e5a183a4a",
+        "shell.c": "00c5cba13701f8c02771f147190aca4faacdf6f6b0def48246fc6c2af656e9ee"
+      },
+      "library_sha256": "f445d7eeb5cfefa0f6d7195caa627133b1a956062306fc8379e58025b9b73829",
+      "upstream": {
+        "retrieved_on": "2026-10-14",
+        "source": "https://github.com/sqlite/sqlite.git",
+        "canonical_source": "https://sqlite.org/src",
+        "branch": "branch-3.54",
+        "git_commit": "23500fbf19d6d412f3326614ce3bac2fbab7564f",
+        "fossil_commit": "e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bb3716",
+        "commit_time_utc": "2026-10-14T13:39:28Z",
+        "version": "3.54.1",
+        "status": "Unreleased 3.54.1 maintenance snapshot following published 3.54.0; pinned for SQLNEW validation.",
+        "integration": "Net source delta from original import; SQLNEW select.c hooks and product README retained. No trunk-only feature intake. Optional upstream extensions remain unregistered unless explicitly built.",
+        "original_import": {
+          "retrieved_on": "2026-09-05",
+          "source": "https://github.com/sqlite/sqlite.git",
+          "canonical_source": "https://sqlite.org/src",
+          "branch": "master",
+          "git_commit": "f3b9f74d81132426dee1ccc07a67fdad2ccfeaa9",
+          "fossil_commit": "4021369bc9558fbfcfa83ee4cd6b986734b8c41b6d72bd97064e566ca8189ea8",
+          "commit_time_utc": "2026-09-04T14:20:44Z",
+          "version": "3.54.0",
+          "status": "development trunk; latest published stable release is 3.53.4",
+          "history": "Shallow clone of the official upstream mirror. Full source and upstream tests are present."
+        },
+        "source_directory": "engine/sqlite",
+        "layout": "Inherited tree relocated intact from the repository root; SQLNEW modules remain in ext/sqlnew. Historical evidence retains original paths."
+      }
+    }
+  }
+}

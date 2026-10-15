@@ -21,11 +21,11 @@ the checks run. Reports with small SQL examples are especially useful.
   `python -m unittest discover -s sqlnew -p "test_*.py" -v`, and run
   `python sqlnew/exercise_dev021.py`. These commands use unittest/direct SQL;
   pytest is not required.
-- After a change to `src/`, also run the upstream `devtest` target. On Linux,
-  create `build/core-devtest`, run `../../configure --dev` there, then
+- After a change to `engine/sqlite/src/`, also run the upstream `devtest` target.
+  On Linux, create `build/core-devtest`, run `../../engine/sqlite/configure --dev` there, then
   `make tclextension-install` and `make -j2 devtest`. Tcl development libraries
   and a writable Tcl package directory are required. Windows can use
-  `nmake /f <source>/Makefile.msc TOP=<source> DEBUG=0 TCLDIR=<tcl> devtest`
+  `nmake /f <engine-source>/Makefile.msc TOP=<engine-source> DEBUG=0 TCLDIR=<tcl> devtest`
   from a separate build directory with a working Tcl SQLite extension.
 - Measure performance changes with exact answer checks and disclose setup,
   complete file sizes, hardware, and query costs. Preserve regressions as well

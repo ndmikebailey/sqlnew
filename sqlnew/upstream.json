@@ -20,5 +20,7 @@
     "version": "3.54.0",
     "status": "development trunk; latest published stable release is 3.53.4",
     "history": "Shallow clone of the official upstream mirror. Full source and upstream tests are present."
-  }
+  },
+  "source_directory": "engine/sqlite",
+  "layout": "Inherited tree relocated intact from the repository root; SQLNEW modules remain in ext/sqlnew. Historical evidence retains original paths."
 }

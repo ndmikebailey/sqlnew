@@ -116,6 +116,13 @@ settings and source hashes.
 
 ## Try it
 
+Get a [development preview download](https://github.com/ndmikebailey/sqlnew/releases)
+for Windows x64 or Linux x64, extract it, and follow the included `README.txt`.
+The CLI runs without Python or a compiler. Each preview includes optimized and
+scalar archives, source/build identities, file hashes and the SQL walkthrough.
+
+To build from source:
+
 Use Python **3.12+** with Visual Studio C++ Build Tools on Windows, or a C
 compiler and make on Linux:
 
@@ -146,6 +153,8 @@ see the [build and usage guide](sqlnew/README.md).
 
 ## Explore the project
 
+- [Native SQLNEW modules](ext/sqlnew/) and [product tools](sqlnew/) contain the current implementation.
+- [Inherited engine](engine/README.md) keeps the SQL compiler, pager and its build/test tree together under `engine/sqlite/`.
 - [Formats and storage behavior](sqlnew/FORMAT.md) describes how the native representations work.
 - [Validation](sqlnew/VALIDATION.md) links the completed checks and their scope.
 - [Experiment archive](experiments/README.md) preserves the prototypes and research trail.

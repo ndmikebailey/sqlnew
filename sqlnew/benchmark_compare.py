@@ -338,7 +338,7 @@ def main():
                                       "Load and index-build times are single observations, not sampled estimates.",
                                       "No composite winner score; workload tradeoffs reported separately."]}, "datasets": []}
     names = ("sqlnew/benchmark_build.py", "sqlnew/benchmark_data.py", "sqlnew/benchmark_compare.py",
-             "sqlnew/db.py", "sqlnew/build.py", "sqlnew/config.h", "src/select.c",
+             "sqlnew/db.py", "sqlnew/build.py", "sqlnew/config.h", "engine/sqlite/src/select.c",
              "ext/sqlnew/columnar.c", "ext/sqlnew/sqlnew.c", "ext/sqlnew/intblock.c")
     report["source_sha256"] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
     for spec in data["datasets"]:

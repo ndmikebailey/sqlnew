@@ -1,10 +1,28 @@
 # Validation of SQLNEW development builds
 
+## Source layout and preview packages
+
+The inherited tree now lives under `engine/sqlite/`, with its internal layout
+and native source bytes preserved. A fresh Windows build generated identical
+amalgamation, header and shell hashes to the previous candidate. Required core
+`devtest` passed **881,414 checks with zero errors** in 7:55, across six builds,
+2,580 Tcl jobs and 16 corpus jobs.
+
+The fresh relocated default build and both Windows `/MT` download builds passed
+all **56 product methods**, **10 direct workflow groups** and **360 canonical
+folding cases**. Both preview archives passed their SQL walkthrough from an
+isolated extraction. [dev021-layout-validation.json](results/dev021-layout-validation.json)
+records configurations and hashes. Hosted preview publication additionally
+requires Windows/Linux product jobs and Linux core devtest on its tagged commit.
+
+Historical source paths and measurements below describe their original runs.
+No native codec, engine behavior or database format changed in this relocation.
+
 ## Current 0.2.1 maintenance preparation — October 14
 
 The inherited core now matches the pinned `branch-3.54` snapshot
 `23500fbf19d6d412f3326614ce3bac2fbab7564f`, with only the existing 231-line
-SQLNEW addition to `src/select.c`. The upstream development version is 3.54.1;
+SQLNEW addition to `engine/sqlite/src/select.c` (originally `src/select.c`). The upstream development version is 3.54.1;
 this is an unreleased maintenance snapshot. Optional upstream extension sources
 are retained without registering additional modules in the default SQLNEW build.
 

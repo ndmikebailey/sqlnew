@@ -16,6 +16,8 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 25
+    env:
+      SQLNEW_STATIC_CRT: '1'
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
@@ -28,6 +30,13 @@ jobs:
         run: python -m unittest discover -s sqlnew -p "test_*.py" -v
       - name: Exercise optimized workflows
         run: python sqlnew/exercise_dev021.py
+      - name: Package optimized download
+        run: python sqlnew/package.py --output-dir build/dist/optimized
+      - uses: actions/upload-artifact@v7
+        with:
+          name: sqlnew-${{ runner.os }}-optimized
+          path: build/dist/optimized/*
+          if-no-files-found: error
       - name: Build scalar engine
         env:
           SQLNEW_DISABLE_SIMD: '1'
@@ -40,6 +49,13 @@ jobs:
         run: python sqlnew/exercise_dev021.py
       - name: Run SQL quickstart
         run: python -c "import pathlib, subprocess, sys; cli = pathlib.Path('build/sqlnew') / ('sqlnew.exe' if sys.platform == 'win32' else 'sqlnew'); subprocess.run([str(cli.resolve()), ':memory:', '.read sqlnew/examples/quickstart.sql'], check=True)"
+      - name: Package scalar download
+        run: python sqlnew/package.py --output-dir build/dist/scalar
+      - uses: actions/upload-artifact@v7
+        with:
+          name: sqlnew-${{ runner.os }}-scalar
+          path: build/dist/scalar/*
+          if-no-files-found: error
 
   sqlite-core:
     runs-on: ubuntu-latest
@@ -51,7 +67,40 @@ jobs:
         run: |
           mkdir -p build/core-devtest
           cd build/core-devtest
-          ../../configure --dev
+          ../../engine/sqlite/configure --dev
           make -j2 tclextension
-          sudo tclsh ../../tool/buildtclext.tcl --install-only
+          sudo tclsh ../../engine/sqlite/tool/buildtclext.tcl --install-only
           make -j2 devtest
+
+  preview-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [sqlnew, sqlite-core]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: sqlnew-*
+          path: build/downloads
+      - name: Collect verified packages
+        run: |
+          python - <<'PY'
+          import hashlib, pathlib, shutil
+          source = pathlib.Path('build/downloads')
+          output = pathlib.Path('build/release-assets')
+          output.mkdir(parents=True)
+          archives = sorted(p for p in source.rglob('sqlnew-*') if p.is_file() and (p.name.endswith('.zip') or p.name.endswith('.tar.gz')))
+          assert len(archives) == 4, archives
+          assert len({p.name for p in archives}) == 4
+          sums = []
+          for path in archives:
+              shutil.copyfile(path, output/path.name)
+              sums.append(hashlib.sha256(path.read_bytes()).hexdigest()+'  '+path.name+'\n')
+          (output/'SHA256SUMS').write_text(''.join(sums))
+          PY
+      - name: Publish experimental preview
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" build/release-assets/* --verify-tag --prerelease --latest=false --title "SQLNEW $GITHUB_REF_NAME preview" --notes-file sqlnew/RELEASE_NOTES.md

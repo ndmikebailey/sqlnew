@@ -6,6 +6,7 @@ the original run; generated databases and binaries remain under ignored `build/`
 
 | Reports | Scope |
 |---|---|
+| [Layout and package validation](dev021-layout-validation.json) | Relocated inherited tree, fresh generation, core devtest, optimized/scalar Windows static-runtime packages |
 | [Hosted CI](dev021-hosted-ci.json) | Initial public commit: Windows/Linux optimized and scalar product checks, Linux core devtest |
 | [Maintenance validation](dev021-maintenance-validation.json) | Local maintenance intake, product checks and core devtest summary; its pending CI list predates the hosted run |
 | [Maintenance benchmark](dev021-maintenance-benchmark.json) | Self-contained benchmark, including the optional previous-library arm |

@@ -40,7 +40,7 @@ def main():
     result["source_sha256"] = {
         name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
         for name in ("ext/sqlnew/columnar.c", "ext/sqlnew/columnar_batch.inc", "ext/sqlnew/columnar_index.inc",
-                     "ext/sqlnew/columnar_write.inc", "ext/sqlnew/sqlnew.c", "src/select.c",
+                     "ext/sqlnew/columnar_write.inc", "ext/sqlnew/sqlnew.c", "engine/sqlite/src/select.c",
                      "sqlnew/config.h", "sqlnew/build.py", "sqlnew/db.py", "sqlnew/exercise_columnar.py")}
     with Database(args.database) as db:
         db.execute("PRAGMA journal_mode=WAL")

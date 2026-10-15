@@ -1506,3 +1506,66 @@ Next useful work
   description and topics would improve discovery. Retain the inherited root
   build layout: moving required SQLite files merely for appearance would make
   source builds harder to maintain. No new storage direction was selected.
+
+
+Source layout, downloads and public documents (2026-10-14)
+========================================================
+The owner challenged the confusing inherited root and AGENTS.md and requested
+the proposed download, document-benchmark and GitHub metadata work. Revisited
+the previous advice to leave the root intact. Keeping the inherited source
+tree internally intact does not require keeping it at the repository root:
+both generators accept an explicit source root.
+
+Relocation attempt and result
+  Moved 2,289 inherited files under engine/sqlite/, preserving their internal
+  layout. SQLNEW modules remain in ext/sqlnew/ and product tools in sqlnew/.
+  Native source bytes are unchanged. Only the inherited overview README's
+  link back to this project's landing page changed inside the relocated tree.
+  Updated generator paths, current source-hash collectors, CI core commands,
+  contributor instructions and CRLF exceptions. Historical reports retain
+  their original paths and hashes. A source-root marker makes Linux generation
+  reconfigure a reused output directory after relocation.
+  A fresh Windows build generated the same amalgamation, header and shell
+  hashes as the previous candidate. All 56 product methods and the 10 direct
+  workflow groups / 360 canonical fold cases passed. Required relocated core
+  devtest passed 881,414 checks with zero errors in 7:55: six builds, 2,580 Tcl
+  jobs and 16 corpus jobs. This supports keeping the clearer root layout.
+  Rewrote AGENTS.md as SQLNEW guidance, retaining generated-file, public-domain,
+  allocator, C compatibility and required core-check rules. No upstream agent
+  prohibition or Fossil workflow is presented as this fork's policy.
+
+Download preparation
+  Added sqlnew/package.py with a whitelist of CLI/library/header/example inputs,
+  build/source hash checks, provenance, a per-file manifest and archive hashes.
+  It extracts its own archive elsewhere and runs the walkthrough there.
+  SQLNEW_STATIC_CRT=1 selects /MT on Windows; normal source builds retain /MD.
+  Both optimized and scalar /MT builds passed 56 product methods, direct
+  workflows and the extracted-archive check. Configuration and hashes are in
+  sqlnew/results/dev021-layout-validation.json. Archives stay in ignored build/.
+  CI packages both configurations on Windows/Linux. Tagged v* publication
+  waits for those product jobs and Linux core devtest, and produces an explicit
+  experimental prerelease. No format, codec or native storage changes were made.
+
+Public document protocol
+  Pinned four complete Project Gutenberg books and three inherited technical
+  documents by original UTF-8 SHA-256: seven originals, 2,863,312 bytes. At the
+  default 4,096-character maximum they form 763 non-overlapping passages.
+  Originals are retained locally under ignored build/document-corpus; only the
+  source manifest is committed. Explicit download permission is a command flag,
+  not a silent build dependency. Changed remote originals are rejected.
+  All three storage arms include the same contentless FTS5 candidate index.
+  Candidate identities come from pristine pinned SQLite; body bytes and whole
+  documents independently match the original hashes. Tests include known-ID
+  reads, keyword-to-passage retrieval, whole-document reads, edits synchronized
+  with FTS, base immutability, compaction, restoration, integrity and reopening.
+  Preflight passed all arms. Its timing ran alongside preparation tasks and is
+  not retained as public benchmark evidence; final timing follows those tasks.
+  Native payload counters exclude FTS/page-cache/physical I/O. This bounded
+  English prose/technical fixture does not establish semantic relevance or
+  enterprise-corpus behavior. No synthetic overlap or duplicate padding is used.
+
+GitHub project details
+  Updated the live About description to exact compression, shared regions and
+  selective retrieval in an independent embedded SQLite fork. Added SQL,
+  embedded-database, sqlite-fork, compression, columnar, information-retrieval
+  and experimental topics. No repository visibility or access settings changed.

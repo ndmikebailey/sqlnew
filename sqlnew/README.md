@@ -15,6 +15,29 @@ notes; they are not requirements or a roadmap.
 
 ## Build and run
 
+### Download a preview
+
+[GitHub Releases](https://github.com/ndmikebailey/sqlnew/releases) provides
+experimental Windows x64 ZIP and Linux x64 tar.gz archives, in optimized and
+scalar configurations. Extract the archive and run the CLI from that directory:
+
+```powershell
+.\sqlnew.exe :memory: ".read examples/quickstart.sql"
+```
+
+Linux uses `./sqlnew` instead. The CLI needs no Python, compiler or server.
+Windows archives include the C runtime; Linux builds target the hosted Ubuntu
+24.04 glibc baseline. These are portable development previews, with no installer,
+automatic upgrade or format-migration promise. macOS/ARM downloads are not built.
+
+`lib/` contains the embedded library and optional loadable module; `include/`
+contains the public C API header. The complete product uses the embedded library,
+including SQLNEW compiler hooks. `BUILD.json`, `UPSTREAM.json` and `MANIFEST.json`
+retain configuration, source provenance and hashes; release `SHA256SUMS` covers
+the archive files. Use the README shipped inside a particular download.
+
+### Build from source
+
 Use Python 3.12+ and an installed C compiler. Windows discovers Visual Studio C++
 Build Tools. Linux uses cc and make. Install `requirements-dev.txt` for the full
 Python tests, vector APIs and benchmarks. Direct region/folding checks need only
@@ -54,6 +77,32 @@ same path in each process; the default is this checkout's `build/` directory.
 On Linux, `sh sqlnew/check_linux.sh` builds and checks both optimized and scalar
 configurations. Install the compiler, make and `requirements-dev.txt` first;
 the helper does not install system packages.
+
+The inherited source and its build tools live together under `engine/sqlite/`.
+Generation uses that explicit source root; generated output stays in `build/`.
+
+To prepare a download, first commit its source, build it, then run
+`python sqlnew/package.py`. On Windows set `SQLNEW_STATIC_CRT=1` for the build;
+this selects `/MT` and avoids a separate Visual C++ runtime installation.
+`SQLNEW_DISABLE_SIMD=1` selects the scalar archive. Packages default to
+`build/dist/` and verify the walkthrough from an isolated extraction. Use
+`--allow-dirty` only for a local packaging rehearsal. CI attaches both
+configurations as artifacts; a `v*` tag publishes an experimental prerelease
+only after the product and core jobs pass.
+
+### Document retrieval comparison
+
+```console
+python sqlnew/benchmark_build.py --fetch-upstream
+python sqlnew/benchmark_documents.py --fetch-corpus
+```
+
+The [corpus manifest](corpora/public-documents.json) pins four complete public
+books and three technical documents by SHA-256. Remote originals stay in ignored
+`build/document-corpus/`. Downloads require the explicit flag, and changed
+upstream files are rejected. Non-overlapping passages preserve every original
+byte. All arms use a common contentless FTS5 candidate index and include its cost.
+See [benchmark methodology](BENCHMARKS.md) for scope and current measurements.
 
 The benchmark builds its fixtures from deterministic numbers and source text in
 this repository. It compares current columns, folded columns, regions and the

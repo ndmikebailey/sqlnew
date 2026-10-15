@@ -8,6 +8,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+ENGINE = ROOT / "engine/sqlite"
 BUILD = Path(os.environ.get("SQLNEW_BUILD_DIR", str(ROOT / "build"))).resolve()
 
 
@@ -34,12 +35,15 @@ def msvc_env():
 def generate(env=None):
     gen = BUILD / "upstream"
     gen.mkdir(parents=True, exist_ok=True)
+    marker = gen / ".sqlnew-source-root"
+    same_source = marker.exists() and marker.read_text() == str(ENGINE)
     if sys.platform == "win32":
-        run(["nmake", "/nologo", "/f", ROOT / "Makefile.msc", f"TOP={ROOT}", "DEBUG=0", "sqlite3.c", "shell.c"], gen, env or msvc_env())
+        run(["nmake", "/nologo", "/f", ENGINE / "Makefile.msc", f"TOP={ENGINE}", "DEBUG=0", "sqlite3.c", "shell.c"], gen, env or msvc_env())
     else:
-        if not (gen / "Makefile").exists():
-            run([ROOT / "configure", "--disable-tcl"], gen)
+        if not (gen / "Makefile").exists() or not same_source:
+            run([ENGINE / "configure", "--disable-tcl"], gen)
         run(["make", "-j2", "sqlite3.c", "shell.c"], gen)
+    marker.write_text(str(ENGINE))
     return gen
 
 
@@ -55,7 +59,8 @@ def main():
     sources = [gen / "sqlite3.c", *sorted((ROOT / "ext/sqlnew").glob("*.c"))]
     includes = b"".join(p.read_bytes() for p in sorted((ROOT / "ext/sqlnew").glob("*.inc")))
     if win:
-        cc = ["cl", "/nologo", "/O2", "/MD", "/utf-8"]
+        runtime = "/MT" if os.environ.get("SQLNEW_STATIC_CRT") == "1" else "/MD"
+        cc = ["cl", "/nologo", "/O2", runtime, "/utf-8"]
         flags = ["/D" + d for d in defines] + [f"/FI{ROOT / 'sqlnew/config.h'}", "/DSQLITE_API=__declspec(dllexport)", "/DSQLITE_CORE", "/DSQLITE_EXTRA_INIT=sqlnew_bootstrap", f"/I{gen}"]
         objects = []
         for source in [*sources, gen / "shell.c"]:
@@ -93,7 +98,8 @@ def main():
         run([*cc, "-Wall", "-Wextra", "-Werror", *extension_flags, "-I", gen, shared, *sources[1:], "-o", out / ("sqlnew" + ext), "-lm"], out)
     source_files = [*sorted((ROOT / "ext/sqlnew").glob("*.c")),
                     *sorted((ROOT / "ext/sqlnew").glob("*.inc")),
-                    ROOT / "sqlnew/config.h", ROOT / "src/select.c"]
+                    ROOT / "sqlnew/config.h", ROOT / "sqlnew/build.py",
+                    ENGINE / "src/select.c", ENGINE / "VERSION", ENGINE / "manifest.uuid"]
     hashes = {str(p.relative_to(ROOT)).replace("\\", "/"): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in source_files}
     version = (ROOT / "sqlnew/config.h").read_text().split('#define SQLNEW_VERSION "')[1].split('"')[0]
