@@ -21,6 +21,15 @@ Python tests, vector APIs and benchmarks. Direct region/folding checks need only
 the Python standard library and the built native engine.
 The native column store has no Python, NumPy, server, or Docker runtime dependency.
 
+The [quickstart SQL](examples/quickstart.sql) is a small, in-memory walkthrough.
+After building, run it from the repository root:
+
+```powershell
+.\build\sqlnew\sqlnew.exe :memory: ".read sqlnew/examples/quickstart.sql"
+```
+
+On Linux, use `./build/sqlnew/sqlnew` in place of the Windows executable.
+
 ```console
 python sqlnew/build.py
 python -m pip install -r requirements-dev.txt
@@ -38,6 +47,13 @@ python sqlnew/benchmark_dev021.py
 
 Direct workflows save their report under `build/dev021/contracts.json`; use
 `--output PATH` to retain an explicit report without changing historical evidence.
+
+`SQLNEW_BUILD_DIR` selects an alternate output root for the builder, Python
+driver, isolated Windows CPython bridge and direct workflows. Set it to the
+same path in each process; the default is this checkout's `build/` directory.
+On Linux, `sh sqlnew/check_linux.sh` builds and checks both optimized and scalar
+configurations. Install the compiler, make and `requirements-dev.txt` first;
+the helper does not install system packages.
 
 The benchmark builds its fixtures from deterministic numbers and source text in
 this repository. It compares current columns, folded columns, regions and the

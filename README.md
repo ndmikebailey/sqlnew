@@ -1,5 +1,7 @@
 # SQLNEW
 
+[![Build and validate](https://github.com/ndmikebailey/sqlnew/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/ndmikebailey/sqlnew/actions/workflows/build.yml)
+
 **An experimental SQL engine for exact compression, shared structure, and selective retrieval.**
 
 SQLNEW explores how a database can recognize repeated structure, store it
@@ -10,8 +12,8 @@ regions into one embedded SQL engine built on SQLite.
 The goal is practical: less data handling before a person or agent gets the
 records, passages or context they need.
 
-[Get started](#try-it) ? [Recorded benchmarks](#benchmarks-recorded-so-far) ?
-[Explore the code](#explore-the-project) ? [Contribute](CONTRIBUTING.md)
+[Get started](#try-it) | [Recorded benchmarks](#benchmarks-recorded-so-far) |
+[Explore the code](#explore-the-project) | [Contribute](CONTRIBUTING.md)
 
 ## The idea
 
@@ -122,6 +124,22 @@ python sqlnew/build.py
 python sqlnew/exercise_dev021.py
 ```
 
+Run the [small SQL walkthrough](sqlnew/examples/quickstart.sql) with the built
+CLI, from the repository root:
+
+```powershell
+# Windows PowerShell
+.\build\sqlnew\sqlnew.exe :memory: ".read sqlnew/examples/quickstart.sql"
+```
+
+```sh
+# Linux
+./build/sqlnew/sqlnew :memory: ".read sqlnew/examples/quickstart.sql"
+```
+
+It demonstrates compressed columns, passage retrieval by coordinate, and
+separate edits with rollback. Everything runs in memory.
+
 The native engine requires no Python runtime or database server once built.
 For SQL examples, optional Python dependencies and benchmark reproduction,
 see the [build and usage guide](sqlnew/README.md).
@@ -139,6 +157,11 @@ validation includes 56 product tests in optimized and scalar builds, 360
 canonical folding cases per configuration, and 881,423 upstream core checks.
 See the [validation record](sqlnew/results/dev021-maintenance-validation.json)
 for exact sources, configurations and remaining coverage.
+
+The [first hosted run](https://github.com/ndmikebailey/sqlnew/actions/runs/38656971916)
+also passed Windows and Linux optimized/scalar product checks, plus **979,196
+Linux core checks with zero errors**. Its commit and per-build results are in
+the [hosted CI record](sqlnew/results/dev021-hosted-ci.json).
 
 Files use **SQLNEW format 2** and require fresh databases; SQLite files and
 earlier experimental formats are not interchangeable. This is a development

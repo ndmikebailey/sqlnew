@@ -1442,3 +1442,67 @@ scope accompany the tables. Linked raw JSON reports, benchmark code, baseline
 builder and full methods. Numeric table values were checked against their
 source reports and local file links resolve. No engine code, binaries or
 benchmark results changed, and no new performance run was implied.
+
+
+Public-repository review (2026-10-14)
+===================================
+Reviewed the live GitHub landing page, source layout, contributor instructions,
+build helpers, evidence links and first hosted Actions run. SQLNEW remains an
+independent Git root; no SQLite history or local consumer snapshot was published.
+
+Finding: hosted cross-platform checks are now complete
+  GitHub Actions run 38656971916 on initial commit
+  502945b45794f43b636807ebe94bf973df357b65 succeeded. Windows x64 and Linux x64
+  each passed 56 product methods, 10 direct workflow groups and 360 canonical
+  folding cases in both optimized and scalar configurations. Logged runtimes
+  report AVX2 and scalar backends respectively. Linux core devtest passed
+  979,196 checks with zero errors in 24:31; it does not enable SQLNEW registration.
+  The run began October 14 and finished October 15 UTC, both October 14 locally.
+  Added sqlnew/results/dev021-hosted-ci.json with run/job links and runtime
+  hashes. Preserved earlier machine-readable evidence unchanged; its pending
+  CI list describes the earlier preparation state. Updated current validation
+  guidance and added a live README build badge. These are correctness/build
+  results, not Linux performance measurements or ARM validation.
+
+Newcomer and developer cleanup
+  Corrected literal question marks in README navigation and made the evidence
+  index clickable. Added sqlnew/examples/quickstart.sql and CLI launch commands:
+  compressed-column aggregates, sparse passage retrieval, a separate edit and
+  rollback restoration, all in memory. CI now runs the example and explicitly
+  passes the scalar assertion flag to scalar product checks.
+  AGENTS.md now identifies SQLNEW's Git workflow, native modules, product build,
+  single journal and source provenance before the retained upstream guidance.
+  SQLite's upstream contribution restrictions are identified as upstream policy.
+  Generated-source rules, allocator conventions and required core devtest remain.
+  The Linux helper now sets a default build directory, invokes current product
+  workflows for both backends and leaves prerequisite installation to the user.
+  The older native fault-injection harness remains available separately; no
+  additional sanitizer/security campaign was run in this review.
+
+Small functional correction
+  The Windows CPython bridge previously always loaded build/sqlnew/python,
+  ignoring SQLNEW_BUILD_DIR used by the builder and ctypes driver. It now honors
+  the same output root and reports the selected missing library in its error.
+  Fresh subprocesses confirmed activation from the optimized default directory
+  and the separate scalar directory, including repeated activation in-process.
+
+Verification and limits
+  Current optimized and scalar builds each passed all 56 product methods and
+  all 10 direct workflow groups / 360 fold cases after these edits. The SQL CLI
+  example produced exact expected original/updated/restored passages and an ok
+  integrity result. Shell syntax, workflow YAML, scalar flag and local links in
+  all 10 entry-point Markdown documents were checked. Local logs and direct
+  reports are under ignored build/public-review/. The Linux helper itself was
+  syntax-checked here; the recorded hosted run predates these helper/CI edits.
+  Native sources and the benchmarked optimized DLL are unchanged (SHA-256
+  5ad28bb4cb3419a9856f3affade0ecc08106ae10e104e570185c899ededd8faa).
+
+Next useful work
+  A documented installation/release bundle would reduce the compiler barrier.
+  A redistributable real-document fixture should compare retrieval correctness,
+  bytes decoded, edit/compaction costs and complete file sizes for ordinary
+  rows, columns and regions. Keep the synthetic controls and record regressions.
+  GitHub's About text is currently only "Experimental SQL"; a precise short
+  description and topics would improve discovery. Retain the inherited root
+  build layout: moving required SQLite files merely for appearance would make
+  source builds harder to maintain. No new storage direction was selected.

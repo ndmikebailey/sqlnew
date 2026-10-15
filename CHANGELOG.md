@@ -18,6 +18,9 @@
 - Organize historical experiments, add contributor guidance and Windows/Linux
   CI, and make the current benchmark independent of private consumer checkouts
   and saved old binaries.
+- Record the first successful hosted Windows/Linux checks, add a runnable SQL
+  quickstart, clarify fork-specific contributor guidance and fix alternate-build
+  selection in the isolated Windows Python bridge.
 
 This remains experimental. Files use `SQLNEW format 2`; compatibility with
 SQLite files, old experimental files and future SQLNEW versions is not promised.

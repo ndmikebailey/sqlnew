@@ -8,6 +8,7 @@ this bootstrap intentionally does not pretend LD_LIBRARY_PATH can repair a
 running process.
 """
 import ctypes
+import os
 from pathlib import Path
 import re
 import sys
@@ -21,10 +22,12 @@ def activate():
         raise RuntimeError("this CPython bootstrap currently supports Windows only")
     if "_sqlite3" in sys.modules and _library is None:
         raise RuntimeError("activate SQLNEW before importing sqlite3 or doc2sql")
-    library = Path(__file__).resolve().parents[1] / "build/sqlnew/python/sqlite3.dll"
+    root = Path(__file__).resolve().parents[1]
+    build = Path(os.environ.get("SQLNEW_BUILD_DIR", str(root / "build"))).resolve()
+    library = build / "sqlnew/python/sqlite3.dll"
     if _library is None:
         if not library.is_file():
-            raise RuntimeError("run python sqlnew/build.py first")
+            raise RuntimeError(f"build SQLNEW with the same SQLNEW_BUILD_DIR first: {library}")
         _library = ctypes.WinDLL(str(library))
     import sqlite3
     connection = sqlite3.connect(":memory:")

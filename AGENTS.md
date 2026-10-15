@@ -2,6 +2,28 @@
 
 Guidance for AI coding agents working in this repository.
 
+## SQLNEW fork
+
+This repository is SQLNEW, an independent experimental SQLite fork maintained
+in Git at <https://github.com/ndmikebailey/sqlnew>. SQLNEW issues and pull
+requests belong here. Upstream SQLite's contribution and agent policies below
+describe the upstream project; they do not prohibit work on this fork.
+
+- Read `sqlnew/README.md` for product builds and `CONTRIBUTING.md` for scope.
+- Build the enabled SQLNEW CLI and libraries with `python sqlnew/build.py`.
+  A plain upstream `make sqlite3` does not enable the SQLNEW product modules.
+- Native modules live in `ext/sqlnew/`; helpers and product checks in `sqlnew/`.
+- Run `python -m unittest discover -s sqlnew -p "test_*.py" -v` and
+  `python sqlnew/exercise_dev021.py` for product changes. The full Python suite
+  needs `requirements-dev.txt`; direct workflows use the standard library.
+- Changes to `src/` also require upstream `devtest`, as described below.
+- Keep narrative experiment summaries in `experiments/exact_fold/ATTEMPTS.txt`.
+  Preserve superseded prototypes under `experiments/archive/` and keep generated
+  databases, binaries and local consumer snapshots in ignored `build/`.
+- Source provenance is pinned in `sqlnew/upstream.json`. Files use SQLNEW
+  format 2; upstream SQLite's file-format documentation describes the inherited
+  machinery, not interoperability with SQLNEW files.
+
 ## Project nature
 
 SQLite is a self-contained, serverless SQL database engine written in C. The
@@ -23,7 +45,7 @@ purposes, are welcomed.
 SQLite uses the [Fossil](https://fossil-scm.org/) for version control,
 not Git.  The canonical repository is at <https://sqlite.org/src>.
 
-## Build
+## Upstream core build
 
 The configure script uses [autosetup](https://msteveb.github.io/autosetup/),
 not GNU Autoconf.
@@ -39,7 +61,7 @@ make testfixture               # test runner binary (requires tcl-dev)
 make tclextension-install      # install TCL extension before running tests
 ```
 
-## Testing
+## Upstream core testing
 
 Tests are TCL scripts run through the `testfixture` enhanced interpreter.
 

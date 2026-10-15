@@ -33,9 +33,20 @@ optional previous-library arm to isolate the maintenance intake. Its constructed
 source passages differ from the historical doc2sql fixture. Per-arm core and
 library identities accompany exact answer checks and timings.
 
-Windows/Linux CI is configured for future pushes. Hosted CI and a new Linux/ARM
-run have not been completed locally. Broader crash scheduling, multiwriter
-throughput and cold-storage behavior remain outside these development checks.
+The [first hosted CI run](https://github.com/ndmikebailey/sqlnew/actions/runs/38656971916)
+has since completed successfully on the initial public commit
+`502945b45794f43b636807ebe94bf973df357b65`. Both Windows x64 and Linux x64 passed
+all **56 product methods**, **10 direct workflow groups** and **360 canonical
+folding cases** in each of their optimized and scalar configurations. Runtime
+reports identify AVX2 and scalar backends respectively. Linux core `devtest`
+passed **979,196 checks with zero errors** in 24:31, without SQLNEW registration.
+
+[dev021-hosted-ci.json](results/dev021-hosted-ci.json) records the run, jobs,
+commit, counts and runtime library hashes. It is separate from the original local
+report, whose pending-work list describes the state before publication. This CI
+run establishes build/correctness coverage; the Windows benchmark timings above
+were not rerun on Linux. ARM/macOS execution, broader crash scheduling,
+multiwriter throughput and cold-storage behavior remain outside these checks.
 No additional sanitizer or security-audit campaign was run during preparation.
 
 ## Pre-maintenance Dev 0.2.1 native integration

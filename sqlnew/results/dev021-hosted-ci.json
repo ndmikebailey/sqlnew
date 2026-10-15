@@ -1,0 +1,103 @@
+{
+  "repository": "ndmikebailey/sqlnew",
+  "run_id": 38656971916,
+  "run_attempt": 1,
+  "url": "https://github.com/ndmikebailey/sqlnew/actions/runs/38656971916",
+  "commit": "502945b45794f43b636807ebe94bf973df357b65",
+  "event": "push",
+  "created_at_utc": "2026-10-14T23:55:11Z",
+  "updated_at_utc": "2026-10-15T00:20:58Z",
+  "conclusion": "success",
+  "evidence": "GitHub Actions run metadata, job results and decoded job logs; recorded after publication. Original local reports remain unchanged.",
+  "product_jobs": [
+    {
+      "job_id": 116168921947,
+      "url": "https://github.com/ndmikebailey/sqlnew/actions/runs/38656971916/job/116168921947",
+      "runner": "windows-latest",
+      "conclusion": "success",
+      "configurations": [
+        {
+          "configuration": "optimized",
+          "product_test_methods": 56,
+          "product_test_seconds": 6.755,
+          "workflow_groups": 10,
+          "canonical_fold_checks": 360,
+          "exact": true,
+          "runtime": {
+            "version": "0.2.1-dev",
+            "sqlite_source_id": "2026-10-14 13:39:28 e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bbalt1",
+            "backend": "avx2-f64",
+            "library_sha256": "b82e1e8230822a81987739e930999e39511c32a529cd06d29ba03680131a3def"
+          }
+        },
+        {
+          "configuration": "scalar",
+          "product_test_methods": 56,
+          "product_test_seconds": 6.815,
+          "workflow_groups": 10,
+          "canonical_fold_checks": 360,
+          "exact": true,
+          "runtime": {
+            "version": "0.2.1-dev",
+            "sqlite_source_id": "2026-10-14 13:39:28 e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bbalt1",
+            "backend": "scalar-f64",
+            "library_sha256": "9940c7c06cdeb564e7d1e2b12be10602aa65f5c173327dfdf80cbebe3e1f2382"
+          }
+        }
+      ]
+    },
+    {
+      "job_id": 116168922036,
+      "url": "https://github.com/ndmikebailey/sqlnew/actions/runs/38656971916/job/116168922036",
+      "runner": "ubuntu-latest",
+      "conclusion": "success",
+      "configurations": [
+        {
+          "configuration": "optimized",
+          "product_test_methods": 56,
+          "product_test_seconds": 1.568,
+          "workflow_groups": 10,
+          "canonical_fold_checks": 360,
+          "exact": true,
+          "runtime": {
+            "version": "0.2.1-dev",
+            "sqlite_source_id": "2026-10-14 13:39:28 e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bbalt1",
+            "backend": "avx2-f64",
+            "library_sha256": "2913312b58d177d127a6c65cf6b09d455ab11e60bf47c959bbe16bb3d62d6c03"
+          }
+        },
+        {
+          "configuration": "scalar",
+          "product_test_methods": 56,
+          "product_test_seconds": 1.473,
+          "workflow_groups": 10,
+          "canonical_fold_checks": 360,
+          "exact": true,
+          "runtime": {
+            "version": "0.2.1-dev",
+            "sqlite_source_id": "2026-10-14 13:39:28 e6b9a40732900d0b7f83ec262ddc81bb47d4230de55d6db319689906e2bbalt1",
+            "backend": "scalar-f64",
+            "library_sha256": "d8e554b44fb1a1e8dc5e3367978443dba4b94ba10d81c48128aba2af46cab1ea"
+          }
+        }
+      ]
+    }
+  ],
+  "core": {
+    "job_id": 116168921694,
+    "url": "https://github.com/ndmikebailey/sqlnew/actions/runs/38656971916/job/116168921694",
+    "runner": "ubuntu-latest",
+    "conclusion": "success",
+    "command": "make -j2 devtest",
+    "tests": 979196,
+    "errors": 0,
+    "elapsed": "24:31",
+    "scope": "Inherited core matrix without SQLNEW registration; separate product jobs exercise enabled SQLNEW modules and compiler hooks."
+  },
+  "not_covered": [
+    "ARM or macOS execution",
+    "Production crash scheduling, multiwriter throughput and cold-storage stress",
+    "Cross-platform performance comparisons"
+  ],
+  "note": "This is a correctness/build run, not a new benchmark. Results apply to the recorded commit."
+}
