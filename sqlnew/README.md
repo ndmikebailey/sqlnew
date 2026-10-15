@@ -110,6 +110,8 @@ For durable reproduction, download the versioned corpus ZIP identified by
 This restores all seven originals into the ignored cache without network access
 or changes to engine source files. The benchmark verifies their pins again.
 `--create PATH` on the same helper preserves already-prepared originals.
+With the tagged preview sources, you can instead extract the corpus ZIP directly
+into `build/document-corpus/`, then run `python sqlnew/benchmark_documents.py`.
 
 The benchmark builds its fixtures from deterministic numbers and source text in
 this repository. It compares current columns, folded columns, regions and the
