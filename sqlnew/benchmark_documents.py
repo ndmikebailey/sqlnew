@@ -236,13 +236,15 @@ def main():
     parser.add_argument('--fetch-corpus',action='store_true')
     parser.add_argument('--passage-chars',type=int,default=4096)
     parser.add_argument('--repetitions',type=int,default=13)
+    parser.add_argument('--sqlite-library',type=Path,
+                        help='override the pristine SQLite baseline, for example the compiled public release')
     parser.add_argument('--output',type=Path,default=BUILD/'documents/benchmark.json')
     args = parser.parse_args()
     if args.repetitions<3 or args.passage_chars<256:
         parser.error('use at least 3 repetitions and 256 passage characters')
     spec, documents, rows = corpus(args.fetch_corpus,args.passage_chars)
     current = BUILD/'sqlnew'/('sqlnewdb'+SUFFIX)
-    baseline = BUILD/'comparison'/('sqlite-baseline'+SUFFIX)
+    baseline = args.sqlite_library.resolve() if args.sqlite_library else BUILD/'comparison'/('sqlite-baseline'+SUFFIX)
     if not current.is_file() or not baseline.is_file():
         parser.error('build SQLNEW and run sqlnew/benchmark_build.py --fetch-upstream first')
     oracle = fts_oracle(rows,spec['fts_terms'],baseline)
@@ -261,7 +263,8 @@ def main():
               'counter_scope':'Native compressed payload bytes, decodes and rows only; excludes FTS index and physical/page-cache I/O. Row-store counters unavailable. Work deltas include warmups.',
               'repetitions':args.repetitions,'arms':{},
               'build':json.loads((BUILD/'build.json').read_text()),
-              'baseline_build':json.loads((BUILD/'comparison/build.json').read_text()),
+              'baseline_build':json.loads((baseline.parent/'build.json').read_text())
+                               if (baseline.parent/'build.json').exists() else {'library':str(baseline),'build_metadata_available':False},
               'script_sha256':digest(Path(__file__).read_bytes()),'corpus_manifest_sha256':digest(SPEC.read_bytes())}
     for kind,library in [('row',baseline),('region',current),('columnar',current)]:
         report['arms'][kind] = run_arm(folder,kind,library,documents,rows,spec['fts_terms'],oracle,args.repetitions)

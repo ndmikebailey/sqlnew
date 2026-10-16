@@ -1,0 +1,11 @@
+{
+  "verified_on": "2026-10-15",
+  "version": "3.54.0",
+  "release_url": "https://sqlite.org/releaselog/3_54_0.html",
+  "download_page": "https://sqlite.org/download.html",
+  "url": "https://sqlite.org/2026/sqlite-amalgamation-3540000.zip",
+  "archive_sha3_256": "7b670a62fdfbd672b75fef004cb703c8a3e87d3a5cc7d675b4a08337004a2d93",
+  "amalgamation_sha3_256": "8efd453d08a7cfc4c79de5923153036cdc4dcaa254d4f1e617be6a2a98828f9e",
+  "source_id": "2026-10-09 15:46:58 be8d059e9a49089ab2dce5ed26dd87aaf598fdc5fbe0b107c0dd758464bcd5e3",
+  "purpose": "Unmodified released SQLite, compiled with the SQLNEW benchmark compiler and common feature flags. Separate from the unreleased revision-matched baseline."
+}
