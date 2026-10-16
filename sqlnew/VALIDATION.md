@@ -24,6 +24,13 @@ or crash-recovery stress test. No native engine or format change was made, so
 the existing product/core validation below remains applicable. See
 [methods and limitations](BENCHMARKS.md#common-application-tasks-against-released-sqlite).
 
+The [direct version audit](results/dev021-version-reads.json) additionally passed
+four identical read tasks on retained 0.1.0, saved 0.2.0 and current 0.2.1 column
+libraries: **12 combinations / 156 retained samples**, with independent answers,
+matching full input hashes, integrity and reopen checks in all three files.
+The frozen 0.1 library hash matches the historical comparison. This checks whole
+version bundles; it does not isolate the cost of one source change.
+
 ## Source layout and preview packages
 
 The inherited tree now lives under `engine/sqlite/`, with its internal layout

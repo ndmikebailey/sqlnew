@@ -114,6 +114,13 @@ The join diagnostic reads the matrix's retained files; pass `--common-report`
 if its report was saved elsewhere. [Recorded results and complete costs](BENCHMARKS.md#common-application-tasks-against-released-sqlite)
 include slow cases and index storage, not just favorable workloads.
 
+The comparison's ordinary-table and compressed-column labels describe storage
+inside the same current engine, not older product versions. An optional
+`python sqlnew/benchmark_versions.py --v01-library PATH --v02-library PATH`
+compares retained old engines on identical unindexed column reads. It requires
+those old native artifacts; they are not included in a fresh public checkout.
+See the [recorded version audit](BENCHMARKS.md#version-check-on-identical-data).
+
 ### Document retrieval comparison
 
 ```console

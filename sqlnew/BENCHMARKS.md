@@ -25,7 +25,15 @@ The following are median **milliseconds**; row arms and the last column include
 both indexes. Points return full records; the range and recent-record requests
 use covered projections.
 
-| Task | Released SQLite | SQLNEW rows | Columns | Indexed columns |
+**SQLNEW ordinary tables** means the current SQLNEW library with ordinary
+`CREATE TABLE` storage. It is not a previous version or an experiment. Compressed
+columns use `CREATE VIRTUAL TABLE ... USING sqlnew_columnar(...)` in that same
+library. Region storage remains available but is a different table type; this
+common-task matrix does not measure it. Current table creation explicitly
+selects storage. SQLNEW does not automatically move a column table's individual
+record lookups to the region representation.
+
+| Task | Released SQLite (ms) | SQLNEW ordinary tables (ms) | Compressed columns (ms) | Compressed columns + indexes (ms) |
 |---|---:|---:|---:|---:|
 | 100 point requests | 2.263 | 2.098 | 32.018 | 32.436 |
 | 100-row time range | 1.066 | 1.054 | 1.391 | 1.165 |
@@ -106,6 +114,64 @@ The first baseline builder retrieves the exact inherited revision; the second
 checks and compiles the official released archive. Both downloads are explicit.
 The [common-task runner](benchmark_common.py) defaults to ignored
 `build/common-tasks/benchmark.json`; `--output PATH` retains another run.
+
+### Version check on identical data
+
+To check whether older improvements had been discarded, the retained **0.1.0-dev**
+and **0.2.0-dev** libraries were compared directly with **0.2.1-dev**. All use
+unindexed compressed columns, the same 100,000 commerce records, six fields,
+query text, parameters, driver and settings. Three isolated persistent processes
+rotate their sequential timing order, with two warmups and 13 retained samples.
+Every answer, complete input hash, integrity check and reopened input passed.
+Median elapsed time for the entire named task:
+
+| Task | SQLNEW 0.1.0 (ms) | Saved SQLNEW 0.2.0 (ms) | Current SQLNEW 0.2.1 (ms) |
+|---|---:|---:|---:|
+| 100 full-record lookups | 33.465 | 32.855 | 32.311 |
+| 100-row time range | 1.105 | 1.128 | 1.119 |
+| Whole-table summary | 0.290 | 0.366 | 0.367 |
+| Group by customer | 49.846 | 16.225 | 16.010 |
+
+This full-record lookup cost was already present in 0.1. All three versions
+decode the same 600 column groups and count 1,407,705 compressed input bytes per
+100 requests. The group size remains 1,024 positions. Retrieving one record
+can expand the requested columns for neighboring records, even though only
+one record is returned. Those are native decoder-input counters, not disk I/O.
+Grouping now uses the native batch path; summaries still avoid column decoding,
+but the newer version is about 27% slower than 0.1 in this paired run. Retaining
+the feature does not mean all of its read costs were retained unchanged.
+
+The old [million-row event exercise](results/columnar.json) reported **0.170 ms
+for one lookup of three fields**. The new common task returns **100 complete
+six-field records** at different IDs; comparing 0.170 directly with 32.311 would
+mix operations and projections. Separately, the historical matched-workload
+[0.1-to-0.2 comparison](results/comparison-v2.json) did record real regressions:
+taxi's 100 three-field points went from 8.386 to 11.562 ms, while grouping fell
+from 1,495.449 to 174.221 ms and 100 updates from 186.299 to 14.492 ms. Those
+earlier gains and losses remain valid for their fixtures and recorded builds.
+
+Current registration still includes columns, summary/batch execution, optional
+covering indexes, exact folding, regions, and vector/text helpers. The integer
+codec source hash is unchanged from 0.1. Storage selection is still explicit;
+retaining these paths does not combine every path's strengths automatically.
+The two fixed base planner estimates are also present in the retained 0.1
+source. The join experiment identifies a current bad plan, but without an
+identical old join run it does not establish which release introduced it.
+
+[Raw version audit](results/dev021-version-reads.json), [runner](benchmark_versions.py).
+The 0.1 library hash matches the frozen previous arm in the historical comparison;
+the saved 0.2 library is the pre-0.2.1 snapshot, including intervening fixes,
+not necessarily the exact early 0.2 binary in every historical report. Their
+inherited cores differ; the comparison measures version bundles, not a single
+code change. The native libraries were not rebuilt or modified for this audit.
+
+```console
+python sqlnew/benchmark_versions.py --v01-library PATH --v02-library PATH
+```
+
+This optional audit requires retained old libraries; they are not shipped with
+the public source. Exact library hashes are in the report. Fresh databases are
+created under ignored `build/version-reads/`; no old database is migrated.
 
 ### Join-order diagnosis
 

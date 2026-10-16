@@ -58,7 +58,13 @@ across six configurations passed exact answer, restoration and reopen checks.
 Below are median **milliseconds**, with 13 retained samples. Row tables and
 indexed columns have the same two covering indexes.
 
-| Task | SQLite | SQLNEW rows | Columns | Indexed columns |
+These columns are **storage methods in today's engine**, not older SQLNEW
+versions. Ordinary tables use the inherited row storage; compressed tables use
+SQLNEW's column module. The region module is another retained method, measured
+separately below. Table storage is selected explicitly; regions do not
+automatically accelerate a table created with column storage.
+
+| Task | Standard SQLite (ms) | SQLNEW ordinary tables (ms) | Compressed columns (ms) | Compressed columns + indexes (ms) |
 |---|---:|---:|---:|---:|
 | 100 full-record point requests | 2.263 | 2.098 | 32.018 | 32.436 |
 | 100-row time range | 1.066 | 1.054 | 1.391 | 1.165 |
@@ -68,7 +74,13 @@ indexed columns have the same two covering indexes.
 | Customer join and grouping | 38.335 | 37.855 | 4,563.656 | 86.385 |
 | Insert 1,000 records + commit | 18.406 | 17.535 | 7.681 | 26.387 |
 | Update 100 memos + commit | 3.150 | 2.703 | 28.486 | 28.252 |
-| Complete initial file, KiB | 11,040 | 11,040 | 1,700 | 16,168 |
+
+Storage is a separate measurement. These are **complete initial database file
+sizes**, including metadata and indexes; 1 KiB = 1,024 bytes:
+
+| Standard SQLite | SQLNEW ordinary tables | Compressed columns | Compressed columns + indexes |
+|---:|---:|---:|---:|
+| 11,040 KiB | 11,040 KiB | 1,700 KiB | 16,168 KiB |
 
 SQLNEW rows stay close to SQLite. Columns give about **19x faster summaries**
 and **3.43x smaller files than unindexed SQLite** (5,824 KiB), with slower
@@ -86,6 +98,13 @@ about all applications. [All 15 tasks and methods](sqlnew/BENCHMARKS.md#common-a
 [runner](sqlnew/benchmark_common.py),
 [released baseline builder](sqlnew/benchmark_release.py), and
 [join diagnosis](sqlnew/results/dev021-join-order.json).
+
+An additional [version check on identical data](sqlnew/BENCHMARKS.md#version-check-on-identical-data)
+compares the retained 0.1.0 and 0.2.0 engines with today's 0.2.1. The 100-record
+lookup takes 33.465 / 32.855 / 32.311 ms, respectively. The much smaller numbers
+in the old single-record exercise covered one lookup of three fields, not 100
+full records. Grouping improved, while summaries retain measurable added cost;
+the version report preserves both rather than assuming every task improved.
 
 ### Current 0.2.1 comparison
 

@@ -1717,3 +1717,59 @@ Completed document measurements and preview publication
   No native code, database format, package release, agents, pytest or separate
   security campaign was introduced. Next improvement candidate is planner cost
   estimation for unindexed columns, subject to course correction on this finding.
+
+2026-10-15 - Audit retained versions after confusing benchmark labels
+  The owner correctly challenged the unexplained "SQLNEW rows" label, missing
+  units in headers and whether fast earlier implementations had been discarded.
+  The latest common-task table compares storage methods in the same 0.2.1
+  engine, not product versions. Ordinary CREATE TABLE uses inherited row storage;
+  sqlnew_columnar uses compressed columns. The retained region module is not an
+  arm in that commerce matrix. Choosing a table's storage remains explicit.
+  Preserving several methods does not automatically route all queries through
+  whichever representation won a different benchmark. Corrected public labels,
+  put milliseconds in timing headers and separated the landing-page file sizes
+  into their own explicitly labeled table.
+
+  Rather than infer a version regression from different fixtures, found the
+  preserved native binaries and added benchmark_versions.py. The frozen 0.1
+  hash b3f92a982913f3982236798c7e10c06dcbef7d31671d16abad407797f68e7853
+  matches the historical comparison's previous arm. Saved 0.2.0 is the pre-0.2.1
+  snapshot, including intervening fixes; not every historical 0.2 report uses
+  exactly that binary. Current library is unchanged. All three get identical
+  new 100,000-row six-field commerce data, unindexed columns, driver, SQL,
+  parameters and settings. Three isolated persistent processes rotate their
+  sequential timing order: two warmups and 13 retained samples per task.
+
+  Median elapsed milliseconds, 0.1.0 / saved 0.2.0 / current 0.2.1:
+    100 complete-record lookups     33.465 / 32.855 / 32.311
+    100-row time range              1.105 /  1.128 /  1.119
+    whole-table summary             0.290 /  0.366 /  0.367
+    GROUP BY customer              49.846 / 16.225 / 16.010
+  All 12 combinations and 156 retained samples passed independent answers.
+  Complete input hashes, integrity and reopened hashes match across all three
+  files. Raw report: sqlnew/results/dev021-version-reads.json. This measures
+  historical version bundles, including different core revisions, not one fix.
+
+  This particular full-record lookup cost existed in 0.1. All versions decode
+  600 column groups and count exactly 1,407,705 compressed input bytes for the
+  same 100 point requests. Group size remains 1,024 positions. Looking up one
+  record can decode neighboring values in each requested column. Cached native
+  decoder inputs are not physical I/O. Old 0.170-ms event timing meant ONE
+  lookup of THREE fields, versus 100 six-field records in the new test; those
+  numbers cannot be used as a direct regression ratio.
+
+  Some earlier regressions are real and should not be dismissed: historical
+  same-fixture taxi point batches went 8.386 -> 11.562 ms from 0.1 to 0.2, while
+  grouping improved 1495.449 -> 174.221 and updates 186.299 -> 14.492 ms. In the
+  new direct audit, summaries are about 27% slower than 0.1 despite grouping
+  being about 3.1x faster. Added patch-aware code does extra work, but this audit
+  does not isolate every source of overhead. Keeping features is not proof that
+  their best performance was preserved on every workload.
+
+  Source confirms retained column/summary/batch/index registration, folding,
+  regions and vector/text helpers. intblock.c has the exact 0.1 source hash.
+  The old and current column planners also have the same fixed base estimates;
+  the recently measured join problem is not evidence by itself that 0.2 newly
+  introduced it. An identical old join run was not part of this four-task audit.
+  Documented the distinctions and both gains and regressions. No native edit,
+  database migration, removed feature, agent, pytest or engine rebuild occurred.
