@@ -1,5 +1,29 @@
 # Validation of SQLNEW development builds
 
+## Common-task and released-SQLite comparison
+
+The [100,000-row common-task matrix](results/dev021-common-tasks.json) passed
+all **15 tasks x six configurations**, with **1,170 retained samples** plus two
+warmups per combination. An independent Python oracle checks typed answers,
+including NULLs and a SUM exceeding 32 bits. Committed insert/update/delete/
+replace and rollback cases verify affected data. Complete ordered input hashes
+match before/after restoration and after reopen in all six files.
+
+The baseline includes unmodified released SQLite 3.54.0 and a separate pristine
+3.54.1 snapshot matching SQLNEW's inherited core. Release archive, amalgamation,
+runtime source ID, compiler flags and library hashes are recorded. The
+[join-order diagnosis](results/dev021-join-order.json) checks six query/engine
+combinations against the same restored inputs and confirms database-file hashes
+are unchanged. Its measurements retain the original slow default plan.
+
+A fresh [public-document run](results/dev021-documents-sqlite-release.json)
+against released 3.54.0 passed all three storage arms: original reconstruction,
+FTS answers and edits, native maintenance, restoration, integrity and reopen.
+These checks validate the measured fixtures; they are not a concurrent-writer
+or crash-recovery stress test. No native engine or format change was made, so
+the existing product/core validation below remains applicable. See
+[methods and limitations](BENCHMARKS.md#common-application-tasks-against-released-sqlite).
+
 ## Source layout and preview packages
 
 The inherited tree now lives under `engine/sqlite/`, with its internal layout

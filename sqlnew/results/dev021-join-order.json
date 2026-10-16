@@ -1,0 +1,306 @@
+{
+  "recorded_utc": "2026-10-16T00:28:52.536401+00:00",
+  "git_commit": "038d8d0e51b1a674c544c355754eb65a5ae78fb7",
+  "script_sha256": "6c3b3bfc54ade139874bd80cc8e741ea95fdd8c9889dc98214345b365256770c",
+  "common_report_sha256": "2a0aac4b73832b29cf3af40b46e30c0550d1df5ca4463deae8c9fd9dea7f2495",
+  "protocol": "Separate sequential processes, same libraries and restored post-task files as common report. Read-only queries; full input hashes checked before timing and file hashes unchanged after. Warm prepared calls include result copying, two warmups and retained samples below. CROSS JOIN forces events outer for diagnosis only; original default scores remain unchanged. Counters include warmups and cached decoder inputs, not physical I/O. No native source change.",
+  "repetitions": 5,
+  "arms": {
+    "sqlite_release": {
+      "library_sha256": "7662eff3b80e6c54afb14c0c77a67b9e4ac00c4c60bc0ed85dff349b3b1a90ba",
+      "database_sha256": "60b5d51b1a1ee001126e01b3c474931b86f55e2a8d88d06b7f8fbff16b82e628",
+      "queries": {
+        "default": {
+          "sql": "SELECT c.segment,count(*),sum(e.amount) FROM events e JOIN customers c ON c.id=e.customer GROUP BY c.segment ORDER BY c.segment",
+          "median_ms": 44.3678,
+          "samples_ms": [
+            46.8824,
+            39.8349,
+            47.5647,
+            44.3678,
+            42.0344
+          ],
+          "plan": [
+            [
+              8,
+              0,
+              115,
+              "SCAN c"
+            ],
+            [
+              10,
+              0,
+              81,
+              "SEARCH e USING COVERING INDEX events_customer (customer=?)"
+            ],
+            [
+              14,
+              0,
+              0,
+              "USE TEMP B-TREE FOR GROUP BY"
+            ]
+          ],
+          "work_delta": {},
+          "calls_including_warmups": 7,
+          "expected_sha256": "a6470411409be13bd9d6a40b676e954b099d6b402fe858c822ac53d3295a240d",
+          "exact": true
+        },
+        "events_outer": {
+          "sql": "SELECT c.segment,count(*),sum(e.amount) FROM events e CROSS JOIN customers c ON c.id=e.customer GROUP BY c.segment ORDER BY c.segment",
+          "median_ms": 61.479,
+          "samples_ms": [
+            61.479,
+            58.3816,
+            55.9516,
+            69.6365,
+            66.9635
+          ],
+          "plan": [
+            [
+              8,
+              0,
+              180,
+              "SCAN e USING COVERING INDEX events_time"
+            ],
+            [
+              10,
+              0,
+              37,
+              "SEARCH c USING INTEGER PRIMARY KEY (rowid=?)"
+            ],
+            [
+              13,
+              0,
+              0,
+              "USE TEMP B-TREE FOR GROUP BY"
+            ]
+          ],
+          "work_delta": {},
+          "calls_including_warmups": 7,
+          "expected_sha256": "a6470411409be13bd9d6a40b676e954b099d6b402fe858c822ac53d3295a240d",
+          "exact": true
+        }
+      },
+      "database_unchanged": true
+    },
+    "sqlnew_columns": {
+      "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+      "database_sha256": "8738884a6967817c70a86e5daead75c482ffb0aecc8c82223793c8a776dbf2b1",
+      "queries": {
+        "default": {
+          "sql": "SELECT c.segment,count(*),sum(e.amount) FROM events e JOIN customers c ON c.id=e.customer GROUP BY c.segment ORDER BY c.segment",
+          "median_ms": 3657.0435,
+          "samples_ms": [
+            3656.6971,
+            3703.4453,
+            3708.1016,
+            3657.0435,
+            3637.5789
+          ],
+          "plan": [
+            [
+              8,
+              0,
+              115,
+              "SCAN c"
+            ],
+            [
+              10,
+              0,
+              99,
+              "SCAN e VIRTUAL TABLE INDEX 0:0,2;"
+            ],
+            [
+              18,
+              0,
+              0,
+              "USE TEMP B-TREE FOR GROUP BY"
+            ]
+          ],
+          "work_delta": {
+            "blocks_read": 686000,
+            "columns_decoded": 1369711,
+            "compressed_bytes_read": 2322558175,
+            "rows_emitted": 700000,
+            "summary_blocks": 0,
+            "blocks_written": 0,
+            "columns_written": 0,
+            "patches_written": 0,
+            "patches_read": 0,
+            "compactions": 0,
+            "rows_filtered": 699300000,
+            "batch_rows": 0,
+            "index_rows_read": 0,
+            "index_rows_written": 0,
+            "batch_fallbacks": 0
+          },
+          "calls_including_warmups": 7,
+          "expected_sha256": "a6470411409be13bd9d6a40b676e954b099d6b402fe858c822ac53d3295a240d",
+          "exact": true
+        },
+        "events_outer": {
+          "sql": "SELECT c.segment,count(*),sum(e.amount) FROM events e CROSS JOIN customers c ON c.id=e.customer GROUP BY c.segment ORDER BY c.segment",
+          "median_ms": 56.7632,
+          "samples_ms": [
+            54.9974,
+            56.7632,
+            57.3664,
+            62.1354,
+            55.6164
+          ],
+          "plan": [
+            [
+              8,
+              0,
+              199,
+              "SCAN e VIRTUAL TABLE INDEX 0:"
+            ],
+            [
+              12,
+              0,
+              37,
+              "SEARCH c USING INTEGER PRIMARY KEY (rowid=?)"
+            ],
+            [
+              15,
+              0,
+              0,
+              "USE TEMP B-TREE FOR GROUP BY"
+            ]
+          ],
+          "work_delta": {
+            "blocks_read": 686,
+            "columns_decoded": 1372,
+            "compressed_bytes_read": 2325820,
+            "rows_emitted": 700000,
+            "summary_blocks": 0,
+            "blocks_written": 0,
+            "columns_written": 0,
+            "patches_written": 0,
+            "patches_read": 0,
+            "compactions": 0,
+            "rows_filtered": 0,
+            "batch_rows": 0,
+            "index_rows_read": 0,
+            "index_rows_written": 0,
+            "batch_fallbacks": 0
+          },
+          "calls_including_warmups": 7,
+          "expected_sha256": "a6470411409be13bd9d6a40b676e954b099d6b402fe858c822ac53d3295a240d",
+          "exact": true
+        }
+      },
+      "database_unchanged": true
+    },
+    "sqlnew_columns_indexed": {
+      "library_sha256": "da50925e65384e01eae84cc1dcd422eac5efc54c0c99c3e70c9d7d94ccd5bcc4",
+      "database_sha256": "9ea78fc44dd2f1eb4cb065334e37d05d06b898ed2288c563cf372187e9febb24",
+      "queries": {
+        "default": {
+          "sql": "SELECT c.segment,count(*),sum(e.amount) FROM events e JOIN customers c ON c.id=e.customer GROUP BY c.segment ORDER BY c.segment",
+          "median_ms": 77.1064,
+          "samples_ms": [
+            77.1064,
+            85.7654,
+            77.6638,
+            74.8582,
+            75.8379
+          ],
+          "plan": [
+            [
+              8,
+              0,
+              115,
+              "SCAN c"
+            ],
+            [
+              10,
+              0,
+              76,
+              "SCAN e VIRTUAL TABLE INDEX 2:0,2;"
+            ],
+            [
+              18,
+              0,
+              0,
+              "USE TEMP B-TREE FOR GROUP BY"
+            ]
+          ],
+          "work_delta": {
+            "blocks_read": 0,
+            "columns_decoded": 0,
+            "compressed_bytes_read": 0,
+            "rows_emitted": 700000,
+            "summary_blocks": 0,
+            "blocks_written": 0,
+            "columns_written": 0,
+            "patches_written": 0,
+            "patches_read": 0,
+            "compactions": 0,
+            "rows_filtered": 0,
+            "batch_rows": 0,
+            "index_rows_read": 700000,
+            "index_rows_written": 0,
+            "batch_fallbacks": 0
+          },
+          "calls_including_warmups": 7,
+          "expected_sha256": "a6470411409be13bd9d6a40b676e954b099d6b402fe858c822ac53d3295a240d",
+          "exact": true
+        },
+        "events_outer": {
+          "sql": "SELECT c.segment,count(*),sum(e.amount) FROM events e CROSS JOIN customers c ON c.id=e.customer GROUP BY c.segment ORDER BY c.segment",
+          "median_ms": 54.8484,
+          "samples_ms": [
+            54.8484,
+            54.1225,
+            54.3998,
+            54.8675,
+            55.0222
+          ],
+          "plan": [
+            [
+              8,
+              0,
+              186,
+              "SCAN e VIRTUAL TABLE INDEX 2:"
+            ],
+            [
+              12,
+              0,
+              37,
+              "SEARCH c USING INTEGER PRIMARY KEY (rowid=?)"
+            ],
+            [
+              15,
+              0,
+              0,
+              "USE TEMP B-TREE FOR GROUP BY"
+            ]
+          ],
+          "work_delta": {
+            "blocks_read": 0,
+            "columns_decoded": 0,
+            "compressed_bytes_read": 0,
+            "rows_emitted": 700000,
+            "summary_blocks": 0,
+            "blocks_written": 0,
+            "columns_written": 0,
+            "patches_written": 0,
+            "patches_read": 0,
+            "compactions": 0,
+            "rows_filtered": 0,
+            "batch_rows": 0,
+            "index_rows_read": 700000,
+            "index_rows_written": 0,
+            "batch_fallbacks": 0
+          },
+          "calls_including_warmups": 7,
+          "expected_sha256": "a6470411409be13bd9d6a40b676e954b099d6b402fe858c822ac53d3295a240d",
+          "exact": true
+        }
+      },
+      "database_unchanged": true
+    }
+  },
+  "all_exact": true
+}

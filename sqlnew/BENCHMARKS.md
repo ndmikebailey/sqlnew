@@ -1,6 +1,190 @@
 # SQLNEW benchmarks
 
+## Common application tasks against released SQLite
+
+The October 15 comparison uses **100,000 commerce-style events, 1,000 customers,
+15 tasks and six configurations**. Every answer, mutation, full restoration and
+reopened file passed exact checks: **90 combinations / 1,170 retained samples**.
+The fixture uses integer cents, nullable quantities, timestamps, status and unique
+short memos. It is synthetic, without duplicate body padding. The large integer
+SUM exceeds 32 bits. An independent Python oracle checks typed answers.
+
+The primary baseline is unmodified, released
+[SQLite 3.54.0](https://sqlite.org/releaselog/3_54_0.html), built from the
+[official amalgamation](https://sqlite.org/2026/sqlite-amalgamation-3540000.zip).
+The [release pin](sqlite-release.json) records archive/source hashes and runtime
+source ID. All libraries use the same MSVC `/O2 /MD` compiler settings and common
+features. These are source builds, not claims about vendor binary defaults.
+An additional pristine **unreleased 3.54.1** baseline matches SQLNEW's inherited
+revision, separating version differences from fork changes.
+
+The indexed row and column configurations have the same two five-key covering
+indexes: `(customer,created,amount,qty,status)` and
+`(created,customer,amount,qty,status)`. Unindexed arms keep only row identity.
+The following are median **milliseconds**; row arms and the last column include
+both indexes. Points return full records; the range and recent-record requests
+use covered projections.
+
+| Task | Released SQLite | SQLNEW rows | Columns | Indexed columns |
+|---|---:|---:|---:|---:|
+| 100 point requests | 2.263 | 2.098 | 32.018 | 32.436 |
+| 100-row time range | 1.066 | 1.054 | 1.391 | 1.165 |
+| Latest 20 records for one customer | 0.252 | 0.243 | 10.588 | 0.329 |
+| Whole-table COUNT/SUM/MIN/MAX | 7.860 | 7.788 | 0.422 | 0.416 |
+| Summary including nullable COUNT | 8.867 | 9.034 | 0.540 | 0.498 |
+| GROUP BY customer | 14.789 | 14.663 | 16.809 | 16.892 |
+| Join customer segments and group | 38.335 | 37.855 | 4,563.656 | 86.385 |
+| Top 20 amounts, descending | 6.557 | 6.591 | 6.672 | 19.199 |
+| Insert 1,000 records + commit | 18.406 | 17.535 | 7.681 | 26.387 |
+| Update 100 memos + commit | 3.150 | 2.703 | 28.486 | 28.252 |
+| Update 100 indexed amounts + commit | 5.610 | 4.894 | 16.623 | 31.958 |
+| Delete 100 records + commit | 5.195 | 4.705 | 69.863 | 73.299 |
+| Replace 100 records + commit | 6.521 | 5.999 | 65.994 | 68.642 |
+| 20 individual insert/commit pairs | 12.971 | 10.420 | 17.714 | 21.676 |
+| Update 100 records and roll back | 0.716 | 0.701 | 27.095 | 26.997 |
+
+Complete checkpointed database sizes include customers, all keys and metadata.
+KiB means 1,024 bytes. Initial files have been vacuumed equally; post-task files
+retain allocation growth after restoring data, native compaction and checkpoint.
+Setup costs are single observations in milliseconds, not sampled medians.
+
+| Configuration | Initial KiB | Post-task KiB | Ingest + commit ms | Index + commit ms | ANALYZE ms |
+|---|---:|---:|---:|---:|---:|
+| Released SQLite, indexed | 11,040 | 11,452 | 55.798 | 125.948 | 19.776 |
+| Released SQLite, unindexed | 5,824 | 5,884 | 66.071 | 0.001 | 0.895 |
+| Matched 3.54.1, indexed | 11,040 | 11,452 | 56.183 | 106.048 | 19.893 |
+| SQLNEW rows, indexed | 11,040 | 11,452 | 57.762 | 103.827 | 19.749 |
+| SQLNEW columns | 1,700 | 1,720 | 83.670 | 0.001 | 0.763 |
+| SQLNEW columns, indexed | 16,168 | 17,744 | 90.919 | 403.796 | 37.200 |
+
+Ordinary SQLNEW rows track SQLite closely in this matrix. Native summaries use
+maintained metadata and are about **19x faster** here. Unindexed columns use
+about **3.43x less storage than unindexed SQLite**; adding these two broad native
+indexes makes the file **46.4% larger than indexed SQLite**. Indexed columns
+improve customer/range retrieval, while full-record points and small mutations
+remain slower. Even a covered index can hurt another task: the top-20 sort is
+slower in the indexed column configuration. There is no combined winner score.
+The raw report also retains all unindexed SQLite and matched-version timings.
+
+The default unindexed column join exposes a major plan problem: customers are
+the outer loop, repeatedly scanning the column table. Its original 4.56-second
+score remains in this matrix. A separate join-order diagnosis below checks the
+effect of scanning events once; it does not substitute a hinted result here.
+
+Each arm has its own persistent process, with only one timed at a time. Arm
+order rotates each iteration: two warmups and 13 retained samples. Prepared
+reads include binding and Python/ctypes result copying. Writes include BEGIN and
+FULL commit; the rollback task ends with ROLLBACK. All files use 4 KiB pages,
+WAL FULL, 64 MiB connection caches, mmap off, memory temporary data and one SQL
+worker. Fixture preparation and validation are outside timing; bulk ingestion,
+indexes and ANALYZE are separate. The fixture is supplied by a common TEMP table
+before native INSERT SELECT, so this is not a CSV/parser benchmark.
+
+Every write sample has separately timed undo and compaction/checkpoint. For
+example, indexed-column insert-1,000 takes 26.387 ms for the application change,
+38.743 ms for later compaction/checkpoint, and 93.703 ms for the whole benchmark
+cycle including undo. Those medians need not add together. A benchmark cycle
+includes fixture restoration and is not a normal application transaction.
+
+This is one warm Windows 11 run on an Intel Core i7-10750H with Python 3.14.4;
+it does not measure cold-cache, concurrent writers or crash recovery. Download
+packages use `/MT`; this timing library uses `/MD`. No native engine or format
+changed for this measurement. Timed source hashes are preserved in commit
+`038d8d0e5` and the [raw report](results/dev021-common-tasks.json), alongside every
+sample, p95, query plan, setting, input hash and library/build identity.
+
+Reproduce from the repository root, sequentially after other builds/checks end:
+
+```console
+python sqlnew/build.py
+python sqlnew/benchmark_build.py --fetch-upstream
+python sqlnew/benchmark_release.py --fetch-release
+python sqlnew/benchmark_common.py --rows 100000 --repetitions 13
+```
+
+The first baseline builder retrieves the exact inherited revision; the second
+checks and compiles the official released archive. Both downloads are explicit.
+The [common-task runner](benchmark_common.py) defaults to ignored
+`build/common-tasks/benchmark.json`; `--output PATH` retains another run.
+
+### Join-order diagnosis
+
+A separate read-only follow-up uses the same libraries and fully restored
+post-task databases. Each query has two warmups and five retained samples.
+`CROSS JOIN` forces events to be the outer loop, following SQLite's
+[documented join-order control](https://sqlite.org/optoverview.html#manual_control_of_query_plans_using_cross_join).
+The five exact segment answers are unchanged, and full input and database-file
+hashes match before/after. Median milliseconds:
+
+| Configuration | Default JOIN | Events outer |
+|---|---:|---:|
+| Released SQLite, indexed | 44.368 | 61.479 |
+| SQLNEW columns, unindexed | 3,657.044 | 56.763 |
+| SQLNEW columns, indexed | 77.106 | 54.848 |
+
+For unindexed columns, the default plan visits 98,000 native blocks per call;
+events-outer visits 98. Filtered-out rows fall from 99,900,000 to zero. Cached
+compressed decoder inputs fall from about 332 MB to 0.332 MB per call. These
+counters exclude physical I/O, customer-table reads and temporary grouping.
+The follow-up's **64x** improvement strongly identifies join planning as an
+actionable source of wasted work. It does not establish that one forced order
+is best generally: SQLite's indexed plan is faster with its default order.
+Default timings also varied between the matrix and follow-up; compare the two
+orders within this follow-up. No planner fix or engine change was made.
+
+[Raw diagnostic](results/dev021-join-order.json), including both plans, samples
+and counters; [runner](benchmark_join_order.py). After running the common matrix:
+
+```console
+python sqlnew/benchmark_join_order.py
+```
+
+If the matrix used `--output PATH`, pass that same path with `--common-report`.
+The diagnostic deliberately requires its retained databases and matching library
+hashes, rather than quietly creating a different fixture.
+
 ## Public documents and passage retrieval
+
+### Comparison against released SQLite 3.54.0
+
+The same seven originals were freshly compared with the official released
+baseline above, using **763 non-overlapping passages of at most 4,096 characters**
+and the common FTS5 candidate index. All three arms passed exact reconstruction,
+search answers, updates, restoration, integrity and reopen checks. Median
+milliseconds use two warmups and 13 retained samples:
+
+| Measurement | Released SQLite | SQLNEW regions | SQLNEW columns |
+|---|---:|---:|---:|
+| Complete initial database, KiB | 4,864 | 4,500 | 3,428 |
+| 64 point requests, ms | 0.997 | 3.281 | 176.490 |
+| Seven keyword context requests, ms | 0.875 | 2.796 | 160.848 |
+| First complete document, ms | 1.189 | 2.682 | 2.654 |
+| 64 edits + FTS synchronization + commit, ms | 19.991 | 24.544 | 178.158 |
+| Compaction / FTS optimization / checkpoint, ms | 37.682 | 39.421 | 78.343 |
+| Restored file after edits/maintenance, KiB | 6,488 | 6,128 | 5,036 |
+
+The edit and maintenance rows are single observations, not sampled medians.
+Initial sizes include all metadata and FTS indexes. Later files retain free-page
+and allocation growth; restoring original values does not implicitly VACUUM.
+Region bases remain unchanged under edits. Regions use **7.5% less initial
+space** than this indexed SQLite database, while SQLite remains faster for
+selective retrieval. Columns save more space but amplify body decoding for
+isolated passages. This is lexical candidate discovery plus exact body recovery,
+not a relevance evaluation.
+
+[Raw released-baseline report](results/dev021-documents-sqlite-release.json)
+retains corpus identities, full samples, counters, setup and maintenance costs.
+To reproduce after preparing SQLNEW, the released baseline and the corpus:
+
+```powershell
+python sqlnew/benchmark_documents.py --sqlite-library build/comparison/sqlite-release/sqlite-release.dll
+```
+
+Use `.so` on Linux or `.dylib` on macOS. The default remains the matched baseline,
+so historical comparisons keep their meaning. The evidence below is preserved
+from that earlier matched-core comparison, not silently replaced with this run.
+
+### Passage-size comparison against the matched core
 
 The [document runner](benchmark_documents.py) compares indexed pristine SQLite,
 SQLNEW regions and SQLNEW columns over **seven complete originals / 2,863,312

@@ -1629,3 +1629,91 @@ Completed document measurements and preview publication
   a separate inherited-engine directory works and is clearer. AGENTS.md now
   describes SQLNEW alone. No agents, pytest, separate security campaign, new
   codec, native engine edit or file-format change was introduced in this pass.
+
+2026-10-15 - Common application tasks against released SQLite
+  Request: measure standard SQLite and common tasks, with actual reproducible
+  evidence. Existing comparisons used the pristine inherited revision, which is
+  unreleased 3.54.1. Added a separate official released 3.54.0 baseline, not a
+  relabeling of that development snapshot. Verified its official release page,
+  archive SHA3-256, amalgamation SHA3-256 and runtime source ID. Compiled the
+  unmodified source with the same MSVC /O2 /MD and common feature flags. The
+  native SQLNEW library and inherited source were unchanged.
+
+  Added benchmark_release.py, sqlite-release.json and benchmark_common.py.
+  Six isolated persistent database processes run sequentially, with rotating
+  arm order: released SQLite indexed/unindexed, matched-core SQLite indexed,
+  SQLNEW ordinary indexed rows, columns, and indexed columns. Same two broad
+  five-key covering indexes where indexed. Deterministic 100,000-event fixture,
+  1,000 customers, integer cents, nullable quantities, timestamps, statuses and
+  unique short memos. Independent Python answers and full ordered typed hashes.
+  Common TEMP seed construction is excluded; native ingestion/commit, index
+  creation and ANALYZE are separate. Warm prepared reads include binding/copying.
+  WAL FULL, 4 KiB pages, 64 MiB caches, mmap off and memory-backed temporary data.
+  Each task/arm has two warmups and 13 retained samples. Fifteen tasks cover
+  point/range/recent lookup, scalar summaries, GROUP BY, join, top-N, bulk insert,
+  sparse text/indexed updates, delete, REPLACE, individual commits and rollback.
+
+  All 90 task/configuration combinations and 1,170 retained samples passed.
+  Each mutation checks its answer, separately times fixture undo and native
+  compaction/checkpoint, then restores the exact input. Six reopened files match
+  full hashes. No implicit VACUUM hides post-task growth. Raw evidence lives in
+  sqlnew/results/dev021-common-tasks.json. Source and raw reports were preserved
+  in commit 038d8d0e5 before documentation and follow-up diagnosis.
+
+  Selected median milliseconds, released indexed SQLite / SQLNEW rows /
+  unindexed columns / indexed columns:
+    100 full-record points      2.263 / 2.098 / 32.018 / 32.436
+    100-row time range          1.066 / 1.054 /  1.391 /  1.165
+    latest 20 customer rows     0.252 / 0.243 / 10.588 /  0.329
+    whole-table summary         7.860 / 7.788 /  0.422 /  0.416
+    GROUP BY customer          14.789 /14.663 / 16.809 / 16.892
+    customer segment join      38.335 /37.855 /4563.656 /86.385
+    insert 1,000 + commit      18.406 /17.535 /  7.681 / 26.387
+    update 100 memos + commit   3.150 / 2.703 / 28.486 / 28.252
+  Initial whole-file KiB: 11,040 / 11,040 / 1,700 / 16,168. The released
+  unindexed SQLite control is 5,824 KiB: columns are 3.43x smaller on that fair
+  unindexed comparison. The two native covering indexes make columns 46.4%
+  larger than equivalently indexed SQLite. Fast metadata summaries (~19x here)
+  do not imply fast points, writes or joins. SQLNEW rows preserve near-parity.
+  Indexed-column post-task file is 17,744 KiB. Insert-1,000 additionally costs
+  38.743 ms compaction/checkpoint; whole benchmark cycle including undo is
+  93.703 ms. All other maintenance/growth costs remain in the raw report.
+
+  Significant finding: unindexed-column join chooses customers outer and scans
+  events repeatedly. Kept the 4.56-second default score. Added a read-only
+  benchmark_join_order.py diagnosis on restored files, two warmups/five retained
+  samples, with full input hashes and unchanged file hashes. Explicit CROSS JOIN
+  makes events outer. Default/forced medians in this separate run:
+    released indexed SQLite        44.368 / 61.479 ms
+    SQLNEW unindexed columns     3657.044 / 56.763 ms
+    SQLNEW indexed columns         77.106 / 54.848 ms
+  Native unindexed block visits fall from 98,000 to 98 per call; 99,900,000
+  filtered rows disappear. Compressed decoder inputs fall from about 332 MB to
+  0.332 MB per call, including cached inputs, not physical I/O. Exact answers
+  match. This identifies planner estimates as an actionable next candidate.
+  CROSS JOIN is a diagnostic, not a universal query recommendation: it slows
+  SQLite's indexed case. Timing varied between main and follow-up runs, so the
+  64x diagnostic ratio compares its own paired samples. Reported the finding
+  to the owner and stopped short of native planner changes to allow direction.
+  Evidence: sqlnew/results/dev021-join-order.json. No bad score was replaced.
+
+  Added --sqlite-library to the existing document runner and freshly compared
+  all three paths with official released SQLite. Same seven original texts,
+  2,863,312 UTF-8 bytes, 763 non-overlapping passages, common FTS5 index.
+  Released SQLite / regions / columns:
+    complete initial KiB       4,864 / 4,500 / 3,428
+    64 points ms               0.997 / 3.281 /176.490
+    seven keyword requests ms  0.875 / 2.796 /160.848
+    whole first document ms    1.189 / 2.682 /  2.654
+  Every original/search/update/restoration/integrity/reopen check passed; region
+  bases remain unchanged under edits. Region files save 7.5% relative to indexed
+  SQLite here, but indexed SQLite still retrieves isolated passages faster.
+  Evidence: sqlnew/results/dev021-documents-sqlite-release.json. Historical
+  passage-size and matched-version reports remain untouched.
+
+  Updated the landing README, benchmark methods, usage, validation and evidence
+  index with full costs and reproduction. These are warm single-host Windows
+  observations, not concurrent-writer, cold-cache or crash-recovery results.
+  No native code, database format, package release, agents, pytest or separate
+  security campaign was introduced. Next improvement candidate is planner cost
+  estimation for unindexed columns, subject to course correction on this finding.

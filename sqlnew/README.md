@@ -90,6 +90,30 @@ this selects `/MT` and avoids a separate Visual C++ runtime installation.
 configurations as artifacts; a `v*` tag publishes an experimental prerelease
 only after the product and core jobs pass.
 
+### Common application tasks against released SQLite
+
+After building SQLNEW, prepare both pristine baselines and run the common tasks:
+
+```console
+python sqlnew/benchmark_build.py --fetch-upstream
+python sqlnew/benchmark_release.py --fetch-release
+python sqlnew/benchmark_common.py --rows 100000 --repetitions 13
+python sqlnew/benchmark_join_order.py
+```
+
+The [released baseline pin](sqlite-release.json) verifies the official SQLite
+3.54.0 archive, source and runtime ID. The matched baseline separately controls
+for SQLNEW's unreleased inherited revision. Six isolated processes cover indexed
+and unindexed SQLite, SQLNEW rows and columns; only one is timed at a time.
+Fifteen tasks include lookups, ranges, summaries, grouping, joins, sorting,
+committed insert/update/delete/replace, individual commits and rollback.
+Every answer and restored/reopened input is checked exactly.
+
+Reports default to `build/common-tasks/benchmark.json` and `join-order.json`.
+The join diagnostic reads the matrix's retained files; pass `--common-report`
+if its report was saved elsewhere. [Recorded results and complete costs](BENCHMARKS.md#common-application-tasks-against-released-sqlite)
+include slow cases and index storage, not just favorable workloads.
+
 ### Document retrieval comparison
 
 ```console
@@ -103,6 +127,9 @@ books and three technical documents by SHA-256. Remote originals stay in ignored
 upstream files are rejected. Non-overlapping passages preserve every original
 byte. All arms use a common contentless FTS5 candidate index and include its cost.
 See [benchmark methodology](BENCHMARKS.md) for scope and current measurements.
+After preparing the released baseline above, `--sqlite-library PATH` selects it
+instead of the matched core. On Windows, its path is
+`build/comparison/sqlite-release/sqlite-release.dll` (`.so` on Linux).
 
 For durable reproduction, download the versioned corpus ZIP identified by
 [public-documents-archive.json](corpora/public-documents-archive.json), then run

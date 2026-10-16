@@ -6,6 +6,9 @@ the original run; generated databases and binaries remain under ignored `build/`
 
 | Reports | Scope |
 |---|---|
+| [Common application tasks](dev021-common-tasks.json) | 100,000 events, 15 tasks, six configurations, 1,170 exact retained samples; released 3.54.0 and matched-core baselines, full storage/index/write costs |
+| [Join-order diagnosis](dev021-join-order.json) | Read-only follow-up on restored files, default and forced event-outer plans, exact answers, unchanged hashes and native work counters |
+| [Documents against released SQLite](dev021-documents-sqlite-release.json) | Fresh default-passage comparison with official 3.54.0; common FTS5 discovery, exact reconstruction, edits, maintenance and reopen |
 | [Published preview validation](dev021-preview-hosted.json) | Tagged Windows/Linux product/core checks, all four package identities and published download verification |
 | [Documents: 1,024](dev021-documents-1024.json), [4,096](dev021-documents-4096.json), [16,384](dev021-documents-16384.json) | Nine exact real-text arms; common FTS5 discovery, points, whole documents, changes and compaction |
 | [Document repeats](dev021-documents-repeat.json) | Both passes' raw timing samples; matched originals, native binaries and file sizes, including observed timing variation |

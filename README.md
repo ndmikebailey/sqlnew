@@ -50,6 +50,43 @@ Edits stay separate until explicit region compaction.
 
 ## Benchmarks recorded so far
 
+### Common tasks against standard SQLite
+
+The latest run compares **100,000 events and 1,000 customers** against unmodified
+released [SQLite 3.54.0](https://sqlite.org/releaselog/3_54_0.html). All 15 tasks
+across six configurations passed exact answer, restoration and reopen checks.
+Below are median **milliseconds**, with 13 retained samples. Row tables and
+indexed columns have the same two covering indexes.
+
+| Task | SQLite | SQLNEW rows | Columns | Indexed columns |
+|---|---:|---:|---:|---:|
+| 100 full-record point requests | 2.263 | 2.098 | 32.018 | 32.436 |
+| 100-row time range | 1.066 | 1.054 | 1.391 | 1.165 |
+| Latest 20 customer records | 0.252 | 0.243 | 10.588 | 0.329 |
+| Whole-table summary | 7.860 | 7.788 | 0.422 | 0.416 |
+| Group by customer | 14.789 | 14.663 | 16.809 | 16.892 |
+| Customer join and grouping | 38.335 | 37.855 | 4,563.656 | 86.385 |
+| Insert 1,000 records + commit | 18.406 | 17.535 | 7.681 | 26.387 |
+| Update 100 memos + commit | 3.150 | 2.703 | 28.486 | 28.252 |
+| Complete initial file, KiB | 11,040 | 11,040 | 1,700 | 16,168 |
+
+SQLNEW rows stay close to SQLite. Columns give about **19x faster summaries**
+and **3.43x smaller files than unindexed SQLite** (5,824 KiB), with slower
+full-record lookups and small mutations. These two broad native indexes make
+columns larger than equivalently indexed SQLite. A separate join-order diagnosis
+reduces the unindexed column join from 3,657 to 57 ms in its own run, identifying
+planner estimates as a concrete improvement target. The default score above
+remains unchanged; no native engine change was made for this comparison.
+
+Measurements use warm sequential Windows processes, matching `/O2 /MD` builds,
+4 KiB pages and WAL FULL. Setup, index construction, undo, compaction and grown
+file sizes are recorded separately. This is a common-task fixture, not a claim
+about all applications. [All 15 tasks and methods](sqlnew/BENCHMARKS.md#common-application-tasks-against-released-sqlite),
+[raw results](sqlnew/results/dev021-common-tasks.json),
+[runner](sqlnew/benchmark_common.py),
+[released baseline builder](sqlnew/benchmark_release.py), and
+[join diagnosis](sqlnew/results/dev021-join-order.json).
+
 ### Current 0.2.1 comparison
 
 Four fixtures were compared across current storage approaches and a pinned,
@@ -95,25 +132,26 @@ random bits provide a control, and source windows are not a document corpus.
 
 ### Public documents and keyword retrieval
 
-A newer comparison uses **seven complete public books/technical documents**
+A document comparison uses **seven complete public books/technical documents**
 with non-overlapping passages. Every storage method includes the same FTS5
 candidate index, so keyword requests can find passages before fetching bodies.
-All nine final arms across three passage sizes passed exact restoration,
-update, compaction and reopen checks.
+All nine matched-core arms across three passage sizes passed exact restoration,
+update, compaction and reopen checks. A fresh default-size run against released
+SQLite 3.54.0 passed the same checks; its results are below.
 
 At the default 4,096-character passage size:
 
 | Measurement | Columns | Regions | Indexed SQLite |
 |---|---:|---:|---:|
 | Complete database, KiB | 3,428 | 4,500 | 4,864 |
-| 64 point requests, median ms | 171.627 | 3.193 | 1.013 |
-| Seven keyword requests, median ms | 173.416 | 2.771 | 0.884 |
+| 64 point requests, median ms | 176.490 | 3.281 | 0.997 |
+| Seven keyword requests, median ms | 160.848 | 2.796 | 0.875 |
 
 At 16,384 characters, region and column files are nearly equal in size and
 regions take about 25x less time for point reads in this run. Passage size
 changes the amount of returned context. Indexed SQLite retains the fastest
 points. See [methods, setup costs and repeat variation](sqlnew/BENCHMARKS.md#public-documents-and-passage-retrieval),
-[raw default results](sqlnew/results/dev021-documents-4096.json) and the
+[raw released-baseline results](sqlnew/results/dev021-documents-sqlite-release.json) and the
 [corpus archive identity](sqlnew/corpora/public-documents-archive.json).
 
 ### Earlier development comparisons
